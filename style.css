@@ -25,10 +25,10 @@ body {
   flex-direction: column;
 }
 
-/* CABEÇALHO PADRONIZADO PARA AMBOS OS DISPOSITIVOS */
+/* CABEÇALHO PERFEITO NO PC E NO CELULAR */
 .header {
   background-color: var(--verde-outplay);
-  padding: 1rem 1.5rem;
+  padding: 0.8rem 1.2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -42,7 +42,7 @@ body {
 }
 
 .logo-img {
-  max-height: 48px;
+  max-height: 42px;
   width: auto;
   object-fit: contain;
 }
@@ -51,7 +51,7 @@ body {
   display: none;
   color: var(--lime-play);
   font-weight: 800;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   letter-spacing: 1px;
 }
 
@@ -59,9 +59,9 @@ body {
   background: var(--card-bg);
   border: 1px solid var(--lime-play);
   color: var(--lime-play);
-  padding: 0.5rem 0.9rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 8px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -92,7 +92,7 @@ body {
 /* SUBTÍTULO */
 .hero {
   text-align: center;
-  padding: 1.5rem 1rem 0.5rem;
+  padding: 1.2rem 1rem 0.5rem;
 }
 
 .subtitle {
@@ -106,23 +106,23 @@ body {
   max-width: 850px;
   width: 100%;
   margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
+  padding: 1.2rem 1rem 3rem;
   flex: 1;
 }
 
 .card {
   background-color: var(--verde-outplay);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 1.8rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(215, 255, 0, 0.15);
 }
 
-/* ETAPAS / PASSO A PASSO (LADO A LADO) */
+/* ETAPAS / PASSO A PASSO (ALINHAMENTO LIMPO) */
 .steps {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
 }
 
 .step-item {
@@ -167,9 +167,9 @@ body {
 /* TÍTULOS */
 .step-title {
   color: var(--lime-play);
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 
 /* CARDS DOS ESPORTES (MANTÉM LADO A LADO EM 3 COLUNAS) */
@@ -177,14 +177,14 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
 }
 
 .sport-card {
   background: var(--card-bg);
   border: 2px solid transparent;
   border-radius: 14px;
-  padding: 1.5rem 0.5rem;
+  padding: 1.2rem 0.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -200,7 +200,7 @@ body {
 }
 
 .sport-img-wrapper {
-  height: 95px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,7 +216,7 @@ body {
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Brilho verde-limão apenas no card selecionado */
+/* Brilho apenas no card selecionado */
 .sport-card.selected .sport-img {
   filter: drop-shadow(0px 0px 8px rgba(215, 255, 0, 0.8));
   transform: scale(1.06);
@@ -716,54 +716,60 @@ body {
   font-size: 0.8rem;
 }
 
-/* AJUSTES PROPORCIONAIS PARA CELULAR SEM QUEBRAR O ANESTÉTICO DO PC */
+/* AJUSTES RESPONSIVOS PARA SMARTPHONES SEM SOBREPOR TEXTO */
 @media (max-width: 600px) {
   .header {
-    padding: 0.8rem 1rem;
+    padding: 0.6rem 0.8rem;
   }
 
   .logo-img {
-    max-height: 38px;
+    max-height: 32px;
   }
 
   .btn-admin-access {
-    padding: 0.45rem 0.7rem;
-    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  /* Oculta o texto "Área Restrita" apenas em telas muito pequenas para caber o cadeado */
+  .btn-admin-text {
+    display: inline;
   }
 
   .card {
-    padding: 1.2rem 0.9rem;
+    padding: 1.1rem 0.8rem;
   }
 
-  .sports-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-  }
-
-  .sport-card {
-    padding: 1rem 0.2rem;
-  }
-
-  .sport-img-wrapper {
-    height: 70px;
-  }
-
-  .sport-img {
-    max-height: 65px;
-  }
-
-  .sport-card h3 {
-    font-size: 0.75rem;
+  /* Esconde rótulos de texto longos nos passos para não encavalar */
+  .step-label {
+    display: none;
   }
 
   .step-number {
     width: 32px;
     height: 32px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 
-  .step-label {
-    font-size: 0.65rem;
+  .sports-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+  }
+
+  .sport-card {
+    padding: 0.8rem 0.2rem;
+  }
+
+  .sport-img-wrapper {
+    height: 60px;
+  }
+
+  .sport-img {
+    max-height: 55px;
+  }
+
+  .sport-card h3 {
+    font-size: 0.7rem;
   }
 
   .time-grid {
