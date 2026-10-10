@@ -1,786 +1,465 @@
-/* PALETA DE CORES OFICIAL OUTPLAY ARENA */
-:root {
-  --verde-outplay: #003F3B;
-  --lime-play: #D7FF00;
-  --areia-dourada: #9A6500;
-  --fundo-escuro: #002B28;
-  --card-bg: #004D48;
-  --branco: #FFFFFF;
-  --texto-suave: #B0C4C2;
-}
-
-/* RESET GLOBAL */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Sora', sans-serif;
-}
-
-body {
-  background-color: var(--fundo-escuro);
-  color: var(--branco);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* CABEÇALHO PERFEITO NO PC E NO CELULAR */
-.header {
-  background-color: var(--verde-outplay);
-  padding: 0.8rem 1.2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 3px solid var(--lime-play);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
-.logo-img {
-  max-height: 42px;
-  width: auto;
-  object-fit: contain;
-}
-
-.logo-fallback {
-  display: none;
-  color: var(--lime-play);
-  font-weight: 800;
-  font-size: 1.3rem;
-  letter-spacing: 1px;
-}
-
-.btn-admin-access {
-  background: var(--card-bg);
-  border: 1px solid var(--lime-play);
-  color: var(--lime-play);
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.btn-admin-access:hover {
-  background-color: var(--lime-play);
-  color: var(--verde-outplay);
-}
-
-.badge-count {
-  background-color: #ff5252;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 0.7rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-}
-
-/* SUBTÍTULO */
-.hero {
-  text-align: center;
-  padding: 1.2rem 1rem 0.5rem;
-}
-
-.subtitle {
-  color: var(--texto-suave);
-  font-size: 0.95rem;
-  font-weight: 400;
-}
-
-/* CONTAINER PRINCIPAL */
-.main-container {
-  max-width: 850px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 1.2rem 1rem 3rem;
-  flex: 1;
-}
-
-.card {
-  background-color: var(--verde-outplay);
-  border-radius: 20px;
-  padding: 1.8rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(215, 255, 0, 0.15);
-}
-
-/* ETAPAS / PASSO A PASSO (ALINHAMENTO LIMPO) */
-.steps {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.8rem;
-}
-
-.step-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  flex: 1;
-}
-
-.step-number {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background-color: var(--card-bg);
-  color: var(--texto-suave);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.step-item.active .step-number {
-  background-color: var(--lime-play);
-  color: var(--verde-outplay);
-  box-shadow: 0 0 12px rgba(215, 255, 0, 0.4);
-}
-
-.step-label {
-  font-size: 0.75rem;
-  color: var(--texto-suave);
-  font-weight: 600;
-  text-align: center;
-}
-
-.step-item.active .step-label {
-  color: var(--lime-play);
-}
-
-/* TÍTULOS */
-.step-title {
-  color: var(--lime-play);
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-bottom: 1.2rem;
-}
-
-/* CARDS DOS ESPORTES (MANTÉM LADO A LADO EM 3 COLUNAS) */
-.sports-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.8rem;
-}
-
-.sport-card {
-  background: var(--card-bg);
-  border: 2px solid transparent;
-  border-radius: 14px;
-  padding: 1.2rem 0.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sport-card:hover, .sport-card.selected {
-  border-color: var(--lime-play);
-  background: rgba(215, 255, 0, 0.08);
-  transform: translateY(-3px);
-}
-
-.sport-img-wrapper {
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.8rem;
-}
-
-.sport-img {
-  max-height: 85px;
-  max-width: 100%;
-  width: auto;
-  object-fit: contain;
-  filter: none;
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-/* Brilho apenas no card selecionado */
-.sport-card.selected .sport-img {
-  filter: drop-shadow(0px 0px 8px rgba(215, 255, 0, 0.8));
-  transform: scale(1.06);
-}
-
-.sport-icon-fallback {
-  font-size: 2.2rem;
-  color: var(--lime-play);
-}
-
-.sport-card h3 {
-  font-size: 0.95rem;
-  color: var(--branco);
-}
-
-/* CAMPOS DE FORMULÁRIO */
-.form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-.form-group label {
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  color: var(--lime-play);
-  margin-bottom: 0.6rem;
-  font-size: 0.9rem;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--card-bg);
-  background-color: var(--card-bg);
-  color: var(--branco);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.form-input:focus {
-  border-color: var(--lime-play);
-}
-
-/* HORÁRIOS */
-.time-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 0.8rem;
-}
-
-.time-slot {
-  background: var(--card-bg);
-  border: 2px solid transparent;
-  border-radius: 12px;
-  padding: 0.9rem 0.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.time-slot:hover, .time-slot.selected {
-  border-color: var(--lime-play);
-  background: var(--lime-play);
-  color: var(--verde-outplay);
-}
-
-.time-text {
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.time-price {
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: 4px;
-  color: var(--areia-dourada);
-}
-
-.time-slot.selected .time-price {
-  color: var(--verde-outplay);
-}
-
-.time-slot.disabled {
-  background-color: rgba(0, 0, 0, 0.25);
-  border-color: rgba(255, 255, 255, 0.05);
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.status-booked {
-  color: #ff5252 !important;
-  font-weight: 700;
-}
-
-.no-slots-msg {
-  grid-column: 1 / -1;
-  color: #ff6b6b;
-  font-size: 0.85rem;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-/* CARD PIX */
-.pix-box {
-  background-color: var(--card-bg);
-  border: 1px dashed var(--lime-play);
-  border-radius: 14px;
-  padding: 1.2rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.pix-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--lime-play);
-  font-weight: 700;
-  margin-bottom: 0.6rem;
-  font-size: 0.9rem;
-}
-
-.pix-desc {
-  font-size: 0.8rem;
-  color: var(--texto-suave);
-  margin-bottom: 0.5rem;
-}
-
-.pix-key-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 0.7rem;
-  border-radius: 10px;
-  margin-bottom: 0.6rem;
-}
-
-#pix-key {
-  font-weight: 800;
-  font-size: 1rem;
-  color: var(--lime-play);
-  letter-spacing: 1px;
-}
-
-.btn-copy {
-  background-color: var(--lime-play);
-  color: var(--verde-outplay);
-  border: none;
-  padding: 0.35rem 0.7rem;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-
-.pix-info {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--texto-suave);
-}
-
-/* BOTÕES DE NAVEGAÇÃO */
-.btn-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.btn-primary {
-  background-color: var(--lime-play);
-  color: var(--verde-outplay);
-  border: none;
-  padding: 1rem;
-  font-size: 1rem;
-  font-weight: 800;
-  border-radius: 12px;
-  cursor: pointer;
-  flex: 2;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-primary:hover {
-  opacity: 0.95;
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--texto-suave);
-  border: 1px solid var(--card-bg);
-  padding: 1rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  border-radius: 12px;
-  cursor: pointer;
-  flex: 1;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-secondary:hover {
-  border-color: var(--texto-suave);
-  color: var(--branco);
-}
-
-/* BOTÃO WHATSAPP */
-.btn-whatsapp {
-  background-color: #25D366;
-  color: #FFFFFF;
-  border: none;
-  padding: 1.1rem;
-  font-size: 1rem;
-  font-weight: 800;
-  border-radius: 12px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-whatsapp:hover {
-  background-color: #20ba5a;
-  transform: translateY(-2px);
-}
-
-.success-icon {
-  font-size: 3.5rem;
-  color: var(--lime-play);
-  margin-bottom: 0.8rem;
-}
-
-.success-desc {
-  color: var(--texto-suave);
-  font-size: 0.9rem;
-  margin-bottom: 1.2rem;
-  line-height: 1.5;
-}
-
-/* ÍCONES SVG DO WHATSAPP */
-.whatsapp-svg-icon {
-  vertical-align: middle;
-  margin-right: 6px;
-  fill: var(--lime-play);
-}
-
-.whatsapp-btn-svg {
-  vertical-align: middle;
-  fill: #FFFFFF;
-}
-
-/* ESTILOS DA ÁREA RESTRITA */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(5px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.modal-content {
-  background-color: var(--verde-outplay);
-  border: 1px solid var(--lime-play);
-  border-radius: 16px;
-  padding: 1.5rem;
-  width: 100%;
-  max-width: 650px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.2rem;
-  border-bottom: 1px solid rgba(215, 255, 0, 0.2);
-  padding-bottom: 0.8rem;
-}
-
-.modal-header h2 {
-  color: var(--lime-play);
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.close-btn {
-  font-size: 1.6rem;
-  color: var(--texto-suave);
-  cursor: pointer;
-}
-
-.admin-section {
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.section-title-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 0.8rem;
-}
-
-.section-title-box h3 {
-  font-size: 0.95rem;
-  color: var(--branco);
-}
-
-.icon-warning { color: #ffca28; font-size: 1.1rem; }
-.icon-lime { color: var(--lime-play); font-size: 1.1rem; }
-
-.pending-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.pending-card {
-  background: rgba(0, 0, 0, 0.2);
-  border-left: 4px solid #ffca28;
-  padding: 0.8rem;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.pending-info strong {
-  color: var(--lime-play);
-  font-size: 0.85rem;
-}
-
-.pending-info span {
-  font-size: 0.75rem;
-  color: var(--texto-suave);
-  display: block;
-  margin-top: 2px;
-}
-
-.pending-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.btn-approve {
-  background-color: #25D366;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.7rem;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-
-.btn-reject {
-  background-color: #ff5252;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.7rem;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-
-.no-pending-msg {
-  font-size: 0.8rem;
-  color: var(--texto-suave);
-  text-align: center;
-  padding: 0.4rem 0;
-}
-
-.admin-filter-bar {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.filter-item {
-  flex: 1;
-}
-
-.filter-item label {
-  font-size: 0.75rem;
-  color: var(--texto-suave);
-  display: block;
-  margin-bottom: 4px;
-}
-
-.form-input-sm {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--verde-outplay);
-  background-color: var(--verde-outplay);
-  color: white;
-  font-size: 0.8rem;
-}
-
-.time-grid-admin {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 0.8rem;
-}
-
-.admin-time-card {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 0.8rem;
-  border: 1px solid transparent;
-}
-
-.admin-time-card.available { border-color: rgba(215, 255, 0, 0.3); }
-.admin-time-card.confirmed { border-color: rgba(37, 211, 102, 0.4); }
-.admin-time-card.pending { border-color: rgba(255, 202, 40, 0.4); }
-
-.time-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  margin-bottom: 0.4rem;
-}
-
-.status-tag {
-  font-size: 0.65rem;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 700;
-}
-
-.status-tag.available { background: rgba(215, 255, 0, 0.15); color: var(--lime-play); }
-.status-tag.confirmed { background: rgba(37, 211, 102, 0.2); color: #25D366; }
-.status-tag.pending { background: rgba(255, 202, 40, 0.2); color: #ffca28; }
-
-.client-detail {
-  font-size: 0.75rem;
-  color: var(--texto-suave);
-  margin-bottom: 0.5rem;
-  line-height: 1.3;
-}
-
-.btn-block-sm, .btn-cancel-sm {
-  width: 100%;
-  padding: 0.4rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-block-sm { background: var(--verde-outplay); color: var(--lime-play); }
-.btn-cancel-sm { background: rgba(255, 82, 82, 0.2); color: #ff5252; }
-
-/* RODAPÉ */
-.footer {
-  background-color: var(--verde-outplay);
-  border-top: 1px solid rgba(215, 255, 0, 0.15);
-  padding: 1.2rem;
-  text-align: center;
-  margin-top: auto;
-  color: var(--texto-suave);
-  font-size: 0.8rem;
-}
-
-/* AJUSTES RESPONSIVOS PARA SMARTPHONES SEM SOBREPOR TEXTO */
-@media (max-width: 600px) {
-  .header {
-    padding: 0.6rem 0.8rem;
-  }
-
-  .logo-img {
-    max-height: 32px;
-  }
-
-  .btn-admin-access {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.7rem;
-  }
-
-  /* Oculta o texto "Área Restrita" apenas em telas muito pequenas para caber o cadeado */
-  .btn-admin-text {
-    display: inline;
-  }
-
-  .card {
-    padding: 1.1rem 0.8rem;
-  }
-
-  /* Esconde rótulos de texto longos nos passos para não encavalar */
-  .step-label {
-    display: none;
-  }
-
-  .step-number {
-    width: 32px;
-    height: 32px;
-    font-size: 0.85rem;
-  }
-
-  .sports-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.4rem;
-  }
-
-  .sport-card {
-    padding: 0.8rem 0.2rem;
-  }
-
-  .sport-img-wrapper {
-    height: 60px;
-  }
-
-  .sport-img {
-    max-height: 55px;
-  }
-
-  .sport-card h3 {
-    font-size: 0.7rem;
-  }
-
-  .time-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .btn-group {
-    flex-direction: column;
-  }
-
-  .btn-primary, .btn-secondary {
-    width: 100%;
-  }
-}
+<!-- Beach Tennis -->
+          <div class="sport-card" onclick="selectSport('Beach Tennis', this)">
+            <div class="sport-img-wrapper">
+              <img src="./img/BT.png" alt="Beach Tennis" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <i class="fa-solid fa-table-tennis-paddle-ball sport-icon-fallback" style="display:none;"></i>
+            </div>
+            <h3>Beach Tennis</h3>
+          </div>
+
+          <!-- Vôlei de Praia -->
+          <div class="sport-card" onclick="selectSport('Vôlei de Praia', this)">
+            <div class="sport-img-wrapper">
+              <img src="./img/vp.png" alt="Vôlei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
+            </div>
+            <h3>Vôlei de Praia</h3>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="goToStep(2)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <!-- ETAPA 2: DATA E HORÁRIOS -->
+      <div id="step2" class="step-content" style="display: none;">
+        <h2 class="step-title">Escolha Data e Horário</h2>
+
+        <div class="form-group">
+          <label for="booking-date"><i class="fa-regular fa-calendar"></i> Data do Agendamento:</label>
+          <input type="date" id="booking-date" class="form-input" onchange="renderTimes()">
+        </div>
+
+        <div class="form-group">
+          <label><i class="fa-regular fa-clock"></i> Horários Disponíveis da Quadra:</label>
+          <div class="time-grid" id="time-grid"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+          <button class="btn-primary" onclick="validateStep2AndProceed()">Avançar para Pagamento <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- ETAPA 3: DADOS DO CLIENTE & PAGAMENTO PIX -->
+      <div id="step3" class="step-content" style="display: none;">
+        <h2 class="step-title">Dados e Pagamento PIX</h2>
+
+        <div class="form-group">
+          <label for="user-name"><i class="fa-regular fa-user"></i> Seu Nome Completo:</label>
+          <input type="text" id="user-name" class="form-input" placeholder="Ex: João Silva">
+        </div>
+
+        <div class="form-group">
+          <label for="user-phone">
+            <svg class="whatsapp-svg-icon" viewBox="0 0 448 512" width="18" height="18" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+            WhatsApp para Contato:
+          </label>
+          <input type="tel" id="user-phone" class="form-input" placeholder="(42) 99999-9999">
+        </div>
+
+        <!-- CARD PIX -->
+        <div class="pix-box">
+          <div class="pix-header">
+            <i class="fa-solid fa-qrcode pix-icon"></i>
+            <span>Pagamento Instantâneo via PIX</span>
+          </div>
+          <p class="pix-desc">Chave PIX da Outplay Arena:</p>
+          <div class="pix-key-container">
+            <span id="pix-key">42999109395</span>
+            <button class="btn-copy" onclick="copyPixKey()"><i class="fa-regular fa-copy"></i> Copiar</button>
+          </div>
+          <small class="pix-info">Após pagar, avance e envie o comprovante no WhatsApp para liberar seu horário.</small>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="goToStep(2)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+          <button class="btn-primary" onclick="validateAndGoToStep4()">Confirmar Agendamento <i class="fa-solid fa-check"></i></button>
+        </div>
+      </div>
+
+      <!-- ETAPA 4: CONFIRMAÇÃO E WHATSAPP -->
+      <div id="step4" class="step-content" style="display: none; text-align: center;">
+        <i class="fa-solid fa-circle-check success-icon"></i>
+        <h2 class="step-title" style="margin-bottom: 0.5rem;">Quase lá!</h2>
+        <p class="success-desc">Seu horário já foi pré-reservado no sistema! Clique no botão abaixo para enviar os dados e o comprovante no WhatsApp oficial da Outplay Arena para confirmar.</p>
+
+        <button class="btn-whatsapp" onclick="sendToWhatsApp()">
+          <svg class="whatsapp-btn-svg" viewBox="0 0 448 512" width="24" height="24" fill="#FFFFFF"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+          Enviar Comprovante no WhatsApp
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL DA ÁREA RESTRITA -->
+  <div id="admin-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-user-shield"></i> Área Restrita - Gestão Outplay</h2>
+        <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+      </div>
+
+      <div id="admin-login-view">
+        <p style="color: var(--texto-suave); margin-bottom: 1rem;">Digite a senha de administrador para acessar o painel:</p>
+        <div class="form-group">
+          <input type="password" id="admin-pass-input" class="form-input" placeholder="Senha (Padrão: 1234)">
+        </div>
+        <button class="btn-primary" onclick="checkAdminPassword()">Acessar Área Restrita</button>
+      </div>
+
+      <div id="admin-dashboard-view" style="display: none;">
+        <div class="admin-section">
+          <div class="section-title-box">
+            <i class="fa-solid fa-bell icon-warning"></i>
+            <h3>Notificações de Pagamentos Pendentes</h3>
+          </div>
+          <div id="pending-requests-container" class="pending-list"></div>
+        </div>
+
+        <div class="admin-section">
+          <div class="section-title-box">
+            <i class="fa-regular fa-calendar-days icon-lime"></i>
+            <h3>Calendário de Agendamentos da Quadra</h3>
+          </div>
+
+          <div class="admin-filter-bar">
+            <div class="filter-item">
+              <label>Selecione a Data:</label>
+              <input type="date" id="admin-view-date" class="form-input-sm" onchange="renderAdminCalendar()">
+            </div>
+          </div>
+
+          <div class="time-grid-admin" id="admin-calendar-grid"></div>
+        </div>
+
+        <button class="btn-secondary" style="margin-top: 1.5rem; width: 100%;" onclick="closeAdminModal()">Sair da Área Restrita</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer class="footer">
+    <p>© Outplay Arena - Esportes de Areia</p>
+    <p>Contato WhatsApp: (42) 99910-9395</p>
+  </footer>
+
+  <script>
+    let selectedSport = 'Futevôlei';
+    let selectedTime = '';
+    let selectedPrice = '';
+
+    let bookedSlots = JSON.parse(localStorage.getItem('outplay_booked_slots')) || {};
+
+    document.getElementById('booking-date').valueAsDate = new Date();
+    document.getElementById('admin-view-date').valueAsDate = new Date();
+
+    function updatePendingBadge() {
+      let pendingCount = 0;
+      for (let date in bookedSlots) {
+        bookedSlots[date].forEach(booking => {
+          if (booking.status === 'pending') pendingCount++;
+        });
+      }
+
+      const badge = document.getElementById('badge-pending-count');
+      if (pendingCount > 0) {
+        badge.innerText = pendingCount;
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function selectSport(sport, element) {
+      selectedSport = sport;
+      document.querySelectorAll('.sport-card').forEach(card => card.classList.remove('selected'));
+      element.classList.add('selected');
+      renderTimes();
+    }
+
+    function renderTimes() {
+      const grid = document.getElementById('time-grid');
+      const selectedDate = document.getElementById('booking-date').value;
+      grid.innerHTML = '';
+      selectedTime = '';
+      selectedPrice = '';
+
+      const times = [
+        { time: '16:00 - 17:00', price: 'R$ 60,00' },
+        { time: '17:00 - 18:00', price: 'R$ 60,00' },
+        { time: '18:00 - 19:00', price: 'R$ 60,00' },
+        { time: '19:00 - 20:00', price: 'R$ 60,00' },
+        { time: '20:00 - 21:00', price: 'R$ 60,00' },
+        { time: '21:00 - 22:00', price: 'R$ 60,00' }
+      ];
+
+      const currentBookings = bookedSlots[selectedDate] || [];
+      let firstAvailableFound = false;
+
+      times.forEach((item) => {
+        const bookingData = currentBookings.find(b => b.time === item.time);
+        const isBooked = !!bookingData;
+        const div = document.createElement('div');
+        
+        div.className = 'time-slot' + (isBooked ? ' disabled' : '');
+        
+        if (isBooked) {
+          const statusText = bookingData.status === 'confirmed' ? 'Ocupado' : 'Aguardando PIX';
+          div.innerHTML = `
+            <div class="time-text">${item.time}</div>
+            <div class="time-price status-booked">${statusText} (${bookingData.sport})</div>
+          `;
+        } else {
+          if (!firstAvailableFound) {
+            div.classList.add('selected');
+            selectedTime = item.time;
+            selectedPrice = item.price;
+            firstAvailableFound = true;
+          }
+
+          div.innerHTML = `
+            <div class="time-text">${item.time}</div>
+            <div class="time-price">${item.price}</div>
+          `;
+
+          div.onclick = () => {
+            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            div.classList.add('selected');
+            selectedTime = item.time;
+            selectedPrice = item.price;
+          };
+        }
+
+        grid.appendChild(div);
+      });
+
+      if (!firstAvailableFound && times.length > 0) {
+        grid.innerHTML += `<p class="no-slots-msg">Todos os horários da quadra nesta data já estão ocupados.</p>`;
+      }
+
+      updatePendingBadge();
+    }
+
+    function goToStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
+      document.getElementById(`step${step}`).style.display = 'block';
+
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`step${i}-indicator`).classList.toggle('active', i <= step);
+      }
+    }
+
+    function validateStep2AndProceed() {
+      if (!selectedTime) {
+        alert('Por favor, selecione um horário disponível para continuar.');
+        return;
+      }
+      goToStep(3);
+    }
+
+    function validateAndGoToStep4() {
+      const name = document.getElementById('user-name').value.trim();
+      const phone = document.getElementById('user-phone').value.trim();
+
+      if (!name || !phone) {
+        alert('Por favor, preencha o seu Nome Completo e o WhatsApp.');
+        return;
+      }
+
+      const rawDate = document.getElementById('booking-date').value;
+      if (!bookedSlots[rawDate]) {
+        bookedSlots[rawDate] = [];
+      }
+      
+      const existing = bookedSlots[rawDate].find(b => b.time === selectedTime);
+      if (!existing) {
+        bookedSlots[rawDate].push({
+          time: selectedTime,
+          sport: selectedSport,
+          name: name,
+          phone: phone,
+          price: selectedPrice,
+          status: 'pending'
+        });
+        localStorage.setItem('outplay_booked_slots', JSON.stringify(bookedSlots));
+      }
+
+      goToStep(4);
+      renderTimes();
+    }
+
+    function copyPixKey() {
+      const pixKey = document.getElementById('pix-key').innerText;
+      navigator.clipboard.writeText(pixKey);
+      alert('Chave PIX copiada para a área de transferência!');
+    }
+
+    function sendToWhatsApp() {
+      const name = document.getElementById('user-name').value;
+      const phone = document.getElementById('user-phone').value;
+      const rawDate = document.getElementById('booking-date').value;
+      const dateFormatted = rawDate ? rawDate.split('-').reverse().join('/') : 'Data não informada';
+
+      const message = `🎾 *NOVO AGENDAMENTO - OUTPLAY ARENA*\n\n` +
+                      `👤 *Nome:* ${name}\n` +
+                      `📱 *WhatsApp:* ${phone}\n` +
+                      `⚽ *Esporte:* ${selectedSport}\n` +
+                      `📅 *Data:* ${dateFormatted}\n` +
+                      `⏰ *Horário:* ${selectedTime}\n` +
+                      `💰 *Valor:* ${selectedPrice}\n\n` +
+                      `📌 *Segue o comprovante do PIX em anexo:*`;
+
+      window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function openAdminModal() {
+      document.getElementById('admin-modal').style.display = 'flex';
+      document.getElementById('admin-login-view').style.display = 'block';
+      document.getElementById('admin-dashboard-view').style.display = 'none';
+      document.getElementById('admin-pass-input').value = '';
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    function checkAdminPassword() {
+      const pass = document.getElementById('admin-pass-input').value;
+      if (pass === '1234') {
+        document.getElementById('admin-login-view').style.display = 'none';
+        document.getElementById('admin-dashboard-view').style.display = 'block';
+        loadAdminDashboard();
+      } else {
+        alert('Senha incorreta!');
+      }
+    }
+
+    function loadAdminDashboard() {
+      renderPendingRequests();
+      renderAdminCalendar();
+    }
+
+    function renderPendingRequests() {
+      const container = document.getElementById('pending-requests-container');
+      container.innerHTML = '';
+
+      let count = 0;
+
+      for (let date in bookedSlots) {
+        const dateFormatted = date ? date.split('-').reverse().join('/') : date;
+
+        bookedSlots[date].forEach((booking, index) => {
+          if (booking.status === 'pending') {
+            count++;
+            const item = document.createElement('div');
+            item.className = 'pending-card';
+            item.innerHTML = `
+              <div class="pending-info">
+                <strong>👤 ${booking.name}</strong> (${booking.phone})<br>
+                <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${booking.sport}</span>
+              </div>
+              <div class="pending-actions">
+                <button class="btn-approve" onclick="approveBooking('${date}', ${index})">
+                  <i class="fa-solid fa-check"></i> Aprovar PIX
+                </button>
+                <button class="btn-reject" onclick="rejectBooking('${date}', ${index})">
+                  <i class="fa-solid fa-xmark"></i> Recusar
+                </button>
+              </div>
+            `;
+            container.appendChild(item);
+          }
+        });
+      }
+
+      if (count === 0) {
+        container.innerHTML = `<p class="no-pending-msg"><i class="fa-solid fa-circle-check"></i> Nenhuma confirmação de PIX pendente no momento.</p>`;
+      }
+
+      updatePendingBadge();
+    }
+
+    function approveBooking(date, index) {
+      bookedSlots[date][index].status = 'confirmed';
+      localStorage.setItem('outplay_booked_slots', JSON.stringify(bookedSlots));
+      loadAdminDashboard();
+      renderTimes();
+    }
+
+    function rejectBooking(date, index) {
+      if (confirm('Deseja recusar e liberar este horário para outros clientes?')) {
+        bookedSlots[date].splice(index, 1);
+        if (bookedSlots[date].length === 0) delete bookedSlots[date];
+        localStorage.setItem('outplay_booked_slots', JSON.stringify(bookedSlots));
+        loadAdminDashboard();
+        renderTimes();
+      }
+    }
+
+    function renderAdminCalendar() {
+      const grid = document.getElementById('admin-calendar-grid');
+      const date = document.getElementById('admin-view-date').value;
+      grid.innerHTML = '';
+
+      const times = ['16:00 - 17:00', '17:00 - 18:00', '18:00 - 19:00', '19:00 - 20:00', '20:00 - 21:00', '21:00 - 22:00'];
+      const currentBookings = bookedSlots[date] || [];
+
+      times.forEach(time => {
+        const bookingIndex = currentBookings.findIndex(b => b.time === time);
+        const booking = bookingIndex !== -1 ? currentBookings[bookingIndex] : null;
+
+        const card = document.createElement('div');
+        card.className = 'admin-time-card ' + (booking ? (booking.status === 'confirmed' ? 'confirmed' : 'pending') : 'available');
+
+        if (booking) {
+          card.innerHTML = `
+            <div class="time-header">
+              <strong>⏰ ${time}</strong>
+              <span class="status-tag ${booking.status}">${booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX'}</span>
+            </div>
+            <div class="client-detail">
+              ⚽ <strong>${booking.sport}</strong><br>
+              👤 ${booking.name}<br>📱 ${booking.phone}
+            </div>
+            <button class="btn-cancel-sm" onclick="rejectBooking('${date}', ${bookingIndex})">
+              <i class="fa-solid fa-trash"></i> Liberar Horário
+            </button>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="time-header">
+              <strong>⏰ ${time}</strong>
+              <span class="status-tag available">Livre</span>
+            </div>
+            <button class="btn-block-sm" onclick="blockSlotManually('${date}', '${time}')">
+              <i class="fa-solid fa-ban"></i> Bloquear Vaga
+            </button>
+          `;
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    function blockSlotManually(date, time) {
+      if (!bookedSlots[date]) bookedSlots[date] = [];
+      bookedSlots[date].push({
+        time: time,
+        sport: 'Bloqueio Presencial',
+        name: 'Bloqueado (Dono)',
+        phone: 'Arena',
+        price: 'R$ 60,00',
+        status: 'confirmed'
+      });
+      localStorage.setItem('outplay_booked_slots', JSON.stringify(bookedSlots));
+      loadAdminDashboard();
+      renderTimes();
+    }
+
+    renderTimes();
+  </script>
+
+</body>
+</html>
