@@ -14,14 +14,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Estilos CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-  <!-- CABEÇALHO COM LOGO E ÁREA RESTRITA DO DONO -->
+  <!-- CABEÇALHO COM LOGO COMPACTA E ÁREA RESTRITA DO DONO -->
   <header class="header">
     <div class="logo-container">
-      <img src="img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
+      <img src="./img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
       <div id="fallback-logo" class="logo-fallback">OUTPLAY ARENA</div>
     </div>
     <!-- Botão de Acesso à Área Restrita -->
@@ -68,7 +68,7 @@
           <!-- Futevôlei (FV.png) -->
           <div class="sport-card selected" onclick="selectSport('Futevôlei', this)">
             <div class="sport-img-wrapper">
-              <img src="img/FV.png" alt="Futevôlei" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./img/FV.png" alt="Futevôlei" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
             </div>
             <h3>Futevôlei</h3>
@@ -77,7 +77,7 @@
           <!-- Beach Tennis (BT.png) -->
           <div class="sport-card" onclick="selectSport('Beach Tennis', this)">
             <div class="sport-img-wrapper">
-              <img src="img/BT.png" alt="Beach Tennis" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./img/BT.png" alt="Beach Tennis" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-table-tennis-paddle-ball sport-icon-fallback" style="display:none;"></i>
             </div>
             <h3>Beach Tennis</h3>
@@ -86,7 +86,7 @@
           <!-- Vôlei de Praia (vp.png) -->
           <div class="sport-card" onclick="selectSport('Vôlei de Praia', this)">
             <div class="sport-img-wrapper">
-              <img src="img/vp.png" alt="Vôlei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./img/vp.png" alt="Vôlei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
             </div>
             <h3>Vôlei de Praia</h3>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="form-group">
-          <label><i class="fa-regular fa-clock"></i> Horários Disponíveis:</label>
+          <label><i class="fa-regular fa-clock"></i> Horários Disponíveis da Quadra:</label>
           <div class="time-grid" id="time-grid"></div>
         </div>
 
@@ -203,21 +203,13 @@
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-regular fa-calendar-days icon-lime"></i>
-            <h3>Calendário de Agendamentos por Dia</h3>
+            <h3>Calendário de Agendamentos da Quadra</h3>
           </div>
 
           <div class="admin-filter-bar">
             <div class="filter-item">
-              <label>Data:</label>
+              <label>Selecione a Data:</label>
               <input type="date" id="admin-view-date" class="form-input-sm" onchange="renderAdminCalendar()">
-            </div>
-            <div class="filter-item">
-              <label>Esporte:</label>
-              <select id="admin-view-sport" class="form-input-sm" onchange="renderAdminCalendar()">
-                <option value="Futevôlei">Futevôlei</option>
-                <option value="Beach Tennis">Beach Tennis</option>
-                <option value="Vôlei de Praia">Vôlei de Praia</option>
-              </select>
             </div>
           </div>
 
@@ -244,7 +236,7 @@
     let selectedTime = '';
     let selectedPrice = '';
 
-    // Estrutura de reservas salvas no navegador
+    // Estrutura de reservas por data (compartilhada para a quadra única)
     let bookedSlots = JSON.parse(localStorage.getItem('outplay_booked_slots')) || {};
 
     // Data padrão de hoje
@@ -253,8 +245,8 @@
 
     function updatePendingBadge() {
       let pendingCount = 0;
-      for (let key in bookedSlots) {
-        bookedSlots[key].forEach(booking => {
+      for (let date in bookedSlots) {
+        bookedSlots[date].forEach(booking => {
           if (booking.status === 'pending') pendingCount++;
         });
       }
@@ -291,8 +283,8 @@
         { time: '21:00 - 22:00', price: 'R$ 60,00' }
       ];
 
-      const dateSportKey = `${selectedDate}_${selectedSport}`;
-      const currentBookings = bookedSlots[dateSportKey] || [];
+      // Pega agendamentos da quadra na data selecionada
+      const currentBookings = bookedSlots[selectedDate] || [];
 
       let firstAvailableFound = false;
 
@@ -304,10 +296,10 @@
         div.className = 'time-slot' + (isBooked ? ' disabled' : '');
         
         if (isBooked) {
-          const statusText = bookingData.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
+          const statusText = bookingData.status === 'confirmed' ? 'Ocupado' : 'Aguardando PIX';
           div.innerHTML = `
             <div class="time-text">${item.time}</div>
-            <div class="time-price status-booked">${statusText}</div>
+            <div class="time-price status-booked">${statusText} (${bookingData.sport})</div>
           `;
         } else {
           if (!firstAvailableFound) {
@@ -334,7 +326,7 @@
       });
 
       if (!firstAvailableFound && times.length > 0) {
-        grid.innerHTML += `<p class="no-slots-msg">Todos os horários para este esporte nesta data estão ocupados.</p>`;
+        grid.innerHTML += `<p class="no-slots-msg">Todos os horários da quadra nesta data já estão ocupados.</p>`;
       }
 
       updatePendingBadge();
@@ -366,17 +358,17 @@
         return;
       }
 
-      // Pré-reserva no sistema com status PENDENTE
+      // Salva pré-reserva da quadra na data selecionada
       const rawDate = document.getElementById('booking-date').value;
-      const dateSportKey = `${rawDate}_${selectedSport}`;
-      if (!bookedSlots[dateSportKey]) {
-        bookedSlots[dateSportKey] = [];
+      if (!bookedSlots[rawDate]) {
+        bookedSlots[rawDate] = [];
       }
       
-      const existing = bookedSlots[dateSportKey].find(b => b.time === selectedTime);
+      const existing = bookedSlots[rawDate].find(b => b.time === selectedTime);
       if (!existing) {
-        bookedSlots[dateSportKey].push({
+        bookedSlots[rawDate].push({
           time: selectedTime,
+          sport: selectedSport,
           name: name,
           phone: phone,
           price: selectedPrice,
@@ -447,11 +439,10 @@
 
       let count = 0;
 
-      for (let dateSportKey in bookedSlots) {
-        const [date, sport] = dateSportKey.split('_');
+      for (let date in bookedSlots) {
         const dateFormatted = date ? date.split('-').reverse().join('/') : date;
 
-        bookedSlots[dateSportKey].forEach((booking, index) => {
+        bookedSlots[date].forEach((booking, index) => {
           if (booking.status === 'pending') {
             count++;
             const item = document.createElement('div');
@@ -459,13 +450,13 @@
             item.innerHTML = `
               <div class="pending-info">
                 <strong>👤 ${booking.name}</strong> (${booking.phone})<br>
-                <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${sport}</span>
+                <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${booking.sport}</span>
               </div>
               <div class="pending-actions">
-                <button class="btn-approve" onclick="approveBooking('${dateSportKey}', ${index})">
+                <button class="btn-approve" onclick="approveBooking('${date}', ${index})">
                   <i class="fa-solid fa-check"></i> Aprovar PIX
                 </button>
-                <button class="btn-reject" onclick="rejectBooking('${dateSportKey}', ${index})">
+                <button class="btn-reject" onclick="rejectBooking('${date}', ${index})">
                   <i class="fa-solid fa-xmark"></i> Recusar
                 </button>
               </div>
@@ -482,17 +473,17 @@
       updatePendingBadge();
     }
 
-    function approveBooking(key, index) {
-      bookedSlots[key][index].status = 'confirmed';
+    function approveBooking(date, index) {
+      bookedSlots[date][index].status = 'confirmed';
       localStorage.setItem('outplay_booked_slots', JSON.stringify(bookedSlots));
       loadAdminDashboard();
       renderTimes();
     }
 
-    function rejectBooking(key, index) {
+    function rejectBooking(date, index) {
       if (confirm('Deseja recusar e liberar este horário para outros clientes?')) {
-        bookedSlots[key].splice(index, 1);
-        if (bookedSlots[key].length === 0) delete bookedSlots[key];
+        bookedSlots[date].splice(index, 1);
+        if (bookedSlots[date].length === 0) delete bookedSlots[date];
         localStorage.setItem('outplay_booked_slots', JSON.stringify(bookedSlots));
         loadAdminDashboard();
         renderTimes();
@@ -502,12 +493,10 @@
     function renderAdminCalendar() {
       const grid = document.getElementById('admin-calendar-grid');
       const date = document.getElementById('admin-view-date').value;
-      const sport = document.getElementById('admin-view-sport').value;
       grid.innerHTML = '';
 
       const times = ['16:00 - 17:00', '17:00 - 18:00', '18:00 - 19:00', '19:00 - 20:00', '20:00 - 21:00', '21:00 - 22:00'];
-      const dateSportKey = `${date}_${sport}`;
-      const currentBookings = bookedSlots[dateSportKey] || [];
+      const currentBookings = bookedSlots[date] || [];
 
       times.forEach(time => {
         const bookingIndex = currentBookings.findIndex(b => b.time === time);
@@ -523,9 +512,10 @@
               <span class="status-tag ${booking.status}">${booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX'}</span>
             </div>
             <div class="client-detail">
+              ⚽ <strong>${booking.sport}</strong><br>
               👤 ${booking.name}<br>📱 ${booking.phone}
             </div>
-            <button class="btn-cancel-sm" onclick="rejectBooking('${dateSportKey}', ${bookingIndex})">
+            <button class="btn-cancel-sm" onclick="rejectBooking('${date}', ${bookingIndex})">
               <i class="fa-solid fa-trash"></i> Liberar Horário
             </button>
           `;
@@ -535,7 +525,7 @@
               <strong>⏰ ${time}</strong>
               <span class="status-tag available">Livre</span>
             </div>
-            <button class="btn-block-sm" onclick="blockSlotManually('${dateSportKey}', '${time}')">
+            <button class="btn-block-sm" onclick="blockSlotManually('${date}', '${time}')">
               <i class="fa-solid fa-ban"></i> Bloquear Vaga
             </button>
           `;
@@ -545,12 +535,13 @@
       });
     }
 
-    function blockSlotManually(key, time) {
-      if (!bookedSlots[key]) bookedSlots[key] = [];
-      bookedSlots[key].push({
+    function blockSlotManually(date, time) {
+      if (!bookedSlots[date]) bookedSlots[date] = [];
+      bookedSlots[date].push({
         time: time,
-        name: 'Bloqueado (Presencial/Whats)',
-        phone: 'Dono',
+        sport: 'Bloqueio Presencial',
+        name: 'Bloqueado (Dono)',
+        phone: 'Arena',
         price: 'R$ 60,00',
         status: 'confirmed'
       });
