@@ -20,7 +20,7 @@
 html, body {
   width: 100%;
   max-width: 100vw;
-  overflow-x: hidden; /* BARRAGEM DEFINITIVA CONTRA VAZAMENTOS LATERAIS */
+  overflow-x: hidden;
   background-color: var(--fundo-escuro);
   color: var(--branco);
   min-height: 100vh;
@@ -28,7 +28,7 @@ html, body {
   flex-direction: column;
 }
 
-/* CABEÇALHO COMPACTO E AJUSTADO PARA NÃO CORTAR O BOTÃO */
+/* CABEÇALHO */
 .header {
   width: 100%;
   background-color: var(--verde-outplay);
@@ -107,7 +107,7 @@ html, body {
   font-weight: 400;
 }
 
-/* CONTAINER PRINCIPAL CONTIDO */
+/* CONTAINER PRINCIPAL */
 .main-container {
   max-width: 850px;
   width: 100%;
@@ -125,7 +125,7 @@ html, body {
   width: 100%;
 }
 
-/* ETAPAS / PASSO A PASSO (LADO A LADO SEM COLAR) */
+/* ETAPAS / PASSO A PASSO */
 .steps {
   display: flex;
   justify-content: space-between;
@@ -180,7 +180,7 @@ html, body {
   margin-bottom: 1.2rem;
 }
 
-/* CARDS DOS ESPORTES (3 COLUNAS UNIFORMES) */
+/* CARDS DOS ESPORTES */
 .sports-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -227,7 +227,6 @@ html, body {
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Brilho apenas no card selecionado */
 .sport-card.selected .sport-img {
   filter: drop-shadow(0px 0px 8px rgba(215, 255, 0, 0.8));
   transform: scale(1.05);
@@ -243,7 +242,7 @@ html, body {
   color: var(--branco);
 }
 
-/* CAMPOS DE FORMULÁRIO (CORRIGIDO VAZAMENTO DE DATA) */
+/* CAMPOS DE FORMULÁRIO */
 .form-group {
   margin-bottom: 1.5rem;
   text-align: left;
@@ -735,7 +734,7 @@ html, body {
   width: 100%;
 }
 
-/* REGRAS EXCLUSIVAS PARA CELULAR (ATÉ 600PX) */
+/* REGRAS EXCLUSIVAS PARA CELULAR */
 @media (max-width: 600px) {
   .header {
     padding: 0.6rem 0.6rem;
@@ -758,7 +757,6 @@ html, body {
     padding: 1rem 0.7rem;
   }
 
-  /* Oculta os rótulos de texto nos passos para não encavalar no celular */
   .step-label {
     display: none;
   }
