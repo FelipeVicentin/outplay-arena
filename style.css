@@ -220,7 +220,7 @@ body {
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Brilho apenas no esporte selecionado */
+/* Brilho verde-limão apenas no card selecionado */
 .sport-card.selected .sport-img {
   filter: drop-shadow(0px 0px 8px rgba(215, 255, 0, 0.8));
   transform: scale(1.06);
@@ -736,7 +736,7 @@ body {
   font-size: 0.85rem;
 }
 
-/* AJUSTES RESPONSIVOS PARA CELULAR */
+/* REGRAS RESPONSIVAS DEDICADAS A TELEMÓVEIS / SMARTPHONES */
 @media (max-width: 600px) {
   .header {
     flex-direction: column;
@@ -752,6 +752,14 @@ body {
 
   .card {
     padding: 1.2rem;
+  }
+
+  .sports-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sport-card {
+    padding: 1.2rem 1rem;
   }
 
   .step-number {
@@ -787,5 +795,10 @@ body {
 
   .btn-approve, .btn-reject {
     flex: 1;
+  }
+
+  .admin-filter-bar {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
