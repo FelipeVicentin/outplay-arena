@@ -1,0 +1,791 @@
+/* PALETA DE CORES OFICIAL OUTPLAY ARENA */
+:root {
+  --verde-outplay: #003F3B;
+  --lime-play: #D7FF00;
+  --areia-dourada: #9A6500;
+  --fundo-escuro: #002B28;
+  --card-bg: #004D48;
+  --branco: #FFFFFF;
+  --texto-suave: #B0C4C2;
+}
+
+/* RESET GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Sora', sans-serif;
+}
+
+body {
+  background-color: var(--fundo-escuro);
+  color: var(--branco);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* CABEÇALHO RESPONSIVO */
+.header {
+  background-color: var(--verde-outplay);
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 3px solid var(--lime-play);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-img {
+  max-height: 55px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-fallback {
+  display: none;
+  color: var(--lime-play);
+  font-weight: 800;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.btn-admin-access {
+  position: absolute;
+  right: 2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--lime-play);
+  color: var(--lime-play);
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-admin-access:hover {
+  background-color: var(--lime-play);
+  color: var(--verde-outplay);
+  transform: translateY(-2px);
+}
+
+.badge-count {
+  background-color: #ff5252;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+/* SUBTÍTULO */
+.hero {
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+}
+
+.subtitle {
+  color: var(--texto-suave);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* CONTAINER PRINCIPAL */
+.main-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  flex: 1;
+}
+
+.card {
+  background-color: var(--verde-outplay);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(215, 255, 0, 0.15);
+}
+
+/* ETAPAS / PASSO A PASSO */
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--card-bg);
+  color: var(--texto-suave);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.step-item.active .step-number {
+  background-color: var(--lime-play);
+  color: var(--verde-outplay);
+  box-shadow: 0 0 12px rgba(215, 255, 0, 0.4);
+}
+
+.step-label {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+.step-item.active .step-label {
+  color: var(--lime-play);
+}
+
+/* TÍTULOS */
+.step-title {
+  color: var(--lime-play);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* CARDS DOS ESPORTES */
+.sports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.sport-card {
+  background: var(--card-bg);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sport-card:hover, .sport-card.selected {
+  border-color: var(--lime-play);
+  background: rgba(215, 255, 0, 0.08);
+  transform: translateY(-3px);
+}
+
+.sport-img-wrapper {
+  height: 95px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.8rem;
+}
+
+.sport-img {
+  max-height: 90px;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  filter: none;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Brilho apenas no esporte selecionado */
+.sport-card.selected .sport-img {
+  filter: drop-shadow(0px 0px 8px rgba(215, 255, 0, 0.8));
+  transform: scale(1.06);
+}
+
+.sport-card:hover .sport-img {
+  transform: scale(1.04);
+}
+
+.sport-icon-fallback {
+  font-size: 2.8rem;
+  color: var(--lime-play);
+}
+
+.sport-card h3 {
+  font-size: 1.1rem;
+  color: var(--branco);
+}
+
+/* CAMPOS DE FORMULÁRIO */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: var(--lime-play);
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--card-bg);
+  background-color: var(--card-bg);
+  color: var(--branco);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: var(--lime-play);
+}
+
+/* HORÁRIOS */
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+}
+
+.time-slot {
+  background: var(--card-bg);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.time-slot:hover, .time-slot.selected {
+  border-color: var(--lime-play);
+  background: var(--lime-play);
+  color: var(--verde-outplay);
+}
+
+.time-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.time-price {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 4px;
+  color: var(--areia-dourada);
+}
+
+.time-slot.selected .time-price {
+  color: var(--verde-outplay);
+}
+
+.time-slot.disabled {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.05);
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.status-booked {
+  color: #ff5252 !important;
+  font-weight: 700;
+}
+
+.no-slots-msg {
+  grid-column: 1 / -1;
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* CARD PIX */
+.pix-box {
+  background-color: var(--card-bg);
+  border: 1px dashed var(--lime-play);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.pix-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--lime-play);
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+
+.pix-desc {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  margin-bottom: 0.5rem;
+}
+
+.pix-key-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.8rem;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+}
+
+#pix-key {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--lime-play);
+  letter-spacing: 1px;
+}
+
+.btn-copy {
+  background-color: var(--lime-play);
+  color: var(--verde-outplay);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-copy:hover {
+  opacity: 0.85;
+}
+
+.pix-info {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+/* BOTÕES DE NAVEGAÇÃO */
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-primary {
+  background-color: var(--lime-play);
+  color: var(--verde-outplay);
+  border: none;
+  padding: 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  border-radius: 12px;
+  cursor: pointer;
+  flex: 2;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-primary:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--texto-suave);
+  border: 1px solid var(--card-bg);
+  padding: 1.1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  flex: 1;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--texto-suave);
+  color: var(--branco);
+}
+
+/* BOTÃO WHATSAPP */
+.btn-whatsapp {
+  background-color: #25D366;
+  color: #FFFFFF;
+  border: none;
+  padding: 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-whatsapp:hover {
+  background-color: #20ba5a;
+  transform: translateY(-2px);
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: var(--lime-play);
+  margin-bottom: 1rem;
+}
+
+.success-desc {
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* ÍCONES SVG DO WHATSAPP */
+.whatsapp-svg-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+  fill: var(--lime-play);
+}
+
+.whatsapp-btn-svg {
+  vertical-align: middle;
+  fill: #FFFFFF;
+}
+
+/* ESTILOS DA ÁREA RESTRITA DO DONO */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background-color: var(--verde-outplay);
+  border: 1px solid var(--lime-play);
+  border-radius: 16px;
+  padding: 1.8rem;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid rgba(215, 255, 0, 0.2);
+  padding-bottom: 0.8rem;
+}
+
+.modal-header h2 {
+  color: var(--lime-play);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.close-btn {
+  font-size: 1.8rem;
+  color: var(--texto-suave);
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: var(--lime-play);
+}
+
+.admin-section {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.section-title-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.section-title-box h3 {
+  font-size: 1rem;
+  color: var(--branco);
+}
+
+.icon-warning { color: #ffca28; font-size: 1.2rem; }
+.icon-lime { color: var(--lime-play); font-size: 1.2rem; }
+
+/* LISTA DE PENDENTES */
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.pending-card {
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 4px solid #ffca28;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pending-info strong {
+  color: var(--lime-play);
+  font-size: 0.95rem;
+}
+
+.pending-info span {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  display: block;
+  margin-top: 3px;
+}
+
+.pending-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-approve {
+  background-color: #25D366;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-reject {
+  background-color: #ff5252;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.no-pending-msg {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+/* FILTRO DO CALENDÁRIO */
+.admin-filter-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-item {
+  flex: 1;
+}
+
+.filter-item label {
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.form-input-sm {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--verde-outplay);
+  background-color: var(--verde-outplay);
+  color: white;
+  font-size: 0.85rem;
+}
+
+/* GRID DE HORÁRIOS DO CALENDÁRIO ADMIN */
+.time-grid-admin {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.8rem;
+}
+
+.admin-time-card {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 0.8rem;
+  border: 1px solid transparent;
+}
+
+.admin-time-card.available { border-color: rgba(215, 255, 0, 0.3); }
+.admin-time-card.confirmed { border-color: rgba(37, 211, 102, 0.4); }
+.admin-time-card.pending { border-color: rgba(255, 202, 40, 0.4); }
+
+.time-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.status-tag {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.status-tag.available { background: rgba(215, 255, 0, 0.15); color: var(--lime-play); }
+.status-tag.confirmed { background: rgba(37, 211, 102, 0.2); color: #25D366; }
+.status-tag.pending { background: rgba(255, 202, 40, 0.2); color: #ffca28; }
+
+.client-detail {
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+
+.btn-block-sm, .btn-cancel-sm {
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-block-sm { background: var(--verde-outplay); color: var(--lime-play); }
+.btn-cancel-sm { background: rgba(255, 82, 82, 0.2); color: #ff5252; }
+
+/* RODAPÉ */
+.footer {
+  background-color: var(--verde-outplay);
+  border-top: 1px solid rgba(215, 255, 0, 0.15);
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: auto;
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+}
+
+/* AJUSTES RESPONSIVOS PARA CELULAR */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 1rem;
+  }
+
+  .btn-admin-access {
+    position: static;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+
+  .step-label {
+    font-size: 0.7rem;
+  }
+
+  .time-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+  }
+
+  .pending-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pending-actions {
+    width: 100%;
+  }
+
+  .btn-approve, .btn-reject {
+    flex: 1;
+  }
+}
