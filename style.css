@@ -25,27 +25,24 @@ body {
   flex-direction: column;
 }
 
-/* CABEÇALHO COMPACTO E RESPONSIVO */
+/* CABEÇALHO PADRONIZADO PARA AMBOS OS DISPOSITIVOS */
 .header {
   background-color: var(--verde-outplay);
-  padding: 0.8rem 1.5rem;
+  padding: 1rem 1.5rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 3px solid var(--lime-play);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  position: relative;
 }
 
 .logo-container {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
-/* Logo compacta de tamanho padronizado para PC e Celular */
 .logo-img {
-  max-height: 42px;
+  max-height: 48px;
   width: auto;
   object-fit: contain;
 }
@@ -56,30 +53,27 @@ body {
   font-weight: 800;
   font-size: 1.4rem;
   letter-spacing: 1px;
-  text-align: center;
 }
 
 .btn-admin-access {
-  position: absolute;
-  right: 1.5rem;
   background: var(--card-bg);
   border: 1px solid var(--lime-play);
   color: var(--lime-play);
-  padding: 0.5rem 0.8rem;
+  padding: 0.5rem 0.9rem;
   border-radius: 8px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .btn-admin-access:hover {
   background-color: var(--lime-play);
   color: var(--verde-outplay);
-  transform: translateY(-2px);
 }
 
 .badge-count {
@@ -98,38 +92,37 @@ body {
 /* SUBTÍTULO */
 .hero {
   text-align: center;
-  padding: 1.2rem 1rem 0.5rem;
+  padding: 1.5rem 1rem 0.5rem;
 }
 
 .subtitle {
   color: var(--texto-suave);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 400;
 }
 
 /* CONTAINER PRINCIPAL */
 .main-container {
-  max-width: 800px;
+  max-width: 850px;
   width: 100%;
   margin: 0 auto;
-  padding: 1rem 1rem 3rem;
+  padding: 1.5rem 1rem 3rem;
   flex: 1;
 }
 
 .card {
   background-color: var(--verde-outplay);
   border-radius: 20px;
-  padding: 1.8rem;
+  padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(215, 255, 0, 0.15);
 }
 
-/* ETAPAS / PASSO A PASSO */
+/* ETAPAS / PASSO A PASSO (LADO A LADO) */
 .steps {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
-  position: relative;
 }
 
 .step-item {
@@ -141,8 +134,8 @@ body {
 }
 
 .step-number {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background-color: var(--card-bg);
   color: var(--texto-suave);
@@ -164,6 +157,7 @@ body {
   font-size: 0.75rem;
   color: var(--texto-suave);
   font-weight: 600;
+  text-align: center;
 }
 
 .step-item.active .step-label {
@@ -173,16 +167,16 @@ body {
 /* TÍTULOS */
 .step-title {
   color: var(--lime-play);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
 }
 
-/* CARDS DOS ESPORTES */
+/* CARDS DOS ESPORTES (MANTÉM LADO A LADO EM 3 COLUNAS) */
 .sports-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -190,7 +184,7 @@ body {
   background: var(--card-bg);
   border: 2px solid transparent;
   border-radius: 14px;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 0.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -206,7 +200,7 @@ body {
 }
 
 .sport-img-wrapper {
-  height: 90px;
+  height: 95px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -228,17 +222,13 @@ body {
   transform: scale(1.06);
 }
 
-.sport-card:hover .sport-img {
-  transform: scale(1.04);
-}
-
 .sport-icon-fallback {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: var(--lime-play);
 }
 
 .sport-card h3 {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   color: var(--branco);
 }
 
@@ -249,18 +239,17 @@ body {
 }
 
 .form-group label {
-  display: block;
+  display: flex;
+  align-items: center;
   font-weight: 600;
   color: var(--lime-play);
   margin-bottom: 0.6rem;
   font-size: 0.9rem;
-  display: flex;
-  align-items: center;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1rem;
   border-radius: 12px;
   border: 1px solid var(--card-bg);
   background-color: var(--card-bg);
@@ -278,14 +267,14 @@ body {
 .time-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .time-slot {
   background: var(--card-bg);
   border: 2px solid transparent;
   border-radius: 12px;
-  padding: 1rem 0.5rem;
+  padding: 0.9rem 0.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -388,11 +377,6 @@ body {
   font-weight: 700;
   font-size: 0.75rem;
   cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.btn-copy:hover {
-  opacity: 0.85;
 }
 
 .pix-info {
@@ -501,7 +485,7 @@ body {
   fill: #FFFFFF;
 }
 
-/* ESTILOS DA ÁREA RESTRITA DO DONO */
+/* ESTILOS DA ÁREA RESTRITA */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -552,10 +536,6 @@ body {
   cursor: pointer;
 }
 
-.close-btn:hover {
-  color: var(--lime-play);
-}
-
 .admin-section {
   background-color: var(--card-bg);
   border-radius: 12px;
@@ -578,7 +558,6 @@ body {
 .icon-warning { color: #ffca28; font-size: 1.1rem; }
 .icon-lime { color: var(--lime-play); font-size: 1.1rem; }
 
-/* LISTA DE PENDENTES */
 .pending-list {
   display: flex;
   flex-direction: column;
@@ -643,7 +622,6 @@ body {
   padding: 0.4rem 0;
 }
 
-/* FILTRO DO CALENDÁRIO */
 .admin-filter-bar {
   display: flex;
   gap: 1rem;
@@ -671,7 +649,6 @@ body {
   font-size: 0.8rem;
 }
 
-/* GRID DE HORÁRIOS DO CALENDÁRIO ADMIN */
 .time-grid-admin {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -739,11 +716,9 @@ body {
   font-size: 0.8rem;
 }
 
-/* REGRAS RESPONSIVAS DEDICADAS A TELEMÓVEIS / SMARTPHONES */
+/* AJUSTES PROPORCIONAIS PARA CELULAR SEM QUEBRAR O ANESTÉTICO DO PC */
 @media (max-width: 600px) {
   .header {
-    flex-direction: column;
-    gap: 10px;
     padding: 0.8rem 1rem;
   }
 
@@ -752,26 +727,38 @@ body {
   }
 
   .btn-admin-access {
-    position: static;
-    width: 100%;
-    justify-content: center;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.75rem;
   }
 
   .card {
-    padding: 1.2rem;
+    padding: 1.2rem 0.9rem;
   }
 
   .sports-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
   }
 
   .sport-card {
-    padding: 1.2rem 1rem;
+    padding: 1rem 0.2rem;
+  }
+
+  .sport-img-wrapper {
+    height: 70px;
+  }
+
+  .sport-img {
+    max-height: 65px;
+  }
+
+  .sport-card h3 {
+    font-size: 0.75rem;
   }
 
   .step-number {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     font-size: 0.8rem;
   }
 
@@ -789,18 +776,5 @@ body {
 
   .btn-primary, .btn-secondary {
     width: 100%;
-  }
-
-  .pending-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .pending-actions {
-    width: 100%;
-  }
-
-  .btn-approve, .btn-reject {
-    flex: 1;
   }
 }
