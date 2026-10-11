@@ -255,7 +255,7 @@ html, body {
   color: var(--branco);
 }
 
-/* NAVEGADOR DE DIAS (ESTILO CARROSSEL) */
+/* NAVEGADOR DO MÊS (COM SETAS) */
 .calendar-nav-container {
   display: flex;
   align-items: center;
@@ -292,20 +292,38 @@ html, body {
   font-size: 0.95rem;
   color: var(--branco);
   letter-spacing: 0.5px;
+  text-transform: capitalize;
 }
 
-.days-carousel {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+/* CARROSSEL DESLIZÁVEL COM TODOS OS DIAS DO MÊS */
+.days-carousel-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
   margin-bottom: 1.5rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Esconde a barra de rolagem mantendo a funcionalidade de deslizar */
+.days-carousel-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.days-carousel-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.days-carousel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(215, 255, 0, 0.3);
+  border-radius: 4px;
 }
 
 .day-card {
   background-color: var(--card-bg);
   border: 2px solid transparent;
   border-radius: 12px;
-  padding: 0.6rem 0.2rem;
+  padding: 0.6rem 0.8rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -313,6 +331,8 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  min-width: 65px;
+  flex-shrink: 0;
 }
 
 .day-card:hover {
@@ -327,7 +347,7 @@ html, body {
 }
 
 .day-name {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: var(--texto-suave);
   text-transform: uppercase;
@@ -975,22 +995,6 @@ html, body {
 
   .sport-card h3 {
     font-size: 0.68rem;
-  }
-
-  .days-carousel {
-    gap: 4px;
-  }
-
-  .day-card {
-    padding: 0.5rem 0.1rem;
-  }
-
-  .day-name {
-    font-size: 0.58rem;
-  }
-
-  .day-number {
-    font-size: 0.9rem;
   }
 
   .time-grid {
