@@ -28,11 +28,11 @@ html, body {
   flex-direction: column;
 }
 
-/* CABEÇALHO COM LOGO CENTRALIZADA */
+/* CABEÇALHO PADRÃO (COMPUTADOR) */
 .header {
   width: 100%;
   background-color: var(--verde-outplay);
-  padding: 0.7rem 1.2rem;
+  padding: 0.7rem 1.5rem;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -63,7 +63,7 @@ html, body {
   letter-spacing: 1px;
 }
 
-/* BOTÃO DA ÁREA RESTRITA (DESIGN DE CADEADO) */
+/* BOTÃO DA ÁREA RESTRITA */
 .btn-admin-access {
   grid-column: 3;
   justify-self: end;
@@ -929,42 +929,36 @@ html, body {
   width: 100%;
 }
 
-/* REGRAS EXCLUSIVAS PARA CELULAR (SOLUÇÃO DEFINITIVA DE POSICIONAMENTO DO BOTÃO) */
+/* REGRAS EXCLUSIVAS PARA CELULAR: LOGO À ESQUERDA E BOTÃO À DIREITA */
 @media (max-width: 600px) {
   .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.6rem 0.8rem;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0.6rem 1rem !important;
     position: relative;
   }
 
-  /* Remove o elemento invisível que empurrava o layout no celular */
-  .header::before {
-    display: none;
-  }
-
-  /* A Logo fica 100% livre e perfeitamente centralizada */
+  /* Logo alinhada à esquerda com elegância */
   .logo-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    flex: unset !important;
+    justify-content: flex-start !important;
+    grid-column: unset !important;
   }
 
   .logo-img {
-    max-height: 32px;
+    max-height: 32px !important;
   }
 
-  /* Posiciona o botão do cadeado de forma absoluta no canto superior direito */
+  /* Botão alinhado à direita com distância perfeita */
   .btn-admin-access {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 30px;
-    font-size: 0.75rem;
-    z-index: 10;
+    position: static !important;
+    transform: none !important;
+    grid-column: unset !important;
+    justify-self: flex-end !important;
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 0.85rem !important;
   }
 
   .card {
