@@ -46,6 +46,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
 }
 
 .logo-img {
@@ -81,6 +82,7 @@ html, body {
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
 }
 
 .btn-admin-access:hover {
@@ -90,14 +92,14 @@ html, body {
 
 .badge-count {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: -5px;
+  right: -5px;
   background-color: #ff5252;
   color: white;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-size: 0.7rem;
+  width: 18px;
+  height: 18px;
+  font-size: 0.65rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -752,17 +754,35 @@ html, body {
 /* REGRAS EXCLUSIVAS PARA CELULAR */
 @media (max-width: 600px) {
   .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 0.6rem 0.8rem;
   }
 
+  /* Espaçador invisível ajustado para o novo tamanho do botão (32px) para manter a logo exatamente no centro */
+  .header::before {
+    content: '';
+    width: 32px;
+    height: 32px;
+    display: block;
+    visibility: hidden;
+  }
+
+  .logo-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
   .logo-img {
-    max-height: 34px; /* Tamanho médio equilibrado no celular */
+    max-height: 32px; /* Proporção ideal com o cabeçalho */
   }
 
   .btn-admin-access {
-    width: 38px;
-    height: 38px;
-    font-size: 0.95rem;
+    width: 32px;  /* Botão mais compacto e proporcional no celular */
+    height: 32px;
+    font-size: 0.8rem; /* Cadeado proporcional ao novo tamanho */
   }
 
   .card {
