@@ -13,8 +13,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v11.0 -->
-  <link rel="stylesheet" href="./style.css?v=11.0">
+  <!-- Estilos CSS com Forçador de Cache v12.0 -->
+  <link rel="stylesheet" href="./style.css?v=12.0">
 
   <!-- SDKs do Firebase (Módulos de Tempo Real) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -100,18 +100,19 @@
         <button class="btn-primary" onclick="goToStep(2)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
-      <!-- ETAPA 2: DATA E HORÁRIOS (SELEÇÃO MÚLTIPLA) -->
+      <!-- ETAPA 2: DATA E HORÁRIOS (CARROSSEL DO MÊS INTEIRO) -->
       <div id="step2" class="step-content" style="display: none;">
         <h2 class="step-title">Escolher Horários</h2>
 
-        <!-- NAVEGADOR DE DIAS (CARROSSEL) -->
+        <!-- NAVEGADOR DO MÊS COM SETAS -->
         <div class="calendar-nav-container">
-          <button class="cal-nav-btn" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-          <span id="date-range-label" class="date-range-label">-- / -- - -- / --</span>
-          <button class="cal-nav-btn" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+          <span id="month-name-label" class="date-range-label">Outubro de 2026</span>
+          <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
 
-        <div class="days-carousel" id="days-carousel">
+        <!-- LISTA DE DIAS COM ROLAGEM LATERAL -->
+        <div class="days-carousel-scroll" id="days-carousel">
           <!-- Preenchido via JS -->
         </div>
 
@@ -260,7 +261,7 @@
     <p>Contato WhatsApp: (42) 99910-9395</p>
   </footer>
 
-  <!-- LÓGICA DE SELEÇÃO MÚLTIPLA E FIREBASE -->
+  <!-- LÓGICA DO CARROSSEL DE MÊS INTEIRO E FIREBASE -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAZn0OrfAmdJWvRf6EK2CbkFLehDkS7S9A",
@@ -277,12 +278,12 @@
     const db = firebase.database();
 
     let selectedSport = 'Futevôlei';
-    let selectedTimes = []; // Array para guardar múltiplos horários selecionados
+    let selectedTimes = [];
     let bookedSlots = {};
-    const SLOT_PRICE = 60.00; // Valor fixo R$ 60,00 por hora
+    const SLOT_PRICE = 60.00;
     
-    let currentDateObj = new Date();
-    let selectedDateStr = formatDateKey(currentDateObj);
+    let currentDateObj = new Date(); // Controla o mês exibido
+    let selectedDateStr = formatDateKey(new Date()); // Dia selecionado atual
 
     document.getElementById('admin-view-date').valueAsDate = new Date();
 
@@ -291,7 +292,7 @@
       if (savedStep) {
         goToStep(parseInt(savedStep), false);
       }
-      renderDaysCarousel();
+      renderMonthCarousel();
     });
 
     db.ref('outplay_booked_slots').on('value', (snapshot) => {
@@ -309,57 +310,62 @@
       return `${year}-${month}-${day}`;
     }
 
-    // CARROSSEL DE DIAS DA SEMANA
-    function renderDaysCarousel() {
+    // RENDERIZA O CARROSSEL COM TODOS OS DIAS DO MÊS
+    function renderMonthCarousel() {
       const carousel = document.getElementById('days-carousel');
       carousel.innerHTML = '';
 
-      let curr = new Date(currentDateObj);
-      let dayOfWeek = curr.getDay();
-      let diffToMonday = curr.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-      
-      let monday = new Date(curr.setDate(diffToMonday));
-      let weekDays = [];
+      const year = currentDateObj.getFullYear();
+      const month = currentDateObj.getMonth();
 
-      for (let i = 0; i < 7; i++) {
-        let d = new Date(monday);
-        d.setDate(monday.getDate() + i);
-        weekDays.push(d);
-      }
+      // Nome do Mês e Ano no topo
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      document.getElementById('month-name-label').innerText = `${monthNames[month]} de ${year}`;
 
-      const startStr = `${String(weekDays[0].getDate()).padStart(2, '0')}/${String(weekDays[0].getMonth() + 1).padStart(2, '0')}`;
-      const endStr = `${String(weekDays[6].getDate()).padStart(2, '0')}/${String(weekDays[6].getMonth() + 1).padStart(2, '0')}`;
-      document.getElementById('date-range-label').innerText = `${startStr} - ${endStr}`;
-
+      // Descobre quantos dias o mês tem
+      const totalDays = new Date(year, month + 1, 0).getDate();
       const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
 
-      weekDays.forEach(d => {
+      let selectedCardElement = null;
+
+      for (let day = 1; day <= totalDays; day++) {
+        const d = new Date(year, month, day);
         const dateKey = formatDateKey(d);
         const dayName = weekdaysNames[d.getDay()];
-        const dayNum = String(d.getDate()).padStart(2, '0');
 
         const card = document.createElement('div');
         card.className = 'day-card' + (dateKey === selectedDateStr ? ' selected' : '');
         card.innerHTML = `
           <span class="day-name">${dayName}</span>
-          <span class="day-number">${dayNum}</span>
+          <span class="day-number">${String(day).padStart(2, '0')}</span>
         `;
 
         card.onclick = () => {
           selectedDateStr = dateKey;
-          selectedTimes = []; // Limpa horários ao mudar de dia
-          renderDaysCarousel();
+          selectedTimes = [];
+          renderMonthCarousel();
           renderTimes();
           updateSummaryBar();
         };
 
         carousel.appendChild(card);
-      });
+
+        if (dateKey === selectedDateStr) {
+          selectedCardElement = card;
+        }
+      }
+
+      // Faz scroll automático para o dia selecionado no carrossel
+      if (selectedCardElement) {
+        setTimeout(() => {
+          selectedCardElement.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 50);
+      }
     }
 
-    function changeWeek(direction) {
-      currentDateObj.setDate(currentDateObj.getDate() + (direction * 7));
-      renderDaysCarousel();
+    function changeMonth(direction) {
+      currentDateObj.setMonth(currentDateObj.getMonth() + direction);
+      renderMonthCarousel();
     }
 
     function updatePendingBadge() {
@@ -388,7 +394,6 @@
       renderTimes();
     }
 
-    // RENDERIZA OS HORÁRIOS COM SUPORTE À SELEÇÃO MÚLTIPLA
     function renderTimes() {
       const afternoonGrid = document.getElementById('afternoon-grid');
       const nightGrid = document.getElementById('night-grid');
@@ -444,20 +449,17 @@
       updateSummaryBar();
     }
 
-    // ALTERNA SELEÇÃO DE UM HORÁRIO (ADICIONA OU REMOVE)
     function toggleTimeSelection(timeStr) {
       const idx = selectedTimes.indexOf(timeStr);
       if (idx > -1) {
         selectedTimes.splice(idx, 1);
       } else {
         selectedTimes.push(timeStr);
-        // Ordena os horários em ordem cronológica
         selectedTimes.sort();
       }
       renderTimes();
     }
 
-    // ATUALIZA A BARRINHA DE RESUMO NO PASSO 2
     function updateSummaryBar() {
       const countLabel = document.getElementById('selected-count-label');
       const totalPriceLabel = document.getElementById('selected-total-price');
@@ -491,7 +493,6 @@
         sessionStorage.setItem('outplay_current_step', step);
       }
 
-      // Preenche o resumo do agendamento ao chegar na Etapa 3
       if (step === 3) {
         populateSummaryStep3();
       }
@@ -525,7 +526,6 @@
       goToStep(3);
     }
 
-    // SALVA TODOS OS HORÁRIOS SELECIONADOS NO FIREBASE
     function validateAndGoToStep4() {
       const name = document.getElementById('user-name').value.trim();
       const phone = document.getElementById('user-phone').value.trim();
@@ -555,7 +555,6 @@
         }
       });
 
-      // Atualiza banco na nuvem
       db.ref('outplay_booked_slots').set(bookedSlots);
       goToStep(4);
     }
