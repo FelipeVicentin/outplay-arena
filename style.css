@@ -50,7 +50,7 @@ html, body {
 }
 
 .logo-img {
-  max-height: 46px; /* Tamanho médio e equilibrado para PC */
+  max-height: 46px;
   width: auto;
   object-fit: contain;
 }
@@ -63,7 +63,7 @@ html, body {
   letter-spacing: 1px;
 }
 
-/* BOTÃO DA ÁREA RESTRITA SÓ COM CADEADO CENTRALIZADO */
+/* BOTÃO DA ÁREA RESTRITA */
 .btn-admin-access {
   grid-column: 3;
   justify-self: end;
@@ -255,6 +255,225 @@ html, body {
   color: var(--branco);
 }
 
+/* NAVEGADOR DE DIAS (ESTILO CARROSSEL) */
+.calendar-nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 1rem;
+  background-color: var(--card-bg);
+  padding: 0.6rem;
+  border-radius: 12px;
+  border: 1px solid rgba(215, 255, 0, 0.15);
+}
+
+.cal-nav-btn {
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  color: var(--lime-play);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.cal-nav-btn:hover {
+  background: var(--lime-play);
+  color: var(--verde-outplay);
+}
+
+.date-range-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--branco);
+  letter-spacing: 0.5px;
+}
+
+.days-carousel {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.day-card {
+  background-color: var(--card-bg);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 0.6rem 0.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.day-card:hover {
+  border-color: rgba(215, 255, 0, 0.4);
+}
+
+.day-card.selected {
+  background-color: var(--lime-play);
+  border-color: var(--lime-play);
+  color: var(--verde-outplay);
+  box-shadow: 0 0 12px rgba(215, 255, 0, 0.3);
+}
+
+.day-name {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+}
+
+.day-card.selected .day-name {
+  color: var(--verde-outplay);
+}
+
+.day-number {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--branco);
+}
+
+.day-card.selected .day-number {
+  color: var(--verde-outplay);
+}
+
+/* SEÇÕES DE PERÍODO (TARDE / NOITE) E HORÁRIOS */
+.period-section {
+  margin-top: 1rem;
+}
+
+.period-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--texto-suave);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.5px;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.time-slot {
+  background: var(--card-bg);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 0.9rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.time-slot:hover {
+  border-color: rgba(215, 255, 0, 0.5);
+}
+
+.time-slot.selected {
+  border-color: var(--lime-play);
+  background: var(--lime-play);
+  color: var(--verde-outplay);
+  box-shadow: 0 0 10px rgba(215, 255, 0, 0.3);
+}
+
+.time-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.time-price {
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #85e89d;
+}
+
+.time-slot.selected .time-price {
+  color: var(--verde-outplay);
+  font-weight: 800;
+}
+
+.time-slot.disabled {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.05);
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.status-booked {
+  color: #ff5252 !important;
+  font-weight: 700;
+}
+
+/* BARRINHA DE RESUMO DA SELEÇÃO (PASSO 2) */
+.summary-selection-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--card-bg);
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  border: 1px solid rgba(215, 255, 0, 0.2);
+  font-size: 0.88rem;
+  color: var(--texto-suave);
+}
+
+.summary-total-price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--lime-play);
+}
+
+/* CARD DE RESUMO NO PASSO 3 */
+.booking-summary-card {
+  background-color: var(--card-bg);
+  border: 1px solid rgba(215, 255, 0, 0.2);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  font-size: 0.88rem;
+  color: var(--texto-suave);
+}
+
+.summary-row strong {
+  color: var(--branco);
+  text-align: right;
+}
+
+.summary-total-row {
+  margin-bottom: 0;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+  font-size: 0.95rem;
+}
+
+.summary-total-row strong {
+  color: var(--lime-play);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
 /* CAMPOS DE FORMULÁRIO */
 .form-group {
   margin-bottom: 1.5rem;
@@ -288,67 +507,6 @@ html, body {
 
 .form-input:focus {
   border-color: var(--lime-play);
-}
-
-/* HORÁRIOS */
-.time-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 0.8rem;
-  width: 100%;
-}
-
-.time-slot {
-  background: var(--card-bg);
-  border: 2px solid transparent;
-  border-radius: 12px;
-  padding: 0.9rem 0.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.time-slot:hover, .time-slot.selected {
-  border-color: var(--lime-play);
-  background: var(--lime-play);
-  color: var(--verde-outplay);
-}
-
-.time-text {
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.time-price {
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: 4px;
-  color: var(--areia-dourada);
-}
-
-.time-slot.selected .time-price {
-  color: var(--verde-outplay);
-}
-
-.time-slot.disabled {
-  background-color: rgba(0, 0, 0, 0.25);
-  border-color: rgba(255, 255, 255, 0.05);
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.status-booked {
-  color: #ff5252 !important;
-  font-weight: 700;
-}
-
-.no-slots-msg {
-  grid-column: 1 / -1;
-  color: #ff6b6b;
-  font-size: 0.85rem;
-  text-align: center;
-  padding: 1rem 0;
 }
 
 /* CARD PIX */
@@ -507,7 +665,7 @@ html, body {
   line-height: 1.5;
 }
 
-/* ÍCONES SVG DO WHATSAPP */
+/* ÍCONES SVG */
 .whatsapp-svg-icon {
   vertical-align: middle;
   margin-right: 6px;
@@ -760,7 +918,6 @@ html, body {
     padding: 0.6rem 0.8rem;
   }
 
-  /* Espaçador invisível ajustado para o novo tamanho do botão (32px) para manter a logo exatamente no centro */
   .header::before {
     content: '';
     width: 32px;
@@ -776,13 +933,13 @@ html, body {
   }
 
   .logo-img {
-    max-height: 32px; /* Proporção ideal com o cabeçalho */
+    max-height: 32px;
   }
 
   .btn-admin-access {
-    width: 32px;  /* Botão mais compacto e proporcional no celular */
+    width: 32px;
     height: 32px;
-    font-size: 0.8rem; /* Cadeado proporcional ao novo tamanho */
+    font-size: 0.8rem;
   }
 
   .card {
@@ -820,11 +977,36 @@ html, body {
     font-size: 0.68rem;
   }
 
+  .days-carousel {
+    gap: 4px;
+  }
+
+  .day-card {
+    padding: 0.5rem 0.1rem;
+  }
+
+  .day-name {
+    font-size: 0.58rem;
+  }
+
+  .day-number {
+    font-size: 0.9rem;
+  }
+
   .time-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* BOTÕES LADO A LADO SEM ULTRAPASSAR O CONTAINER */
+  .summary-selection-bar {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.78rem;
+  }
+
+  .summary-total-price {
+    font-size: 1rem;
+  }
+
+  /* BOTÕES LADO A LADO */
   .btn-group {
     flex-direction: row !important;
     gap: 0.5rem;
