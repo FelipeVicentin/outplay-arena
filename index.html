@@ -13,8 +13,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v7.0 -->
-  <link rel="stylesheet" href="./style.css?v=7.0">
+  <!-- Estilos CSS com Forçador de Cache v11.0 -->
+  <link rel="stylesheet" href="./style.css?v=11.0">
 
   <!-- SDKs do Firebase (Módulos de Tempo Real) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -28,7 +28,7 @@
       <img src="./img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
       <div id="fallback-logo" class="logo-fallback">OUTPLAY ARENA</div>
     </div>
-    <!-- Botão de Acesso à Área Restrita (Apenas Ícone do Cadeado Centralizado) -->
+    <!-- Botão de Acesso à Área Restrita -->
     <button class="btn-admin-access" onclick="openAdminModal()" title="Acesso Restrito ao Dono">
       <i class="fa-solid fa-lock"></i>
       <span id="badge-pending-count" class="badge-count" style="display: none;">0</span>
@@ -100,29 +100,64 @@
         <button class="btn-primary" onclick="goToStep(2)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
-      <!-- ETAPA 2: DATA E HORÁRIOS -->
+      <!-- ETAPA 2: DATA E HORÁRIOS (SELEÇÃO MÚLTIPLA) -->
       <div id="step2" class="step-content" style="display: none;">
-        <h2 class="step-title">Escolha Data e Horário</h2>
+        <h2 class="step-title">Escolher Horários</h2>
 
-        <div class="form-group">
-          <label for="booking-date"><i class="fa-regular fa-calendar"></i> Data do Agendamento:</label>
-          <input type="date" id="booking-date" class="form-input" onchange="renderTimes()">
+        <!-- NAVEGADOR DE DIAS (CARROSSEL) -->
+        <div class="calendar-nav-container">
+          <button class="cal-nav-btn" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+          <span id="date-range-label" class="date-range-label">-- / -- - -- / --</span>
+          <button class="cal-nav-btn" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
 
-        <div class="form-group">
-          <label><i class="fa-regular fa-clock"></i> Horários Disponíveis da Quadra:</label>
-          <div class="time-grid" id="time-grid"></div>
+        <div class="days-carousel" id="days-carousel">
+          <!-- Preenchido via JS -->
         </div>
 
-        <div class="btn-group">
+        <!-- SEÇÃO TARDE -->
+        <div class="period-section">
+          <h3 class="period-title">TARDE</h3>
+          <div class="time-grid" id="afternoon-grid"></div>
+        </div>
+
+        <!-- SEÇÃO NOITE -->
+        <div class="period-section" style="margin-top: 1.2rem;">
+          <h3 class="period-title">NOITE</h3>
+          <div class="time-grid" id="night-grid"></div>
+        </div>
+
+        <!-- RESUMO DA SELEÇÃO DE HORÁRIOS -->
+        <div class="summary-selection-bar" id="summary-selection-bar">
+          <span id="selected-count-label">Nenhum horário selecionado</span>
+          <span id="selected-total-price" class="summary-total-price">R$ 0,00</span>
+        </div>
+
+        <div class="btn-group" style="margin-top: 1.2rem;">
           <button class="btn-secondary" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
-          <button class="btn-primary" onclick="validateStep2AndProceed()">Avançar para Pagamento <i class="fa-solid fa-arrow-right"></i></button>
+          <button class="btn-primary" onclick="validateStep2AndProceed()">Continuar <i class="fa-solid fa-arrow-right"></i></button>
         </div>
       </div>
 
       <!-- ETAPA 3: DADOS DO CLIENTE & PAGAMENTO PIX -->
       <div id="step3" class="step-content" style="display: none;">
         <h2 class="step-title">Dados e Pagamento PIX</h2>
+
+        <!-- RESUMO DOS HORÁRIOS SELECIONADOS -->
+        <div class="booking-summary-card">
+          <div class="summary-row">
+            <span><i class="fa-regular fa-calendar-check icon-lime"></i> Data:</span>
+            <strong id="summary-date-val">--/--/----</strong>
+          </div>
+          <div class="summary-row">
+            <span><i class="fa-regular fa-clock icon-lime"></i> Horários:</span>
+            <strong id="summary-times-val">Nenhum</strong>
+          </div>
+          <div class="summary-row summary-total-row">
+            <span>Total a pagar:</span>
+            <strong id="summary-price-val">R$ 0,00</strong>
+          </div>
+        </div>
 
         <div class="form-group">
           <label for="user-name"><i class="fa-regular fa-user"></i> Seu Nome Completo:</label>
@@ -148,7 +183,7 @@
             <span id="pix-key">42999109395</span>
             <button class="btn-copy" onclick="copyPixKey()"><i class="fa-regular fa-copy"></i> Copiar</button>
           </div>
-          <small class="pix-info">Após pagar, avance e envie o comprovante no WhatsApp para liberar seu horário.</small>
+          <small class="pix-info">Após pagar, avance e envie o comprovante no WhatsApp para liberar seus horários.</small>
         </div>
 
         <div class="btn-group">
@@ -161,7 +196,7 @@
       <div id="step4" class="step-content" style="display: none; text-align: center;">
         <i class="fa-solid fa-circle-check success-icon"></i>
         <h2 class="step-title" style="margin-bottom: 0.5rem;">Quase lá!</h2>
-        <p class="success-desc">Seu horário já foi pré-reservado no sistema! Clique no botão abaixo para enviar os dados e o comprovante no WhatsApp oficial da Outplay Arena para confirmar.</p>
+        <p class="success-desc">Seus horários já foram pré-reservados no sistema! Clique no botão abaixo para enviar os dados e o comprovante no WhatsApp oficial da Outplay Arena para confirmar.</p>
 
         <button class="btn-whatsapp" onclick="sendToWhatsApp()">
           <svg class="whatsapp-btn-svg" viewBox="0 0 448 512" width="24" height="24" fill="#FFFFFF"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
@@ -225,9 +260,8 @@
     <p>Contato WhatsApp: (42) 99910-9395</p>
   </footer>
 
-  <!-- LÓGICA INTEGRAÇÃO FIREBASE & MELHORIAS -->
+  <!-- LÓGICA DE SELEÇÃO MÚLTIPLA E FIREBASE -->
   <script>
-    // Suas Chaves Oficiais do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAZn0OrfAmdJWvRf6EK2CbkFLehDkS7S9A",
       authDomain: "outplay-arena.firebaseapp.com",
@@ -243,22 +277,23 @@
     const db = firebase.database();
 
     let selectedSport = 'Futevôlei';
-    let selectedTime = '';
-    let selectedPrice = '';
+    let selectedTimes = []; // Array para guardar múltiplos horários selecionados
     let bookedSlots = {};
+    const SLOT_PRICE = 60.00; // Valor fixo R$ 60,00 por hora
+    
+    let currentDateObj = new Date();
+    let selectedDateStr = formatDateKey(currentDateObj);
 
-    document.getElementById('booking-date').valueAsDate = new Date();
     document.getElementById('admin-view-date').valueAsDate = new Date();
 
-    // RESTAURA A ETAPA ATUAL CASO A PÁGINA SEJA RECARREGADA (F5)
     window.addEventListener('DOMContentLoaded', () => {
       const savedStep = sessionStorage.getItem('outplay_current_step');
       if (savedStep) {
         goToStep(parseInt(savedStep), false);
       }
+      renderDaysCarousel();
     });
 
-    // ESCUTA ALTERAÇÕES EM TEMPO REAL NA NUVEM
     db.ref('outplay_booked_slots').on('value', (snapshot) => {
       bookedSlots = snapshot.val() || {};
       renderTimes();
@@ -266,6 +301,66 @@
       renderAdminCalendar();
       renderPendingRequests();
     });
+
+    function formatDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // CARROSSEL DE DIAS DA SEMANA
+    function renderDaysCarousel() {
+      const carousel = document.getElementById('days-carousel');
+      carousel.innerHTML = '';
+
+      let curr = new Date(currentDateObj);
+      let dayOfWeek = curr.getDay();
+      let diffToMonday = curr.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      
+      let monday = new Date(curr.setDate(diffToMonday));
+      let weekDays = [];
+
+      for (let i = 0; i < 7; i++) {
+        let d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        weekDays.push(d);
+      }
+
+      const startStr = `${String(weekDays[0].getDate()).padStart(2, '0')}/${String(weekDays[0].getMonth() + 1).padStart(2, '0')}`;
+      const endStr = `${String(weekDays[6].getDate()).padStart(2, '0')}/${String(weekDays[6].getMonth() + 1).padStart(2, '0')}`;
+      document.getElementById('date-range-label').innerText = `${startStr} - ${endStr}`;
+
+      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+
+      weekDays.forEach(d => {
+        const dateKey = formatDateKey(d);
+        const dayName = weekdaysNames[d.getDay()];
+        const dayNum = String(d.getDate()).padStart(2, '0');
+
+        const card = document.createElement('div');
+        card.className = 'day-card' + (dateKey === selectedDateStr ? ' selected' : '');
+        card.innerHTML = `
+          <span class="day-name">${dayName}</span>
+          <span class="day-number">${dayNum}</span>
+        `;
+
+        card.onclick = () => {
+          selectedDateStr = dateKey;
+          selectedTimes = []; // Limpa horários ao mudar de dia
+          renderDaysCarousel();
+          renderTimes();
+          updateSummaryBar();
+        };
+
+        carousel.appendChild(card);
+      });
+    }
+
+    function changeWeek(direction) {
+      currentDateObj.setDate(currentDateObj.getDate() + (direction * 7));
+      renderDaysCarousel();
+    }
 
     function updatePendingBadge() {
       let pendingCount = 0;
@@ -293,65 +388,93 @@
       renderTimes();
     }
 
+    // RENDERIZA OS HORÁRIOS COM SUPORTE À SELEÇÃO MÚLTIPLA
     function renderTimes() {
-      const grid = document.getElementById('time-grid');
-      const selectedDate = document.getElementById('booking-date').value;
-      grid.innerHTML = '';
-      selectedTime = '';
-      selectedPrice = '';
+      const afternoonGrid = document.getElementById('afternoon-grid');
+      const nightGrid = document.getElementById('night-grid');
+      if (!afternoonGrid || !nightGrid) return;
 
-      const times = [
-        { time: '16:00 - 17:00', price: 'R$ 60,00' },
-        { time: '17:00 - 18:00', price: 'R$ 60,00' },
-        { time: '18:00 - 19:00', price: 'R$ 60,00' },
-        { time: '19:00 - 20:00', price: 'R$ 60,00' },
-        { time: '20:00 - 21:00', price: 'R$ 60,00' },
-        { time: '21:00 - 22:00', price: 'R$ 60,00' }
+      afternoonGrid.innerHTML = '';
+      nightGrid.innerHTML = '';
+
+      const afternoonTimes = [
+        { time: '16:00 - 17:00' },
+        { time: '17:00 - 18:00' }
       ];
 
-      const currentBookings = bookedSlots[selectedDate] || [];
-      let firstAvailableFound = false;
+      const nightTimes = [
+        { time: '18:00 - 19:00' },
+        { time: '19:00 - 20:00' },
+        { time: '20:00 - 21:00' },
+        { time: '21:00 - 22:00' }
+      ];
 
-      times.forEach((item) => {
+      const currentBookings = bookedSlots[selectedDateStr] || [];
+
+      function buildSlotElement(item) {
         const bookingData = currentBookings.find(b => b && b.time === item.time);
         const isBooked = !!bookingData;
+        const isSelected = selectedTimes.includes(item.time);
+
         const div = document.createElement('div');
-        
-        div.className = 'time-slot' + (isBooked ? ' disabled' : '');
+        div.className = 'time-slot' + (isBooked ? ' disabled' : '') + (isSelected ? ' selected' : '');
         
         if (isBooked) {
           const statusText = bookingData.status === 'confirmed' ? 'Ocupado' : 'Aguardando PIX';
           div.innerHTML = `
             <div class="time-text">${item.time}</div>
-            <div class="time-price status-booked">${statusText} (${bookingData.sport})</div>
+            <div class="time-price status-booked">${statusText}</div>
           `;
         } else {
-          if (!firstAvailableFound) {
-            div.classList.add('selected');
-            selectedTime = item.time;
-            selectedPrice = item.price;
-            firstAvailableFound = true;
-          }
-
           div.innerHTML = `
             <div class="time-text">${item.time}</div>
-            <div class="time-price">${item.price}</div>
+            <div class="time-price">${isSelected ? 'selecionado' : 'disponível'}</div>
           `;
 
           div.onclick = () => {
-            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-            div.classList.add('selected');
-            selectedTime = item.time;
-            selectedPrice = item.price;
+            toggleTimeSelection(item.time);
           };
         }
-
-        grid.appendChild(div);
-      });
-
-      if (!firstAvailableFound && times.length > 0) {
-        grid.innerHTML += `<p class="no-slots-msg">Todos os horários da quadra nesta data já estão ocupados.</p>`;
+        return div;
       }
+
+      afternoonTimes.forEach(item => afternoonGrid.appendChild(buildSlotElement(item)));
+      nightTimes.forEach(item => nightGrid.appendChild(buildSlotElement(item)));
+
+      updateSummaryBar();
+    }
+
+    // ALTERNA SELEÇÃO DE UM HORÁRIO (ADICIONA OU REMOVE)
+    function toggleTimeSelection(timeStr) {
+      const idx = selectedTimes.indexOf(timeStr);
+      if (idx > -1) {
+        selectedTimes.splice(idx, 1);
+      } else {
+        selectedTimes.push(timeStr);
+        // Ordena os horários em ordem cronológica
+        selectedTimes.sort();
+      }
+      renderTimes();
+    }
+
+    // ATUALIZA A BARRINHA DE RESUMO NO PASSO 2
+    function updateSummaryBar() {
+      const countLabel = document.getElementById('selected-count-label');
+      const totalPriceLabel = document.getElementById('selected-total-price');
+      if (!countLabel || !totalPriceLabel) return;
+
+      const totalSlots = selectedTimes.length;
+      const totalAmount = totalSlots * SLOT_PRICE;
+
+      if (totalSlots === 0) {
+        countLabel.innerText = 'Nenhum horário selecionado';
+      } else if (totalSlots === 1) {
+        countLabel.innerText = '1 horário selecionado';
+      } else {
+        countLabel.innerText = `${totalSlots} horários selecionados`;
+      }
+
+      totalPriceLabel.innerText = `R$ ${totalAmount.toFixed(2).replace('.', ',')}`;
     }
 
     function goToStep(step, saveSession = true) {
@@ -367,23 +490,42 @@
       if (saveSession) {
         sessionStorage.setItem('outplay_current_step', step);
       }
+
+      // Preenche o resumo do agendamento ao chegar na Etapa 3
+      if (step === 3) {
+        populateSummaryStep3();
+      }
     }
 
-    // FUNÇÃO PARA VOLTAR AO INÍCIO AO CLICAR NA LOGO
+    function populateSummaryStep3() {
+      const dateVal = document.getElementById('summary-date-val');
+      const timesVal = document.getElementById('summary-times-val');
+      const priceVal = document.getElementById('summary-price-val');
+
+      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
+      const totalAmount = selectedTimes.length * SLOT_PRICE;
+
+      dateVal.innerText = dateFormatted;
+      timesVal.innerText = selectedTimes.join(' | ');
+      priceVal.innerText = `R$ ${totalAmount.toFixed(2).replace('.', ',')}`;
+    }
+
     function resetToHome() {
       sessionStorage.removeItem('outplay_current_step');
+      selectedTimes = [];
       goToStep(1, false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function validateStep2AndProceed() {
-      if (!selectedTime) {
-        alert('Por favor, selecione um horário disponível para continuar.');
+      if (selectedTimes.length === 0) {
+        alert('Por favor, selecione pelo menos um horário disponível para continuar.');
         return;
       }
       goToStep(3);
     }
 
+    // SALVA TODOS OS HORÁRIOS SELECIONADOS NO FIREBASE
     function validateAndGoToStep4() {
       const name = document.getElementById('user-name').value.trim();
       const phone = document.getElementById('user-phone').value.trim();
@@ -393,25 +535,28 @@
         return;
       }
 
-      const rawDate = document.getElementById('booking-date').value;
-      if (!bookedSlots[rawDate]) {
-        bookedSlots[rawDate] = [];
+      if (!bookedSlots[selectedDateStr]) {
+        bookedSlots[selectedDateStr] = [];
       }
       
-      const existing = bookedSlots[rawDate].find(b => b && b.time === selectedTime);
-      if (!existing) {
-        bookedSlots[rawDate].push({
-          time: selectedTime,
-          sport: selectedSport,
-          name: name,
-          phone: phone,
-          price: selectedPrice,
-          status: 'pending'
-        });
-        
-        db.ref('outplay_booked_slots').set(bookedSlots);
-      }
+      const totalPriceFormatted = `R$ ${(selectedTimes.length * SLOT_PRICE).toFixed(2).replace('.', ',')}`;
 
+      selectedTimes.forEach(time => {
+        const existing = bookedSlots[selectedDateStr].find(b => b && b.time === time);
+        if (!existing) {
+          bookedSlots[selectedDateStr].push({
+            time: time,
+            sport: selectedSport,
+            name: name,
+            phone: phone,
+            price: totalPriceFormatted,
+            status: 'pending'
+          });
+        }
+      });
+
+      // Atualiza banco na nuvem
+      db.ref('outplay_booked_slots').set(bookedSlots);
       goToStep(4);
     }
 
@@ -424,16 +569,17 @@
     function sendToWhatsApp() {
       const name = document.getElementById('user-name').value;
       const phone = document.getElementById('user-phone').value;
-      const rawDate = document.getElementById('booking-date').value;
-      const dateFormatted = rawDate ? rawDate.split('-').reverse().join('/') : 'Data não informada';
+      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
+      const totalPriceFormatted = `R$ ${(selectedTimes.length * SLOT_PRICE).toFixed(2).replace('.', ',')}`;
+      const timesFormatted = selectedTimes.join(', ');
 
       const message = `🎾 *NOVO AGENDAMENTO - OUTPLAY ARENA*\n\n` +
                       `👤 *Nome:* ${name}\n` +
                       `📱 *WhatsApp:* ${phone}\n` +
                       `⚽ *Esporte:* ${selectedSport}\n` +
                       `📅 *Data:* ${dateFormatted}\n` +
-                      `⏰ *Horário:* ${selectedTime}\n` +
-                      `💰 *Valor:* ${selectedPrice}\n\n` +
+                      `⏰ *Horários (${selectedTimes.length}):* ${timesFormatted}\n` +
+                      `💰 *Valor Total:* ${totalPriceFormatted}\n\n` +
                       `📌 *Segue o comprovante do PIX em anexo:*`;
 
       window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
