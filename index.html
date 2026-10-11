@@ -13,8 +13,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v3.0 -->
-  <link rel="stylesheet" href="./style.css?v=3.0">
+  <!-- Estilos CSS com Forçador de Cache v7.0 -->
+  <link rel="stylesheet" href="./style.css?v=7.0">
 
   <!-- SDKs do Firebase (Módulos de Tempo Real) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -24,21 +24,20 @@
 
   <!-- CABEÇALHO -->
   <header class="header">
-    <div class="logo-container">
+    <div class="logo-container" onclick="resetToHome()" style="cursor: pointer;" title="Voltar para a página inicial">
       <img src="./img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
       <div id="fallback-logo" class="logo-fallback">OUTPLAY ARENA</div>
     </div>
-    <!-- Botão de Acesso à Área Restrita -->
+    <!-- Botão de Acesso à Área Restrita (Apenas Ícone do Cadeado Centralizado) -->
     <button class="btn-admin-access" onclick="openAdminModal()" title="Acesso Restrito ao Dono">
       <i class="fa-solid fa-lock"></i>
-      <span class="btn-admin-text"></span>
       <span id="badge-pending-count" class="badge-count" style="display: none;">0</span>
     </button>
   </header>
 
   <!-- SUBTÍTULO -->
   <div class="hero">
-    <p class="subtitle">Agendamento Online de Horários</p>
+    <p class="subtitle">Agendamento Online de Horários • Esportes de Areia</p>
   </div>
 
   <!-- CONTAINER PRINCIPAL -->
@@ -226,7 +225,7 @@
     <p>Contato WhatsApp: (42) 99910-9395</p>
   </footer>
 
-  <!-- LÓGICA INTEGRAÇÃO FIREBASE EM TEMPO REAL -->
+  <!-- LÓGICA INTEGRAÇÃO FIREBASE & MELHORIAS -->
   <script>
     // Suas Chaves Oficiais do Firebase
     const firebaseConfig = {
@@ -240,7 +239,6 @@
       measurementId: "G-MTWDLZM52H"
     };
 
-    // Inicializa o Firebase e o Banco de Dados
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -252,7 +250,15 @@
     document.getElementById('booking-date').valueAsDate = new Date();
     document.getElementById('admin-view-date').valueAsDate = new Date();
 
-    // ESCUTA ALTERAÇÕES EM TEMPO REAL NA NUVEM DE QUALQUER DISPOSITIVO!
+    // RESTAURA A ETAPA ATUAL CASO A PÁGINA SEJA RECARREGADA (F5)
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedStep = sessionStorage.getItem('outplay_current_step');
+      if (savedStep) {
+        goToStep(parseInt(savedStep), false);
+      }
+    });
+
+    // ESCUTA ALTERAÇÕES EM TEMPO REAL NA NUVEM
     db.ref('outplay_booked_slots').on('value', (snapshot) => {
       bookedSlots = snapshot.val() || {};
       renderTimes();
@@ -348,13 +354,26 @@
       }
     }
 
-    function goToStep(step) {
+    function goToStep(step, saveSession = true) {
       document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
-      document.getElementById(`step${step}`).style.display = 'block';
+      const targetStep = document.getElementById(`step${step}`);
+      if (targetStep) targetStep.style.display = 'block';
 
       for (let i = 1; i <= 4; i++) {
-        document.getElementById(`step${i}-indicator`).classList.toggle('active', i <= step);
+        const indicator = document.getElementById(`step${i}-indicator`);
+        if (indicator) indicator.classList.toggle('active', i <= step);
       }
+
+      if (saveSession) {
+        sessionStorage.setItem('outplay_current_step', step);
+      }
+    }
+
+    // FUNÇÃO PARA VOLTAR AO INÍCIO AO CLICAR NA LOGO
+    function resetToHome() {
+      sessionStorage.removeItem('outplay_current_step');
+      goToStep(1, false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function validateStep2AndProceed() {
@@ -390,7 +409,6 @@
           status: 'pending'
         });
         
-        // SALVA NA NUVEM NO FIREBASE
         db.ref('outplay_booked_slots').set(bookedSlots);
       }
 
