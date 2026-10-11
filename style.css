@@ -28,7 +28,7 @@ html, body {
   flex-direction: column;
 }
 
-/* CABEÇALHO COMPACTO E PROPORCIONAL */
+/* CABEÇALHO COM LOGO CENTRALIZADA */
 .header {
   width: 100%;
   background-color: var(--verde-outplay);
@@ -50,7 +50,7 @@ html, body {
 }
 
 .logo-img {
-  max-height: 38px; /* Mantém o tamanho ideal da logo */
+  max-height: 38px;
   width: auto;
   object-fit: contain;
 }
@@ -63,7 +63,7 @@ html, body {
   letter-spacing: 1px;
 }
 
-/* BOTÃO DA ÁREA RESTRITA MAIS COMPACTO E DELICADO */
+/* BOTÃO DA ÁREA RESTRITA (DESIGN DE CADEADO) */
 .btn-admin-access {
   grid-column: 3;
   justify-self: end;
@@ -120,7 +120,7 @@ html, body {
   font-weight: 400;
 }
 
-/* CONTAINER PRINCIPAL MAIS COMPACTO */
+/* CONTAINER PRINCIPAL */
 .main-container {
   max-width: 780px;
   width: 100%;
@@ -929,22 +929,24 @@ html, body {
   width: 100%;
 }
 
-/* REGRAS EXCLUSIVAS PARA CELULAR */
+/* REGRAS EXCLUSIVAS PARA CELULAR (SOLUÇÃO DEFINITIVA DE POSICIONAMENTO DO BOTÃO) */
 @media (max-width: 600px) {
   .header {
-    padding: 0.5rem 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.6rem 0.8rem;
+    position: relative;
   }
 
+  /* Remove o elemento invisível que empurrava o layout no celular */
   .header::before {
-    content: '';
-    width: 36px;
-    height: 36px;
-    display: block;
-    visibility: hidden;
+    display: none;
   }
 
+  /* A Logo fica 100% livre e perfeitamente centralizada */
   .logo-container {
-    flex: 1;
+    width: 100%;
     display: flex;
     justify-content: center;
   }
@@ -953,10 +955,16 @@ html, body {
     max-height: 32px;
   }
 
+  /* Posiciona o botão do cadeado de forma absoluta no canto superior direito */
   .btn-admin-access {
-    width: 36px;
-    height: 36px;
-    font-size: 0.85rem;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+    z-index: 10;
   }
 
   .card {
