@@ -13,8 +13,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v13.0 -->
-  <link rel="stylesheet" href="./style.css?v=13.0">
+  <!-- Estilos CSS com Forçador de Cache v16.0 -->
+  <link rel="stylesheet" href="./style.css?v=16.0">
 
   <!-- SDKs do Firebase (Módulos de Tempo Real) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -28,7 +28,7 @@
       <img src="./img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
       <div id="fallback-logo" class="logo-fallback">OUTPLAY ARENA</div>
     </div>
-    <!-- Botão de Acesso à Área Restrita (Compacto e Proporcional) -->
+    <!-- Botão de Acesso à Área Restrita -->
     <button class="btn-admin-access" onclick="openAdminModal()" title="Acesso Restrito ao Dono">
       <i class="fa-solid fa-lock"></i>
       <span id="badge-pending-count" class="badge-count" style="display: none;">0</span>
@@ -100,18 +100,16 @@
         <button class="btn-primary" onclick="goToStep(2)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
-      <!-- ETAPA 2: DATA E HORÁRIOS (COMPACTO) -->
+      <!-- ETAPA 2: DATA E HORÁRIOS -->
       <div id="step2" class="step-content" style="display: none;">
         <h2 class="step-title">Escolher Horários</h2>
 
-        <!-- NAVEGADOR DO MÊS -->
+        <!-- APENAS O NOME DO MÊS -->
         <div class="calendar-nav-container">
-          <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-          <span id="month-name-label" class="date-range-label">Outubro de 2026</span>
-          <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          <span id="month-name-label" class="date-range-label">Outubro</span>
         </div>
 
-        <!-- LISTA DE DIAS COM ROLAGEM LATERAL -->
+        <!-- PRÓXIMOS 15 DIAS A PARTIR DE HOJE -->
         <div class="days-carousel-scroll" id="days-carousel"></div>
 
         <!-- SEÇÃO TARDE -->
@@ -126,13 +124,13 @@
           <div class="time-grid" id="night-grid"></div>
         </div>
 
-        <!-- RESUMO DA SELEÇÃO DE HORÁRIOS -->
-        <div class="summary-selection-bar" id="summary-selection-bar">
-          <span id="selected-count-label">Nenhum horário selecionado</span>
+        <!-- BARRINHA DE RESUMO (EXIBIDA APENAS AO SELECCIONAR HORÁRIOS) -->
+        <div class="summary-selection-bar" id="summary-selection-bar" style="display: none;">
+          <span id="selected-count-label"></span>
           <span id="selected-total-price" class="summary-total-price">R$ 0,00</span>
         </div>
 
-        <div class="btn-group" style="margin-top: 1rem;">
+        <div class="btn-group" style="margin-top: 1.2rem;">
           <button class="btn-secondary" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
           <button class="btn-primary" onclick="validateStep2AndProceed()">Continuar <i class="fa-solid fa-arrow-right"></i></button>
         </div>
@@ -278,8 +276,9 @@
     let bookedSlots = {};
     const SLOT_PRICE = 60.00;
     
-    let currentDateObj = new Date();
-    let selectedDateStr = formatDateKey(new Date());
+    // Dia inicial selecionado = Hoje
+    let todayObj = new Date();
+    let selectedDateStr = formatDateKey(todayObj);
 
     document.getElementById('admin-view-date').valueAsDate = new Date();
 
@@ -288,7 +287,7 @@
       if (savedStep) {
         goToStep(parseInt(savedStep), false);
       }
-      renderMonthCarousel();
+      render15DaysCarousel();
     });
 
     db.ref('outplay_booked_slots').on('value', (snapshot) => {
@@ -306,58 +305,44 @@
       return `${year}-${month}-${day}`;
     }
 
-    function renderMonthCarousel() {
+    // RENDERIZA APENAS O NOME DO MÊS E OS PRÓXIMOS 15 DIAS A PARTIR DE HOJE
+    function render15DaysCarousel() {
       const carousel = document.getElementById('days-carousel');
       carousel.innerHTML = '';
 
-      const year = currentDateObj.getFullYear();
-      const month = currentDateObj.getMonth();
-
       const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-      document.getElementById('month-name-label').innerText = `${monthNames[month]} de ${year}`;
+      
+      // Exibe apenas o nome do mês atual do primeiro dia da lista (hoje)
+      document.getElementById('month-name-label').innerText = monthNames[todayObj.getMonth()];
 
-      const totalDays = new Date(year, month + 1, 0).getDate();
       const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
 
-      let selectedCardElement = null;
+      // Gera os próximos 15 dias a partir de hoje
+      for (let i = 0; i < 15; i++) {
+        let d = new Date();
+        d.setDate(todayObj.getDate() + i);
 
-      for (let day = 1; day <= totalDays; day++) {
-        const d = new Date(year, month, day);
         const dateKey = formatDateKey(d);
         const dayName = weekdaysNames[d.getDay()];
+        const dayNum = String(d.getDate()).padStart(2, '0');
 
         const card = document.createElement('div');
         card.className = 'day-card' + (dateKey === selectedDateStr ? ' selected' : '');
         card.innerHTML = `
           <span class="day-name">${dayName}</span>
-          <span class="day-number">${String(day).padStart(2, '0')}</span>
+          <span class="day-number">${dayNum}</span>
         `;
 
         card.onclick = () => {
           selectedDateStr = dateKey;
           selectedTimes = [];
-          renderMonthCarousel();
+          render15DaysCarousel();
           renderTimes();
           updateSummaryBar();
         };
 
         carousel.appendChild(card);
-
-        if (dateKey === selectedDateStr) {
-          selectedCardElement = card;
-        }
       }
-
-      if (selectedCardElement) {
-        setTimeout(() => {
-          selectedCardElement.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        }, 50);
-      }
-    }
-
-    function changeMonth(direction) {
-      currentDateObj.setMonth(currentDateObj.getMonth() + direction);
-      renderMonthCarousel();
     }
 
     function updatePendingBadge() {
@@ -452,23 +437,27 @@
       renderTimes();
     }
 
+    // EXIBE A BARRINHA DE RESUMO SOMENTE QUANDO HOUVER HORÁRIOS SELECIONADOS
     function updateSummaryBar() {
+      const summaryBar = document.getElementById('summary-selection-bar');
       const countLabel = document.getElementById('selected-count-label');
       const totalPriceLabel = document.getElementById('selected-total-price');
-      if (!countLabel || !totalPriceLabel) return;
+      if (!summaryBar || !countLabel || !totalPriceLabel) return;
 
       const totalSlots = selectedTimes.length;
       const totalAmount = totalSlots * SLOT_PRICE;
 
       if (totalSlots === 0) {
-        countLabel.innerText = 'Nenhum horário selecionado';
-      } else if (totalSlots === 1) {
-        countLabel.innerText = '1 horário selecionado';
+        summaryBar.style.display = 'none'; // Esconde quando não houver seleção
       } else {
-        countLabel.innerText = `${totalSlots} horários selecionados`;
+        summaryBar.style.display = 'flex'; // Exibe ao escolher 1 ou mais
+        if (totalSlots === 1) {
+          countLabel.innerText = '1 horário selecionado';
+        } else {
+          countLabel.innerText = `${totalSlots} horários selecionados`;
+        }
+        totalPriceLabel.innerText = `R$ ${totalAmount.toFixed(2).replace('.', ',')}`;
       }
-
-      totalPriceLabel.innerText = `R$ ${totalAmount.toFixed(2).replace('.', ',')}`;
     }
 
     function goToStep(step, saveSession = true) {
