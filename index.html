@@ -13,8 +13,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v16.0 -->
-  <link rel="stylesheet" href="./style.css?v=16.0">
+  <!-- Estilos CSS com Forçador de Cache v17.0 -->
+  <link rel="stylesheet" href="./style.css?v=17.0">
 
   <!-- SDKs do Firebase (Módulos de Tempo Real) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -104,27 +104,22 @@
       <div id="step2" class="step-content" style="display: none;">
         <h2 class="step-title">Escolher Horários</h2>
 
-        <!-- APENAS O NOME DO MÊS -->
         <div class="calendar-nav-container">
           <span id="month-name-label" class="date-range-label">Outubro</span>
         </div>
 
-        <!-- PRÓXIMOS 15 DIAS A PARTIR DE HOJE -->
         <div class="days-carousel-scroll" id="days-carousel"></div>
 
-        <!-- SEÇÃO TARDE -->
         <div class="period-section">
           <h3 class="period-title">TARDE</h3>
           <div class="time-grid" id="afternoon-grid"></div>
         </div>
 
-        <!-- SEÇÃO NOITE -->
         <div class="period-section" style="margin-top: 1rem;">
           <h3 class="period-title">NOITE</h3>
           <div class="time-grid" id="night-grid"></div>
         </div>
 
-        <!-- BARRINHA DE RESUMO (EXIBIDA APENAS AO SELECCIONAR HORÁRIOS) -->
         <div class="summary-selection-bar" id="summary-selection-bar" style="display: none;">
           <span id="selected-count-label"></span>
           <span id="selected-total-price" class="summary-total-price">R$ 0,00</span>
@@ -168,7 +163,6 @@
           <input type="tel" id="user-phone" class="form-input" placeholder="(42) 99999-9999">
         </div>
 
-        <!-- CARD PIX -->
         <div class="pix-box">
           <div class="pix-header">
             <i class="fa-solid fa-qrcode pix-icon"></i>
@@ -203,44 +197,50 @@
     </div>
   </main>
 
-  <!-- MODAL DA ÁREA RESTRITA -->
+  <!-- MODAL DA ÁREA RESTRITA (AGENDA COMPLETA DE LOCAÇÕES) -->
   <div id="admin-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
-        <h2><i class="fa-solid fa-user-shield"></i> Área Restrita - Gestão Outplay</h2>
+        <h2><i class="fa-solid fa-user-shield"></i> Agenda de Locações - Outplay</h2>
         <span class="close-btn" onclick="closeAdminModal()">&times;</span>
       </div>
 
+      <!-- TELA DE LOGIN DA ÁREA RESTRITA -->
       <div id="admin-login-view">
         <p style="color: var(--texto-suave); margin-bottom: 0.8rem; font-size: 0.85rem;">Digite a senha de administrador:</p>
         <div class="form-group">
           <input type="password" id="admin-pass-input" class="form-input" placeholder="Senha (Padrão: 1234)">
         </div>
-        <button class="btn-primary" onclick="checkAdminPassword()">Acessar Painel</button>
+        <button class="btn-primary" onclick="checkAdminPassword()">Acessar Agenda</button>
       </div>
 
+      <!-- PAINEL DA AGENDA COMPLETA -->
       <div id="admin-dashboard-view" style="display: none;">
+        
+        <!-- SEÇÃO DE NOTIFICAÇÕES / APROVAÇÕES PENDENTES -->
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-solid fa-bell icon-warning"></i>
-            <h3>Notificações de Pagamentos Pendentes</h3>
+            <h3>Aprovações Pendentes (PIX)</h3>
           </div>
           <div id="pending-requests-container" class="pending-list"></div>
         </div>
 
+        <!-- AGENDA DIÁRIA COM FILTRO -->
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-regular fa-calendar-days icon-lime"></i>
-            <h3>Calendário de Agendamentos da Quadra</h3>
+            <h3>Agenda do Dia</h3>
           </div>
 
           <div class="admin-filter-bar">
             <div class="filter-item">
-              <label>Selecione a Data:</label>
+              <label><i class="fa-regular fa-calendar"></i> Selecione a Data para consultar:</label>
               <input type="date" id="admin-view-date" class="form-input-sm" onchange="renderAdminCalendar()">
             </div>
           </div>
 
+          <!-- CARDS DE CADA HORÁRIO DO DIA -->
           <div class="time-grid-admin" id="admin-calendar-grid"></div>
         </div>
 
@@ -276,7 +276,6 @@
     let bookedSlots = {};
     const SLOT_PRICE = 60.00;
     
-    // Dia inicial selecionado = Hoje
     let todayObj = new Date();
     let selectedDateStr = formatDateKey(todayObj);
 
@@ -305,19 +304,15 @@
       return `${year}-${month}-${day}`;
     }
 
-    // RENDERIZA APENAS O NOME DO MÊS E OS PRÓXIMOS 15 DIAS A PARTIR DE HOJE
     function render15DaysCarousel() {
       const carousel = document.getElementById('days-carousel');
       carousel.innerHTML = '';
 
       const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-      
-      // Exibe apenas o nome do mês atual do primeiro dia da lista (hoje)
       document.getElementById('month-name-label').innerText = monthNames[todayObj.getMonth()];
 
       const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
 
-      // Gera os próximos 15 dias a partir de hoje
       for (let i = 0; i < 15; i++) {
         let d = new Date();
         d.setDate(todayObj.getDate() + i);
@@ -437,7 +432,6 @@
       renderTimes();
     }
 
-    // EXIBE A BARRINHA DE RESUMO SOMENTE QUANDO HOUVER HORÁRIOS SELECIONADOS
     function updateSummaryBar() {
       const summaryBar = document.getElementById('summary-selection-bar');
       const countLabel = document.getElementById('selected-count-label');
@@ -448,9 +442,9 @@
       const totalAmount = totalSlots * SLOT_PRICE;
 
       if (totalSlots === 0) {
-        summaryBar.style.display = 'none'; // Esconde quando não houver seleção
+        summaryBar.style.display = 'none';
       } else {
-        summaryBar.style.display = 'flex'; // Exibe ao escolher 1 ou mais
+        summaryBar.style.display = 'flex';
         if (totalSlots === 1) {
           countLabel.innerText = '1 horário selecionado';
         } else {
@@ -565,6 +559,7 @@
       window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
     }
 
+    // ABRIR E FECHAR A ÁREA RESTRITA
     function openAdminModal() {
       document.getElementById('admin-modal').style.display = 'flex';
       document.getElementById('admin-login-view').style.display = 'block';
@@ -592,6 +587,7 @@
       renderAdminCalendar();
     }
 
+    // LISTA DE SOLICITAÇÕES PENDENTES DE APROVAÇÃO PIX
     function renderPendingRequests() {
       const container = document.getElementById('pending-requests-container');
       if (!container) return;
@@ -639,13 +635,14 @@
     }
 
     function rejectBooking(date, index) {
-      if (confirm('Deseja recusar e liberar este horário para outros clientes?')) {
+      if (confirm('Deseja liberar este horário da agenda?')) {
         bookedSlots[date].splice(index, 1);
         if (bookedSlots[date].length === 0) delete bookedSlots[date];
         db.ref('outplay_booked_slots').set(bookedSlots);
       }
     }
 
+    // AGENDA DO DIA: EXIBE TODOS OS HORÁRIOS COM OS DADOS DAS LOCAÇÕES
     function renderAdminCalendar() {
       const grid = document.getElementById('admin-calendar-grid');
       if (!grid) return;
@@ -663,17 +660,24 @@
         card.className = 'admin-time-card ' + (booking ? (booking.status === 'confirmed' ? 'confirmed' : 'pending') : 'available');
 
         if (booking) {
+          const statusText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
+          const whatsappClean = booking.phone.replace(/\D/g, '');
+
           card.innerHTML = `
             <div class="time-header">
               <strong>⏰ ${time}</strong>
-              <span class="status-tag ${booking.status}">${booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX'}</span>
+              <span class="status-tag ${booking.status}">${statusText}</span>
             </div>
             <div class="client-detail">
-              ⚽ <strong>${booking.sport}</strong><br>
-              👤 ${booking.name}<br>📱 ${booking.phone}
+              <div class="detail-line"><i class="fa-solid fa-volleyball icon-lime"></i> <strong>Esporte:</strong> ${booking.sport}</div>
+              <div class="detail-line"><i class="fa-regular fa-user icon-lime"></i> <strong>Nome:</strong> ${booking.name}</div>
+              <div class="detail-line">
+                <i class="fa-brands fa-whatsapp icon-lime"></i> <strong>Tel:</strong> 
+                <a href="https://wa.me/55${whatsappClean}" target="_blank" class="phone-link">${booking.phone}</a>
+              </div>
             </div>
             <button class="btn-cancel-sm" onclick="rejectBooking('${date}', ${bookingIndex})">
-              <i class="fa-solid fa-trash"></i> Liberar Horário
+              <i class="fa-solid fa-trash-can"></i> Liberar Horário
             </button>
           `;
         } else {
@@ -682,8 +686,9 @@
               <strong>⏰ ${time}</strong>
               <span class="status-tag available">Livre</span>
             </div>
+            <p class="free-slot-msg"><i class="fa-regular fa-circle-check"></i> Horário disponível</p>
             <button class="btn-block-sm" onclick="blockSlotManually('${date}', '${time}')">
-              <i class="fa-solid fa-ban"></i> Bloquear Vaga
+              <i class="fa-solid fa-ban"></i> Bloquear Presencial
             </button>
           `;
         }
@@ -697,8 +702,8 @@
       bookedSlots[date].push({
         time: time,
         sport: 'Bloqueio Presencial',
-        name: 'Bloqueado (Dono)',
-        phone: 'Arena',
+        name: 'Dono / Presencial',
+        phone: '(42) 99910-9395',
         price: 'R$ 60,00',
         status: 'confirmed'
       });
