@@ -13,10 +13,10 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v17.0 -->
-  <link rel="stylesheet" href="./style.css?v=17.0">
+  <!-- Estilos CSS com Forçador de Cache v18.0 -->
+  <link rel="stylesheet" href="./style.css?v=18.0">
 
-  <!-- SDKs do Firebase (Módulos de Tempo Real) -->
+  <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
@@ -100,7 +100,7 @@
         <button class="btn-primary" onclick="goToStep(2)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
-      <!-- ETAPA 2: DATA E HORÁRIOS -->
+      <!-- ETAPA 2: DATA E HORÁRIOS (CLIENTE: PRÓXIMOS 15 DIAS) -->
       <div id="step2" class="step-content" style="display: none;">
         <h2 class="step-title">Escolher Horários</h2>
 
@@ -197,7 +197,7 @@
     </div>
   </main>
 
-  <!-- MODAL DA ÁREA RESTRITA (AGENDA COMPLETA DE LOCAÇÕES) -->
+  <!-- MODAL DA ÁREA RESTRITA (AGENDA COMPLETA) -->
   <div id="admin-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -205,7 +205,7 @@
         <span class="close-btn" onclick="closeAdminModal()">&times;</span>
       </div>
 
-      <!-- TELA DE LOGIN DA ÁREA RESTRITA -->
+      <!-- LOGIN -->
       <div id="admin-login-view">
         <p style="color: var(--texto-suave); margin-bottom: 0.8rem; font-size: 0.85rem;">Digite a senha de administrador:</p>
         <div class="form-group">
@@ -214,10 +214,10 @@
         <button class="btn-primary" onclick="checkAdminPassword()">Acessar Agenda</button>
       </div>
 
-      <!-- PAINEL DA AGENDA COMPLETA -->
+      <!-- PAINEL DA AGENDA (MESMO LAYOUT DA PÁGINA) -->
       <div id="admin-dashboard-view" style="display: none;">
         
-        <!-- SEÇÃO DE NOTIFICAÇÕES / APROVAÇÕES PENDENTES -->
+        <!-- PENDENTES PIX -->
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-solid fa-bell icon-warning"></i>
@@ -226,19 +226,22 @@
           <div id="pending-requests-container" class="pending-list"></div>
         </div>
 
-        <!-- AGENDA DIÁRIA COM FILTRO -->
+        <!-- AGENDA DO DIA COM NAVEGADOR DE MÊS E DIAS -->
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-regular fa-calendar-days icon-lime"></i>
-            <h3>Agenda do Dia</h3>
+            <h3>Consultar Agenda</h3>
           </div>
 
-          <div class="admin-filter-bar">
-            <div class="filter-item">
-              <label><i class="fa-regular fa-calendar"></i> Selecione a Data para consultar:</label>
-              <input type="date" id="admin-view-date" class="form-input-sm" onchange="renderAdminCalendar()">
-            </div>
+          <!-- NAVEGADOR DO MÊS COM SETAS PARA O DONO -->
+          <div class="calendar-nav-container">
+            <button class="cal-nav-btn" onclick="changeAdminMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="admin-month-name-label" class="date-range-label">Outubro de 2026</span>
+            <button class="cal-nav-btn" onclick="changeAdminMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
+
+          <!-- CARROSSEL DE TODOS OS DIAS DO MÊS (LAYOUT IDÊNTICO) -->
+          <div class="days-carousel-scroll" id="admin-days-carousel"></div>
 
           <!-- CARDS DE CADA HORÁRIO DO DIA -->
           <div class="time-grid-admin" id="admin-calendar-grid"></div>
@@ -276,10 +279,13 @@
     let bookedSlots = {};
     const SLOT_PRICE = 60.00;
     
+    // Datas e Controles do Cliente
     let todayObj = new Date();
     let selectedDateStr = formatDateKey(todayObj);
 
-    document.getElementById('admin-view-date').valueAsDate = new Date();
+    // Datas e Controles da Área Restrita
+    let adminCurrentDateObj = new Date();
+    let adminSelectedDateStr = formatDateKey(new Date());
 
     window.addEventListener('DOMContentLoaded', () => {
       const savedStep = sessionStorage.getItem('outplay_current_step');
@@ -304,6 +310,7 @@
       return `${year}-${month}-${day}`;
     }
 
+    // CARROSSEL DO CLIENTE (PRÓXIMOS 15 DIAS A PARTIR DE HOJE)
     function render15DaysCarousel() {
       const carousel = document.getElementById('days-carousel');
       carousel.innerHTML = '';
@@ -338,6 +345,60 @@
 
         carousel.appendChild(card);
       }
+    }
+
+    // CARROSSEL DA ÁREA RESTRITA (TODOS OS DIAS E MESES)
+    function renderAdminMonthCarousel() {
+      const carousel = document.getElementById('admin-days-carousel');
+      if (!carousel) return;
+      carousel.innerHTML = '';
+
+      const year = adminCurrentDateObj.getFullYear();
+      const month = adminCurrentDateObj.getMonth();
+
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      document.getElementById('admin-month-name-label').innerText = `${monthNames[month]} de ${year}`;
+
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+
+      let selectedCardElement = null;
+
+      for (let day = 1; day <= totalDays; day++) {
+        const d = new Date(year, month, day);
+        const dateKey = formatDateKey(d);
+        const dayName = weekdaysNames[d.getDay()];
+
+        const card = document.createElement('div');
+        card.className = 'day-card' + (dateKey === adminSelectedDateStr ? ' selected' : '');
+        card.innerHTML = `
+          <span class="day-name">${dayName}</span>
+          <span class="day-number">${String(day).padStart(2, '0')}</span>
+        `;
+
+        card.onclick = () => {
+          adminSelectedDateStr = dateKey;
+          renderAdminMonthCarousel();
+          renderAdminCalendar();
+        };
+
+        carousel.appendChild(card);
+
+        if (dateKey === adminSelectedDateStr) {
+          selectedCardElement = card;
+        }
+      }
+
+      if (selectedCardElement) {
+        setTimeout(() => {
+          selectedCardElement.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 50);
+      }
+    }
+
+    function changeAdminMonth(direction) {
+      adminCurrentDateObj.setMonth(adminCurrentDateObj.getMonth() + direction);
+      renderAdminMonthCarousel();
     }
 
     function updatePendingBadge() {
@@ -559,7 +620,6 @@
       window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    // ABRIR E FECHAR A ÁREA RESTRITA
     function openAdminModal() {
       document.getElementById('admin-modal').style.display = 'flex';
       document.getElementById('admin-login-view').style.display = 'block';
@@ -584,10 +644,10 @@
 
     function loadAdminDashboard() {
       renderPendingRequests();
+      renderAdminMonthCarousel();
       renderAdminCalendar();
     }
 
-    // LISTA DE SOLICITAÇÕES PENDENTES DE APROVAÇÃO PIX
     function renderPendingRequests() {
       const container = document.getElementById('pending-requests-container');
       if (!container) return;
@@ -611,7 +671,7 @@
                 </div>
                 <div class="pending-actions">
                   <button class="btn-approve" onclick="approveBooking('${date}', ${index})">
-                    <i class="fa-solid fa-check"></i> Aprovar PIX
+                    <i class="fa-solid fa-check"></i> Aprovar
                   </button>
                   <button class="btn-reject" onclick="rejectBooking('${date}', ${index})">
                     <i class="fa-solid fa-xmark"></i> Recusar
@@ -642,15 +702,14 @@
       }
     }
 
-    // AGENDA DO DIA: EXIBE TODOS OS HORÁRIOS COM OS DADOS DAS LOCAÇÕES
+    // RENDERIZA A AGENDA DO DIA SELECIONADO NO CARROSSEL DA ÁREA RESTRITA
     function renderAdminCalendar() {
       const grid = document.getElementById('admin-calendar-grid');
       if (!grid) return;
-      const date = document.getElementById('admin-view-date').value;
       grid.innerHTML = '';
 
       const times = ['16:00 - 17:00', '17:00 - 18:00', '18:00 - 19:00', '19:00 - 20:00', '20:00 - 21:00', '21:00 - 22:00'];
-      const currentBookings = bookedSlots[date] || [];
+      const currentBookings = bookedSlots[adminSelectedDateStr] || [];
 
       times.forEach(time => {
         const bookingIndex = currentBookings.findIndex(b => b && b.time === time);
@@ -676,7 +735,7 @@
                 <a href="https://wa.me/55${whatsappClean}" target="_blank" class="phone-link">${booking.phone}</a>
               </div>
             </div>
-            <button class="btn-cancel-sm" onclick="rejectBooking('${date}', ${bookingIndex})">
+            <button class="btn-cancel-sm" onclick="rejectBooking('${adminSelectedDateStr}', ${bookingIndex})">
               <i class="fa-solid fa-trash-can"></i> Liberar Horário
             </button>
           `;
@@ -687,7 +746,7 @@
               <span class="status-tag available">Livre</span>
             </div>
             <p class="free-slot-msg"><i class="fa-regular fa-circle-check"></i> Horário disponível</p>
-            <button class="btn-block-sm" onclick="blockSlotManually('${date}', '${time}')">
+            <button class="btn-block-sm" onclick="blockSlotManually('${adminSelectedDateStr}', '${time}')">
               <i class="fa-solid fa-ban"></i> Bloquear Presencial
             </button>
           `;
