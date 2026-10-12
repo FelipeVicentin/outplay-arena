@@ -255,17 +255,35 @@ html, body {
   color: var(--branco);
 }
 
-/* NAVEGADOR DO MÊS COMPACTO */
+/* NAVEGADOR DO MÊS COM SETAS SEM FUNDO ESCURO */
 .calendar-nav-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 0.8rem;
   background-color: var(--card-bg);
   padding: 0.5rem;
   border-radius: 10px;
   border: 1px solid rgba(215, 255, 0, 0.15);
+}
+
+.cal-nav-btn {
+  background: transparent !important; /* Sem fundo escuro feio */
+  border: none !important;
+  color: var(--lime-play);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  padding: 0 4px;
+}
+
+.cal-nav-btn:hover {
+  transform: scale(1.2);
+  color: var(--branco);
 }
 
 .date-range-label {
@@ -814,34 +832,6 @@ html, body {
   padding: 0.3rem 0;
 }
 
-.admin-filter-bar {
-  display: flex;
-  gap: 0.8rem;
-  margin-bottom: 0.8rem;
-}
-
-.filter-item {
-  flex: 1;
-}
-
-.filter-item label {
-  font-size: 0.72rem;
-  color: var(--lime-play);
-  font-weight: 600;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.form-input-sm {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--lime-play);
-  background-color: var(--verde-outplay);
-  color: white;
-  font-size: 0.8rem;
-}
-
 /* CARDS DE HORÁRIOS DA AGENDA */
 .time-grid-admin {
   display: grid;
@@ -930,7 +920,7 @@ html, body {
   width: 100%;
 }
 
-/* REGRAS EXCLUSIVAS PARA CELULAR: LOGO À ESQUERDA E BOTÃO À DIREITA */
+/* REGRAS EXCLUSIVAS PARA CELULAR */
 @media (max-width: 600px) {
   .header {
     display: flex !important;
