@@ -268,26 +268,6 @@ html, body {
   border: 1px solid rgba(215, 255, 0, 0.15);
 }
 
-.cal-nav-btn {
-  background: rgba(0, 0, 0, 0.2);
-  border: none;
-  color: var(--lime-play);
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  font-size: 0.8rem;
-}
-
-.cal-nav-btn:hover {
-  background: var(--lime-play);
-  color: var(--verde-outplay);
-}
-
 .date-range-label {
   font-weight: 700;
   font-size: 0.88rem;
@@ -697,7 +677,7 @@ html, body {
   fill: #FFFFFF;
 }
 
-/* ESTILOS DA ÁREA RESTRITA */
+/* ESTILOS DA ÁREA RESTRITA / AGENDA */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -845,50 +825,54 @@ html, body {
 }
 
 .filter-item label {
-  font-size: 0.7rem;
-  color: var(--texto-suave);
+  font-size: 0.72rem;
+  color: var(--lime-play);
+  font-weight: 600;
   display: block;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 .form-input-sm {
   width: 100%;
-  padding: 0.4rem;
-  border-radius: 6px;
-  border: 1px solid var(--verde-outplay);
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--lime-play);
   background-color: var(--verde-outplay);
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
+/* CARDS DE HORÁRIOS DA AGENDA */
 .time-grid-admin {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 0.6rem;
 }
 
 .admin-time-card {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-  padding: 0.6rem;
+  padding: 0.7rem;
   border: 1px solid transparent;
 }
 
-.admin-time-card.available { border-color: rgba(215, 255, 0, 0.3); }
-.admin-time-card.confirmed { border-color: rgba(37, 211, 102, 0.4); }
-.admin-time-card.pending { border-color: rgba(255, 202, 40, 0.4); }
+.admin-time-card.available { border-color: rgba(215, 255, 0, 0.2); }
+.admin-time-card.confirmed { border-color: rgba(37, 211, 102, 0.5); background: rgba(37, 211, 102, 0.05); }
+.admin-time-card.pending { border-color: rgba(255, 202, 40, 0.5); background: rgba(255, 202, 40, 0.05); }
 
 .time-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.75rem;
-  margin-bottom: 0.3rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .status-tag {
   font-size: 0.6rem;
-  padding: 2px 5px;
+  padding: 2px 6px;
   border-radius: 4px;
   font-weight: 700;
 }
@@ -898,24 +882,41 @@ html, body {
 .status-tag.pending { background: rgba(255, 202, 40, 0.2); color: #ffca28; }
 
 .client-detail {
+  font-size: 0.72rem;
+  color: var(--branco);
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+}
+
+.detail-line {
+  margin-bottom: 2px;
+}
+
+.phone-link {
+  color: #25D366;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.free-slot-msg {
   font-size: 0.7rem;
   color: var(--texto-suave);
-  margin-bottom: 0.4rem;
-  line-height: 1.2;
+  margin-bottom: 0.6rem;
 }
 
 .btn-block-sm, .btn-cancel-sm {
   width: 100%;
-  padding: 0.3rem;
-  border-radius: 5px;
-  font-size: 0.65rem;
+  padding: 0.4rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-.btn-block-sm { background: var(--verde-outplay); color: var(--lime-play); }
-.btn-cancel-sm { background: rgba(255, 82, 82, 0.2); color: #ff5252; }
+.btn-block-sm { background: var(--verde-outplay); color: var(--lime-play); border: 1px solid var(--lime-play); }
+.btn-cancel-sm { background: rgba(255, 82, 82, 0.2); color: #ff5252; border: 1px solid #ff5252; }
 
 /* RODAPÉ */
 .footer {
@@ -939,7 +940,6 @@ html, body {
     position: relative;
   }
 
-  /* Logo alinhada à esquerda com elegância */
   .logo-container {
     flex: unset !important;
     justify-content: flex-start !important;
@@ -950,7 +950,6 @@ html, body {
     max-height: 32px !important;
   }
 
-  /* Botão alinhado à direita com distância perfeita */
   .btn-admin-access {
     position: static !important;
     transform: none !important;
@@ -998,6 +997,10 @@ html, body {
 
   .time-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .time-grid-admin {
+    grid-template-columns: 1fr;
   }
 
   .summary-selection-bar {
