@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Outplay Arena - Esportes de Areia</title>
   
-  <!-- FAVICON: Logo exclusiva para a aba do navegador -->
-  <link rel="icon" type="image/png" href="./img/logo-aba.png">
-  <link rel="shortcut icon" type="image/png" href="./img/logo-aba.png">
-  <link rel="apple-touch-icon" href="./img/logo-aba.png">
+  <!-- FAVICON: Logo para a aba do navegador (Pasta IMG em maiúsculas) -->
+  <link rel="icon" type="image/png" href="./IMG/logo-aba.png">
+  <link rel="shortcut icon" type="image/png" href="./IMG/logo-aba.png">
+  <link rel="apple-touch-icon" href="./IMG/logo-aba.png">
 
   <!-- Fonte Oficial Sora -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,8 +18,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v21.0 -->
-  <link rel="stylesheet" href="./style.css?v=21.0">
+  <!-- Estilos CSS com Forçador de Cache v22.0 -->
+  <link rel="stylesheet" href="./style.css?v=22.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -27,10 +27,10 @@
 </head>
 <body>
 
-  <!-- CABEÇALHO (Mantém a logo original do topo: logo.png) -->
+  <!-- CABEÇALHO -->
   <header class="header">
     <div class="logo-container" onclick="resetToHome()" style="cursor: pointer;" title="Voltar para a página inicial">
-      <img src="./img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
+      <img src="./IMG/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
       <div id="fallback-logo" class="logo-fallback">OUTPLAY ARENA</div>
     </div>
     <!-- Botão de Acesso à Área Restrita -->
@@ -77,7 +77,7 @@
           <!-- 1º Vôlei de Praia -->
           <div class="sport-card selected" onclick="selectSport('Vôlei de Praia', this)">
             <div class="sport-img-wrapper">
-              <img src="./img/vp.png" alt="Vôlei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./IMG/vp.png" alt="Vôlei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
             </div>
             <h3>Vôlei de Praia</h3>
@@ -86,7 +86,7 @@
           <!-- 2º Beach Tennis -->
           <div class="sport-card" onclick="selectSport('Beach Tennis', this)">
             <div class="sport-img-wrapper">
-              <img src="./img/BT.png" alt="Beach Tennis" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./IMG/BT.png" alt="Beach Tennis" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-table-tennis-paddle-ball sport-icon-fallback" style="display:none;"></i>
             </div>
             <h3>Beach Tennis</h3>
@@ -95,7 +95,7 @@
           <!-- 3º Futevôlei -->
           <div class="sport-card" onclick="selectSport('Futevôlei', this)">
             <div class="sport-img-wrapper">
-              <img src="./img/FV.png" alt="Futevôlei" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./IMG/FV.png" alt="Futevôlei" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
             </div>
             <h3>Futevôlei</h3>
