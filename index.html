@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v29.0 -->
-  <link rel="stylesheet" href="./style.css?v=29.0">
+  <!-- Estilos CSS com Forçador de Cache v30.0 -->
+  <link rel="stylesheet" href="./style.css?v=30.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -689,6 +689,7 @@
       alert('Chave PIX copiada para a area de transferencia!');
     }
 
+    // 1. MENSAGEM PADRAO DE ENVIAR AGENDAMENTO (CLIENTE)
     function sendToWhatsApp() {
       const name = document.getElementById('user-name').value;
       const phone = document.getElementById('user-phone').value;
@@ -696,7 +697,7 @@
       const totalPriceFormatted = `R$ ${calculateTotalPrice().toFixed(2).replace('.', ',')}`;
       const timesFormatted = selectedTimes.join(', ');
 
-      const message = "NOVO AGENDAMENTO - OUTPLAY ARENA\n\n" +
+      const message = "OUTPLAY ARENA - NOVO AGENDAMENTO\n\n" +
                       "Nome: " + name + "\n" +
                       "WhatsApp: " + phone + "\n" +
                       "Esporte: " + selectedSport + "\n" +
@@ -769,11 +770,21 @@
               count++;
               const whatsappClean = booking.phone.replace(/\D/g, '');
               
-              const textAprovado = `Ola ${booking.name}!\n\nSua reserva de ${booking.sport} para o dia ${dateFormatted} as ${booking.time} foi APROVADA com sucesso na Outplay Arena!\n\nNos vemos em quadra!`;
+              // MENSAGENS PADRONIZADAS E UNIFORMES PARA O ADMIN
+              const textAprovado = "OUTPLAY ARENA - RESERVA APROVADA\n\n" +
+                                   "Ola " + booking.name + "!\n" +
+                                   "Sua reserva de " + booking.sport + " para o dia " + dateFormatted + " as " + booking.time + " foi aprovada com sucesso.\n\n" +
+                                   "Nos vemos em quadra!";
               
-              const textPagamento = `Ola ${booking.name},\n\nPassando para lembrar sobre o envio do comprovante PIX para garantir sua pre-reserva de ${booking.sport} em ${dateFormatted} as ${booking.time}.\n\nQualquer duvida estamos a disposicao!`;
+              const textPagamento = "OUTPLAY ARENA - COMPROVANTE PIX\n\n" +
+                                    "Ola " + booking.name + ",\n" +
+                                    "Passando para lembrar sobre o envio do comprovante PIX para garantir sua pre-reserva de " + booking.sport + " em " + dateFormatted + " as " + booking.time + ".\n\n" +
+                                    "Qualquer duvida estamos a disposicao!";
               
-              const textRecusado = `Ola ${booking.name}.\n\nInfelizmente nao recebemos o comprovante a tempo e sua pre-reserva de ${booking.sport} para ${dateFormatted} as ${booking.time} foi cancelada, liberando o horario na agenda.\n\nAgradecemos o contato!`;
+              const textRecusado = "OUTPLAY ARENA - RESERVA CANCELADA\n\n" +
+                                   "Ola " + booking.name + ".\n" +
+                                   "Infelizmente nao recebemos o comprovante a tempo e sua pre-reserva de " + booking.sport + " para " + dateFormatted + " as " + booking.time + " foi cancelada, liberando o horario na agenda.\n\n" +
+                                   "Agradecemos o contato!";
 
               const msgAprovadoEncoded = encodeURIComponent(textAprovado);
               const msgPagamentoEncoded = encodeURIComponent(textPagamento);
@@ -873,7 +884,12 @@
         if (booking) {
           const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = booking.phone.replace(/\D/g, '');
-          const textContato = `Ola ${booking.name}! Sobre sua reserva na Outplay Arena para o dia ${dateFormatted} as ${time}:`;
+          
+          // MENSAGEM PADRAO PARA CHAMAR DIRETO DA AGENDA
+          const textContato = "OUTPLAY ARENA - CONTATO\n\n" +
+                              "Ola " + booking.name + "!\n" +
+                              "Sobre sua reserva na Outplay Arena para o dia " + dateFormatted + " as " + time + ":";
+          
           const msgContatoEncoded = encodeURIComponent(textContato);
 
           card.innerHTML = `
