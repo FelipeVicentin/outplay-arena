@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v27.0 -->
-  <link rel="stylesheet" href="./style.css?v=27.0">
+  <!-- Estilos CSS com Forçador de Cache v28.0 -->
+  <link rel="stylesheet" href="./style.css?v=28.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -696,15 +696,15 @@
       const totalPriceFormatted = `R$ ${calculateTotalPrice().toFixed(2).replace('.', ',')}`;
       const timesFormatted = selectedTimes.join(', ');
 
-      // Mensagem formatada com quebras limpas para celular
-      const message = `🎾 *NOVO AGENDAMENTO - OUTPLAY ARENA*\n\n` +
-                      `👤 *Nome:* ${name}\n` +
-                      `📱 *WhatsApp:* ${phone}\n` +
-                      `⚽ *Esporte:* ${selectedSport}\n` +
-                      `📅 *Data:* ${dateFormatted}\n` +
-                      `⏰ *Horários (${selectedTimes.length}):* ${timesFormatted}\n` +
-                      `💰 *Valor Total:* ${totalPriceFormatted}\n\n` +
-                      `📌 *Segue o comprovante do PIX em anexo:*`;
+      // Mensagem limpa sem emojis para evitar o erro de caracteres corrompidos no WhatsApp
+      const message = "NOVO AGENDAMENTO - OUTPLAY ARENA\n\n" +
+                      "Nome: " + name + "\n" +
+                      "WhatsApp: " + phone + "\n" +
+                      "Esporte: " + selectedSport + "\n" +
+                      "Data: " + dateFormatted + "\n" +
+                      "Horários (" + selectedTimes.length + "): " + timesFormatted + "\n" +
+                      "Valor Total: " + totalPriceFormatted + "\n\n" +
+                      "Segue o comprovante do PIX em anexo:";
 
       window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
     }
@@ -770,12 +770,12 @@
               count++;
               const whatsappClean = booking.phone.replace(/\D/g, '');
               
-              // Textos codificados perfeitamente para celulares com emojis preservados
-              const textAprovado = `Olá ${booking.name}! 🎾\n\nSua reserva de *${booking.sport}* para o dia *${dateFormatted}* às *${booking.time}* foi *APROVADA* com sucesso na Outplay Arena! ✅\n\nNos vemos em quadra! 🚀`;
+              // Textos limpos sem emojis para evitar caracteres corrompidos
+              const textAprovado = `Olá ${booking.name}!\n\nSua reserva de ${booking.sport} para o dia ${dateFormatted} às ${booking.time} foi APROVADA com sucesso na Outplay Arena!\n\nNos vemos em quadra!`;
               
-              const textPagamento = `Olá ${booking.name}! ⏱️\n\nPassando para lembrar sobre o envio do comprovante PIX para garantir sua pré-reserva de *${booking.sport}* em *${dateFormatted}* às *${booking.time}*.\n\nQualquer dúvida estamos à disposição! 📲`;
+              const textPagamento = `Olá ${booking.name},\n\nPassando para lembrar sobre o envio do comprovante PIX para garantir sua pré-reserva de ${booking.sport} em ${dateFormatted} às ${booking.time}.\n\nQualquer dúvida estamos à disposição!`;
               
-              const textRecusado = `Olá ${booking.name}. ⚠️\n\nInfelizmente não recebemos o comprovante a tempo e sua pré-reserva de *${booking.sport}* para *${dateFormatted}* às *${booking.time}* foi cancelada, liberando o horário na agenda.\n\nAgradecemos o contato!`;
+              const textRecusado = `Olá ${booking.name}.\n\nInfelizmente não recebemos o comprovante a tempo e sua pré-reserva de ${booking.sport} para ${dateFormatted} às ${booking.time} foi cancelada, liberando o horário na agenda.\n\nAgradecemos o contato!`;
 
               const msgAprovadoEncoded = encodeURIComponent(textAprovado);
               const msgPagamentoEncoded = encodeURIComponent(textPagamento);
@@ -875,7 +875,7 @@
         if (booking) {
           const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = booking.phone.replace(/\D/g, '');
-          const textContato = `Olá ${booking.name}! 🎾 Sobre sua reserva na Outplay Arena para o dia *${dateFormatted}* às *${time}*:`;
+          const textContato = `Olá ${booking.name}! Sobre sua reserva na Outplay Arena para o dia ${dateFormatted} às ${time}:`;
           const msgContatoEncoded = encodeURIComponent(textContato);
 
           card.innerHTML = `
