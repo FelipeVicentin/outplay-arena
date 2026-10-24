@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v26.0 -->
-  <link rel="stylesheet" href="./style.css?v=26.0">
+  <!-- Estilos CSS com Forçador de Cache v27.0 -->
+  <link rel="stylesheet" href="./style.css?v=27.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -696,6 +696,7 @@
       const totalPriceFormatted = `R$ ${calculateTotalPrice().toFixed(2).replace('.', ',')}`;
       const timesFormatted = selectedTimes.join(', ');
 
+      // Mensagem formatada com quebras limpas para celular
       const message = `🎾 *NOVO AGENDAMENTO - OUTPLAY ARENA*\n\n` +
                       `👤 *Nome:* ${name}\n` +
                       `📱 *WhatsApp:* ${phone}\n` +
@@ -769,10 +770,16 @@
               count++;
               const whatsappClean = booking.phone.replace(/\D/g, '');
               
-              // Mensagens prontas para o WhatsApp
-              const msgAprovado = encodeURIComponent(`Olá ${booking.name}! Sua reserva de ${booking.sport} para o dia ${dateFormatted} às ${booking.time} foi APROVADA com sucesso na Outplay Arena! 🎾 Nos vemos lá!`);
-              const msgPagamento = encodeURIComponent(`Olá ${booking.name}, passando para lembrar sobre o envio do comprovante PIX para garantir sua reserva de ${booking.sport} em ${dateFormatted} às ${booking.time}. Obrigado! ⏱️`);
-              const msgRecusado = encodeURIComponent(`Olá ${booking.name}, infelizmente não recebemos o comprovante do PIX a tempo e sua pré-reserva de ${booking.sport} para ${dateFormatted} às ${booking.time} foi cancelada. Os horários foram liberados.`);
+              // Textos codificados perfeitamente para celulares com emojis preservados
+              const textAprovado = `Olá ${booking.name}! 🎾\n\nSua reserva de *${booking.sport}* para o dia *${dateFormatted}* às *${booking.time}* foi *APROVADA* com sucesso na Outplay Arena! ✅\n\nNos vemos em quadra! 🚀`;
+              
+              const textPagamento = `Olá ${booking.name}! ⏱️\n\nPassando para lembrar sobre o envio do comprovante PIX para garantir sua pré-reserva de *${booking.sport}* em *${dateFormatted}* às *${booking.time}*.\n\nQualquer dúvida estamos à disposição! 📲`;
+              
+              const textRecusado = `Olá ${booking.name}. ⚠️\n\nInfelizmente não recebemos o comprovante a tempo e sua pré-reserva de *${booking.sport}* para *${dateFormatted}* às *${booking.time}* foi cancelada, liberando o horário na agenda.\n\nAgradecemos o contato!`;
+
+              const msgAprovadoEncoded = encodeURIComponent(textAprovado);
+              const msgPagamentoEncoded = encodeURIComponent(textPagamento);
+              const msgRecusadoEncoded = encodeURIComponent(textRecusado);
 
               const item = document.createElement('div');
               item.className = 'pending-card';
@@ -782,18 +789,18 @@
                   <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${booking.sport}</span>
                 </div>
                 <div class="pending-actions" style="display: flex; gap: 4px; flex-wrap: wrap;">
-                  <!-- BOTÃO APROVAR (Aprova e abre WhatsApp) -->
-                  <button class="btn-approve" onclick="approveAndNotify('${date}', ${index}, '${whatsappClean}', '${msgAprovado}')">
+                  <!-- BOTÃO APROVAR -->
+                  <button class="btn-approve" onclick="approveAndNotify('${date}', ${index}, '${whatsappClean}', \`${textAprovado}\`)">
                     <i class="fa-solid fa-check"></i> Aprovar
                   </button>
                   
-                  <!-- NOVO BOTÃO: AGUARDANDO PAGAMENTO -->
-                  <a href="https://wa.me/55${whatsappClean}?text=${msgPagamento}" target="_blank" style="background:#ffca28; color:#000; padding: 0.3rem 0.5rem; border-radius: 5px; font-weight: 700; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Lembrar Comprovante">
+                  <!-- BOTÃO AGUARDANDO PAGAMENTO -->
+                  <a href="https://wa.me/55${whatsappClean}?text=${msgPagamentoEncoded}" target="_blank" style="background:#ffca28; color:#000; padding: 0.3rem 0.5rem; border-radius: 5px; font-weight: 700; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Lembrar Comprovante">
                     <i class="fa-regular fa-clock"></i> Pagamento
                   </a>
 
-                  <!-- BOTÃO RECUSAR (Recusa, libera horário e abre WhatsApp) -->
-                  <button class="btn-reject" onclick="rejectAndNotify('${date}', ${index}, '${whatsappClean}', '${msgRecusado}')">
+                  <!-- BOTÃO RECUSAR -->
+                  <button class="btn-reject" onclick="rejectAndNotify('${date}', ${index}, '${whatsappClean}', \`${textRecusado}\`)">
                     <i class="fa-solid fa-xmark"></i> Recusar
                   </button>
                 </div>
@@ -809,19 +816,18 @@
       }
     }
 
-    // Ações automáticas com WhatsApp integrado
-    function approveAndNotify(date, index, phoneClean, message) {
+    function approveAndNotify(date, index, phoneClean, rawMessage) {
       bookedSlots[date][index].status = 'confirmed';
       db.ref('outplay_booked_slots').set(bookedSlots);
-      window.open(`https://wa.me/55${phoneClean}?text=${message}`, '_blank');
+      window.open(`https://wa.me/55${phoneClean}?text=${encodeURIComponent(rawMessage)}`, '_blank');
     }
 
-    function rejectAndNotify(date, index, phoneClean, message) {
+    function rejectAndNotify(date, index, phoneClean, rawMessage) {
       if (confirm('Deseja recusar e liberar este horário da agenda?')) {
         bookedSlots[date].splice(index, 1);
         if (bookedSlots[date].length === 0) delete bookedSlots[date];
         db.ref('outplay_booked_slots').set(bookedSlots);
-        window.open(`https://wa.me/55${phoneClean}?text=${message}`, '_blank');
+        window.open(`https://wa.me/55${phoneClean}?text=${encodeURIComponent(rawMessage)}`, '_blank');
       }
     }
 
@@ -869,7 +875,8 @@
         if (booking) {
           const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = booking.phone.replace(/\D/g, '');
-          const msgContato = encodeURIComponent(`Olá ${booking.name}, sobre sua reserva na Outplay Arena (${dateFormatted} às ${time}):`);
+          const textContato = `Olá ${booking.name}! 🎾 Sobre sua reserva na Outplay Arena para o dia *${dateFormatted}* às *${time}*:`;
+          const msgContatoEncoded = encodeURIComponent(textContato);
 
           card.innerHTML = `
             <div class="time-header">
@@ -881,7 +888,7 @@
               <div class="detail-line"><i class="fa-regular fa-user icon-lime"></i> <strong>Nome:</strong> ${booking.name}</div>
               <div class="detail-line" style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
                 <span><i class="fa-brands fa-whatsapp icon-lime"></i> <strong>Tel:</strong> ${booking.phone}</span>
-                <a href="https://wa.me/55${whatsappClean}?text=${msgContato}" target="_blank" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                <a href="https://wa.me/55${whatsappClean}?text=${msgContatoEncoded}" target="_blank" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
                   <i class="fa-brands fa-whatsapp"></i> Chamar
                 </a>
               </div>
