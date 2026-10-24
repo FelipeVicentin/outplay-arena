@@ -8,7 +8,7 @@
   <!-- META TAGS OPEN GRAPH (WhatsApp e Redes Sociais) -->
   <meta property="meta-title" content="Outplay Arena - Esportes de Areia">
   <meta property="og:title" content="Outplay Arena - Agendamento Online">
-  <meta property="og:description" content="Reserve sua quadra de Vôlei de Praia, Beach Tennis ou Futevôlei de forma rápida e prática!">
+  <meta property="og:description" content="Reserve sua quadra de Volei de Praia, Beach Tennis ou Futevolei de forma rapida e pratica!">
   <meta property="og:image" content="https://felipevicentin.github.io/outplay-arena/img/logo.png">
   <meta property="og:url" content="https://felipevicentin.github.io/outplay-arena/">
   <meta property="og:type" content="website">
@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v28.0 -->
-  <link rel="stylesheet" href="./style.css?v=28.0">
+  <!-- Estilos CSS com Forçador de Cache v29.0 -->
+  <link rel="stylesheet" href="./style.css?v=29.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -37,20 +37,20 @@
 
   <!-- CABEÇALHO -->
   <header class="header">
-    <div class="logo-container" onclick="resetToHome()" style="cursor: pointer;" title="Voltar para a página inicial">
+    <div class="logo-container" onclick="resetToHome()" style="cursor: pointer;" title="Voltar para a pagina inicial">
       <img src="./img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
       <div id="fallback-logo" class="logo-fallback">OUTPLAY ARENA</div>
     </div>
-    <!-- Botão de Acesso à Área Restrita -->
+    <!-- Botao de Acesso a Area Restrita -->
     <button class="btn-admin-access" onclick="openAdminModal()" title="Acesso Restrito ao Dono">
       <i class="fa-solid fa-lock"></i>
       <span id="badge-pending-count" class="badge-count" style="display: none;">0</span>
     </button>
   </header>
 
-  <!-- SUBTÍTULO -->
+  <!-- SUBTITULO -->
   <div class="hero">
-    <p class="subtitle">Agendamento Online de Horários</p>
+    <p class="subtitle">Agendamento Online de Horarios</p>
   </div>
 
   <!-- CONTAINER PRINCIPAL -->
@@ -73,25 +73,25 @@
         </div>
         <div class="step-item" id="step4-indicator">
           <div class="step-number">4</div>
-          <div class="step-label">Confirmação</div>
+          <div class="step-label">Confirmacao</div>
         </div>
       </div>
 
-      <!-- ETAPA 1: SELEÇÃO DA MODALIDADE -->
+      <!-- ETAPA 1: SELECAO DA MODALIDADE -->
       <div id="step1" class="step-content">
         <h2 class="step-title">Selecione o Esporte</h2>
         
         <div class="sports-grid">
-          <!-- 1º Vôlei de Praia -->
-          <div class="sport-card selected" onclick="selectSport('Vôlei de Praia', this)">
+          <!-- 1o Volei de Praia -->
+          <div class="sport-card selected" onclick="selectSport('Volei de Praia', this)">
             <div class="sport-img-wrapper">
-              <img src="./img/vp.png" alt="Vôlei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./img/vp.png" alt="Volei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
             </div>
-            <h3>Vôlei de Praia</h3>
+            <h3>Volei de Praia</h3>
           </div>
 
-          <!-- 2º Beach Tennis -->
+          <!-- 2o Beach Tennis -->
           <div class="sport-card" onclick="selectSport('Beach Tennis', this)">
             <div class="sport-img-wrapper">
               <img src="./img/BT.png" alt="Beach Tennis" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
@@ -100,22 +100,22 @@
             <h3>Beach Tennis</h3>
           </div>
 
-          <!-- 3º Futevôlei -->
-          <div class="sport-card" onclick="selectSport('Futevôlei', this)">
+          <!-- 3o Futevolei -->
+          <div class="sport-card" onclick="selectSport('Futevolei', this)">
             <div class="sport-img-wrapper">
-              <img src="./img/FV.png" alt="Futevôlei" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <img src="./img/FV.png" alt="Futevolei" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
               <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
             </div>
-            <h3>Futevôlei</h3>
+            <h3>Futevolei</h3>
           </div>
         </div>
 
         <button class="btn-primary" onclick="goToStep(2)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
-      <!-- ETAPA 2: DATA E HORÁRIOS -->
+      <!-- ETAPA 2: DATA E HORARIOS -->
       <div id="step2" class="step-content" style="display: none;">
-        <h2 class="step-title">Escolher Horários</h2>
+        <h2 class="step-title">Escolher Horarios</h2>
 
         <div class="calendar-nav-container">
           <span id="month-name-label" class="date-range-label">Outubro</span>
@@ -126,7 +126,7 @@
         <!-- Alerta de Dia Bloqueado -->
         <div id="day-blocked-alert" style="display: none; background: rgba(255, 82, 82, 0.15); border: 1px solid #ff5252; color: #ff8080; padding: 1rem; border-radius: 10px; text-align: center; margin-bottom: 1rem;">
           <i class="fa-solid fa-ban" style="font-size: 1.5rem; margin-bottom: 0.4rem;"></i>
-          <p style="font-weight: 700; font-size: 0.9rem;" id="blocked-reason-text">Arena Fechada nesta data (Chuva / Manutenção / Evento)</p>
+          <p style="font-weight: 700; font-size: 0.9rem;" id="blocked-reason-text">Arena Fechada nesta data (Chuva / Manutencao / Evento)</p>
         </div>
 
         <div id="times-selection-wrapper">
@@ -136,7 +136,7 @@
           </div>
 
           <div class="period-section" style="margin-top: 1rem;">
-            <h3 class="period-title">NOITE (Horário Nobre)</h3>
+            <h3 class="period-title">NOITE (Horario Nobre)</h3>
             <div class="time-grid" id="night-grid"></div>
           </div>
         </div>
@@ -162,7 +162,7 @@
             <strong id="summary-date-val">--/--/----</strong>
           </div>
           <div class="summary-row">
-            <span><i class="fa-regular fa-clock icon-lime"></i> Horários:</span>
+            <span><i class="fa-regular fa-clock icon-lime"></i> Horarios:</span>
             <strong id="summary-times-val">Nenhum</strong>
           </div>
           <div class="summary-row summary-total-row">
@@ -173,7 +173,7 @@
 
         <div class="form-group">
           <label for="user-name"><i class="fa-regular fa-user"></i> Seu Nome Completo:</label>
-          <input type="text" id="user-name" class="form-input" placeholder="Ex: João Silva">
+          <input type="text" id="user-name" class="form-input" placeholder="Ex: Joao Silva">
         </div>
 
         <div class="form-group">
@@ -187,7 +187,7 @@
         <div class="pix-box">
           <div class="pix-header">
             <i class="fa-solid fa-qrcode pix-icon"></i>
-            <span>Pagamento Instantâneo via PIX</span>
+            <span>Pagamento Instantaneo via PIX</span>
           </div>
           <p class="pix-desc">Chave PIX da Outplay Arena:</p>
           <div class="pix-key-container">
@@ -196,7 +196,7 @@
           </div>
           <!-- AVISO DE TEMPO LIMITE PIX -->
           <small class="pix-info" style="color: #ffca28; margin-top: 6px; font-weight: 600;">
-            <i class="fa-solid fa-triangle-exclamation"></i> Atenção: Envie o comprovante no WhatsApp em até 10 minutos para garantir sua reserva.
+            <i class="fa-solid fa-triangle-exclamation"></i> Atencao: Envie o comprovante no WhatsApp em ate 10 minutos para garantir sua reserva.
           </small>
         </div>
 
@@ -206,11 +206,11 @@
         </div>
       </div>
 
-      <!-- ETAPA 4: CONFIRMAÇÃO E WHATSAPP -->
+      <!-- ETAPA 4: CONFIRMACAO E WHATSAPP -->
       <div id="step4" class="step-content" style="display: none; text-align: center;">
         <i class="fa-solid fa-circle-check success-icon"></i>
-        <h2 class="step-title" style="margin-bottom: 0.4rem;">Quase lá!</h2>
-        <p class="success-desc">Seus horários já foram pré-reservados no sistema! Clique no botão abaixo para enviar os dados e o comprovante no WhatsApp oficial da Outplay Arena para confirmar.</p>
+        <h2 class="step-title" style="margin-bottom: 0.4rem;">Quase la!</h2>
+        <p class="success-desc">Seus horarios ja foram pre-reservados no sistema! Clique no botao abaixo para enviar os dados e o comprovante no WhatsApp oficial da Outplay Arena para confirmar.</p>
 
         <button class="btn-whatsapp" onclick="sendToWhatsApp()">
           <svg class="whatsapp-btn-svg" viewBox="0 0 448 512" width="20" height="20" fill="#FFFFFF"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
@@ -221,11 +221,11 @@
     </div>
   </main>
 
-  <!-- MODAL DA ÁREA RESTRITA -->
+  <!-- MODAL DA AREA RESTRITA -->
   <div id="admin-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
-        <h2><i class="fa-solid fa-user-shield"></i> Agenda de Locações - Outplay</h2>
+        <h2><i class="fa-solid fa-user-shield"></i> Agenda de Locacoes - Outplay</h2>
         <span class="close-btn" onclick="closeAdminModal()">&times;</span>
       </div>
 
@@ -233,7 +233,7 @@
       <div id="admin-login-view">
         <p style="color: var(--texto-suave); margin-bottom: 0.8rem; font-size: 0.85rem;">Digite a senha de administrador:</p>
         <div class="form-group">
-          <input type="password" id="admin-pass-input" class="form-input" placeholder="Senha (Padrão: 1234)">
+          <input type="password" id="admin-pass-input" class="form-input" placeholder="Senha (Padrao: 1234)">
         </div>
         <button class="btn-primary" onclick="checkAdminPassword()">Acessar Agenda</button>
       </div>
@@ -245,12 +245,12 @@
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-solid fa-bell icon-warning"></i>
-            <h3>Aprovações Pendentes (PIX)</h3>
+            <h3>Aprovacoes Pendentes (PIX)</h3>
           </div>
           <div id="pending-requests-container" class="pending-list"></div>
         </div>
 
-        <!-- AGENDA DO DIA COM NAVEGADOR LIMPO DE MÊS -->
+        <!-- AGENDA DO DIA COM NAVEGADOR LIMPO DE MES -->
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-regular fa-calendar-days icon-lime"></i>
@@ -265,7 +265,7 @@
 
           <div class="days-carousel-scroll" id="admin-days-carousel"></div>
 
-          <!-- BOTÃO DE BLOQUEIO DO DIA COMPLETO -->
+          <!-- BOTAO DE BLOQUEIO DO DIA COMPLETO -->
           <div id="admin-day-control-box" style="margin-bottom: 0.8rem; background: rgba(0, 0, 0, 0.2); padding: 0.6rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
             <span id="admin-block-status-text" style="font-size: 0.75rem; color: var(--texto-suave);">Dia aberto para agendamentos</span>
             <button id="btn-toggle-block-day" class="btn-reject" style="font-size: 0.7rem; padding: 0.4rem 0.6rem;" onclick="toggleBlockSelectedDate()">
@@ -276,13 +276,13 @@
           <div class="time-grid-admin" id="admin-calendar-grid"></div>
         </div>
 
-        <button class="btn-secondary" style="margin-top: 1rem; width: 100%;" onclick="closeAdminModal()">Sair da Área Restrita</button>
+        <button class="btn-secondary" style="margin-top: 1rem; width: 100%;" onclick="closeAdminModal()">Sair da Area Restrita</button>
       </div>
 
     </div>
   </div>
 
-  <!-- RODAPÉ -->
+  <!-- RODAPE -->
   <footer class="footer">
     <p>© Outplay Arena - Esportes de Areia</p>
     <p>WhatsApp: (42) 99910-9395</p>
@@ -303,7 +303,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let selectedSport = 'Vôlei de Praia';
+    let selectedSport = 'Volei de Praia';
     let selectedTimes = [];
     let bookedSlots = {};
     let blockedDates = {};
@@ -379,10 +379,10 @@
       const carousel = document.getElementById('days-carousel');
       carousel.innerHTML = '';
 
-      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      const monthNames = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
       document.getElementById('month-name-label').innerText = monthNames[todayObj.getMonth()];
 
-      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
 
       for (let i = 0; i < 15; i++) {
         let d = new Date();
@@ -421,11 +421,11 @@
       const year = adminCurrentDateObj.getFullYear();
       const month = adminCurrentDateObj.getMonth();
 
-      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      const monthNames = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
       document.getElementById('admin-month-name-label').innerText = `${monthNames[month]} de ${year}`;
 
       const totalDays = new Date(year, month + 1, 0).getDate();
-      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
 
       let selectedCardElement = null;
 
@@ -598,7 +598,7 @@
         summaryBar.style.display = 'none';
       } else {
         summaryBar.style.display = 'flex';
-        countLabel.innerText = totalSlots === 1 ? '1 horário selecionado' : `${totalSlots} horários selecionados`;
+        countLabel.innerText = totalSlots === 1 ? '1 horario selecionado' : `${totalSlots} horarios selecionados`;
         totalPriceLabel.innerText = `R$ ${totalAmount.toFixed(2).replace('.', ',')}`;
       }
     }
@@ -627,7 +627,7 @@
       const timesVal = document.getElementById('summary-times-val');
       const priceVal = document.getElementById('summary-price-val');
 
-      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
+      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data nao informada';
       const totalAmount = calculateTotalPrice();
 
       dateVal.innerText = dateFormatted;
@@ -644,7 +644,7 @@
 
     function validateStep2AndProceed() {
       if (selectedTimes.length === 0) {
-        alert('Por favor, selecione pelo menos um horário disponível para continuar.');
+        alert('Por favor, selecione pelo menos um horario disponivel para continuar.');
         return;
       }
       goToStep(3);
@@ -686,23 +686,22 @@
     function copyPixKey() {
       const pixKey = document.getElementById('pix-key').innerText;
       navigator.clipboard.writeText(pixKey);
-      alert('Chave PIX copiada para a área de transferência!');
+      alert('Chave PIX copiada para a area de transferencia!');
     }
 
     function sendToWhatsApp() {
       const name = document.getElementById('user-name').value;
       const phone = document.getElementById('user-phone').value;
-      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
+      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data nao informada';
       const totalPriceFormatted = `R$ ${calculateTotalPrice().toFixed(2).replace('.', ',')}`;
       const timesFormatted = selectedTimes.join(', ');
 
-      // Mensagem limpa sem emojis para evitar o erro de caracteres corrompidos no WhatsApp
       const message = "NOVO AGENDAMENTO - OUTPLAY ARENA\n\n" +
                       "Nome: " + name + "\n" +
                       "WhatsApp: " + phone + "\n" +
                       "Esporte: " + selectedSport + "\n" +
                       "Data: " + dateFormatted + "\n" +
-                      "Horários (" + selectedTimes.length + "): " + timesFormatted + "\n" +
+                      "Horarios (" + selectedTimes.length + "): " + timesFormatted + "\n" +
                       "Valor Total: " + totalPriceFormatted + "\n\n" +
                       "Segue o comprovante do PIX em anexo:";
 
@@ -770,12 +769,11 @@
               count++;
               const whatsappClean = booking.phone.replace(/\D/g, '');
               
-              // Textos limpos sem emojis para evitar caracteres corrompidos
-              const textAprovado = `Olá ${booking.name}!\n\nSua reserva de ${booking.sport} para o dia ${dateFormatted} às ${booking.time} foi APROVADA com sucesso na Outplay Arena!\n\nNos vemos em quadra!`;
+              const textAprovado = `Ola ${booking.name}!\n\nSua reserva de ${booking.sport} para o dia ${dateFormatted} as ${booking.time} foi APROVADA com sucesso na Outplay Arena!\n\nNos vemos em quadra!`;
               
-              const textPagamento = `Olá ${booking.name},\n\nPassando para lembrar sobre o envio do comprovante PIX para garantir sua pré-reserva de ${booking.sport} em ${dateFormatted} às ${booking.time}.\n\nQualquer dúvida estamos à disposição!`;
+              const textPagamento = `Ola ${booking.name},\n\nPassando para lembrar sobre o envio do comprovante PIX para garantir sua pre-reserva de ${booking.sport} em ${dateFormatted} as ${booking.time}.\n\nQualquer duvida estamos a disposicao!`;
               
-              const textRecusado = `Olá ${booking.name}.\n\nInfelizmente não recebemos o comprovante a tempo e sua pré-reserva de ${booking.sport} para ${dateFormatted} às ${booking.time} foi cancelada, liberando o horário na agenda.\n\nAgradecemos o contato!`;
+              const textRecusado = `Ola ${booking.name}.\n\nInfelizmente nao recebemos o comprovante a tempo e sua pre-reserva de ${booking.sport} para ${dateFormatted} as ${booking.time} foi cancelada, liberando o horario na agenda.\n\nAgradecemos o contato!`;
 
               const msgAprovadoEncoded = encodeURIComponent(textAprovado);
               const msgPagamentoEncoded = encodeURIComponent(textPagamento);
@@ -789,17 +787,17 @@
                   <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${booking.sport}</span>
                 </div>
                 <div class="pending-actions" style="display: flex; gap: 4px; flex-wrap: wrap;">
-                  <!-- BOTÃO APROVAR -->
+                  <!-- BOTAO APROVAR -->
                   <button class="btn-approve" onclick="approveAndNotify('${date}', ${index}, '${whatsappClean}', \`${textAprovado}\`)">
                     <i class="fa-solid fa-check"></i> Aprovar
                   </button>
                   
-                  <!-- BOTÃO AGUARDANDO PAGAMENTO -->
+                  <!-- BOTAO AGUARDANDO PAGAMENTO -->
                   <a href="https://wa.me/55${whatsappClean}?text=${msgPagamentoEncoded}" target="_blank" style="background:#ffca28; color:#000; padding: 0.3rem 0.5rem; border-radius: 5px; font-weight: 700; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Lembrar Comprovante">
                     <i class="fa-regular fa-clock"></i> Pagamento
                   </a>
 
-                  <!-- BOTÃO RECUSAR -->
+                  <!-- BOTAO RECUSAR -->
                   <button class="btn-reject" onclick="rejectAndNotify('${date}', ${index}, '${whatsappClean}', \`${textRecusado}\`)">
                     <i class="fa-solid fa-xmark"></i> Recusar
                   </button>
@@ -812,7 +810,7 @@
       }
 
       if (count === 0) {
-        container.innerHTML = `<p class="no-pending-msg"><i class="fa-solid fa-circle-check"></i> Nenhuma confirmação de PIX pendente no momento.</p>`;
+        container.innerHTML = `<p class="no-pending-msg"><i class="fa-solid fa-circle-check"></i> Nenhuma confirmacao de PIX pendente no momento.</p>`;
       }
     }
 
@@ -823,7 +821,7 @@
     }
 
     function rejectAndNotify(date, index, phoneClean, rawMessage) {
-      if (confirm('Deseja recusar e liberar este horário da agenda?')) {
+      if (confirm('Deseja recusar e liberar este horario da agenda?')) {
         bookedSlots[date].splice(index, 1);
         if (bookedSlots[date].length === 0) delete bookedSlots[date];
         db.ref('outplay_booked_slots').set(bookedSlots);
@@ -832,7 +830,7 @@
     }
 
     function rejectBooking(date, index) {
-      if (confirm('Deseja liberar este horário da agenda?')) {
+      if (confirm('Deseja liberar este horario da agenda?')) {
         bookedSlots[date].splice(index, 1);
         if (bookedSlots[date].length === 0) delete bookedSlots[date];
         db.ref('outplay_booked_slots').set(bookedSlots);
@@ -875,7 +873,7 @@
         if (booking) {
           const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = booking.phone.replace(/\D/g, '');
-          const textContato = `Olá ${booking.name}! Sobre sua reserva na Outplay Arena para o dia ${dateFormatted} às ${time}:`;
+          const textContato = `Ola ${booking.name}! Sobre sua reserva na Outplay Arena para o dia ${dateFormatted} as ${time}:`;
           const msgContatoEncoded = encodeURIComponent(textContato);
 
           card.innerHTML = `
@@ -894,7 +892,7 @@
               </div>
             </div>
             <button class="btn-cancel-sm" onclick="rejectBooking('${adminSelectedDateStr}', ${bookingIndex})">
-              <i class="fa-solid fa-trash-can"></i> Liberar Horário
+              <i class="fa-solid fa-trash-can"></i> Liberar Horario
             </button>
           `;
         } else {
@@ -903,7 +901,7 @@
               <strong>⏰ ${time}</strong>
               <span class="status-tag available">Livre</span>
             </div>
-            <p class="free-slot-msg"><i class="fa-regular fa-circle-check"></i> Horário disponível</p>
+            <p class="free-slot-msg"><i class="fa-regular fa-circle-check"></i> Horario disponivel</p>
             <button class="btn-block-sm" onclick="blockSlotManually('${adminSelectedDateStr}', '${time}')">
               <i class="fa-solid fa-ban"></i> Bloquear Presencial
             </button>
