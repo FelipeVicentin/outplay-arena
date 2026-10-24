@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v23.1 -->
-  <link rel="stylesheet" href="./style.css?v=23.1">
+  <!-- Estilos CSS com Forçador de Cache v24.0 -->
+  <link rel="stylesheet" href="./style.css?v=24.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -686,6 +686,9 @@
           bookedSlots[date].forEach((booking, index) => {
             if (booking && booking.status === 'pending') {
               count++;
+              const whatsappClean = booking.phone.replace(/\D/g, '');
+              const msgAprovado = encodeURIComponent(`Olá ${booking.name}! Sua reserva de ${booking.sport} para o dia ${dateFormatted} às ${booking.time} foi APROVADA com sucesso na Outplay Arena! 🎾 Nos vemos lá!`);
+
               const item = document.createElement('div');
               item.className = 'pending-card';
               item.innerHTML = `
@@ -693,10 +696,13 @@
                   <strong>👤 ${booking.name}</strong> (${booking.phone})<br>
                   <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${booking.sport}</span>
                 </div>
-                <div class="pending-actions">
+                <div class="pending-actions" style="display: flex; gap: 4px; flex-wrap: wrap;">
                   <button class="btn-approve" onclick="approveBooking('${date}', ${index})">
                     <i class="fa-solid fa-check"></i> Aprovar
                   </button>
+                  <a href="https://wa.me/55${whatsappClean}?text=${msgAprovado}" target="_blank" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 0.3rem 0.5rem; border-radius: 5px; font-weight: 700; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                    <i class="fa-brands fa-whatsapp"></i> Avisar
+                  </a>
                   <button class="btn-reject" onclick="rejectBooking('${date}', ${index})">
                     <i class="fa-solid fa-xmark"></i> Recusar
                   </button>
@@ -733,6 +739,7 @@
 
       const times = ['16:00 - 17:00', '17:00 - 18:00', '18:00 - 19:00', '19:00 - 20:00', '20:00 - 21:00', '21:00 - 22:00'];
       const currentBookings = bookedSlots[adminSelectedDateStr] || [];
+      const dateFormatted = adminSelectedDateStr ? adminSelectedDateStr.split('-').reverse().join('/') : '';
 
       times.forEach(time => {
         const bookingIndex = currentBookings.findIndex(b => b && b.time === time);
@@ -744,6 +751,7 @@
         if (booking) {
           const statusText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = booking.phone.replace(/\D/g, '');
+          const msgContato = encodeURIComponent(`Olá ${booking.name}, sobre sua reserva na Outplay Arena (${dateFormatted} às ${time}):`);
 
           card.innerHTML = `
             <div class="time-header">
@@ -753,9 +761,11 @@
             <div class="client-detail">
               <div class="detail-line"><i class="fa-solid fa-volleyball icon-lime"></i> <strong>Esporte:</strong> ${booking.sport}</div>
               <div class="detail-line"><i class="fa-regular fa-user icon-lime"></i> <strong>Nome:</strong> ${booking.name}</div>
-              <div class="detail-line">
-                <i class="fa-brands fa-whatsapp icon-lime"></i> <strong>Tel:</strong> 
-                <a href="https://wa.me/55${whatsappClean}" target="_blank" class="phone-link">${booking.phone}</a>
+              <div class="detail-line" style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
+                <span><i class="fa-brands fa-whatsapp icon-lime"></i> <strong>Tel:</strong> ${booking.phone}</span>
+                <a href="https://wa.me/55${whatsappClean}?text=${msgContato}" target="_blank" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                  <i class="fa-brands fa-whatsapp"></i> Chamar
+                </a>
               </div>
             </div>
             <button class="btn-cancel-sm" onclick="rejectBooking('${adminSelectedDateStr}', ${bookingIndex})">
