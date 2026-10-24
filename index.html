@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v24.1 -->
-  <link rel="stylesheet" href="./style.css?v=24.1">
+  <!-- Estilos CSS com Forçador de Cache v25.0 -->
+  <link rel="stylesheet" href="./style.css?v=25.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -123,14 +123,22 @@
 
         <div class="days-carousel-scroll" id="days-carousel"></div>
 
-        <div class="period-section">
-          <h3 class="period-title">TARDE</h3>
-          <div class="time-grid" id="afternoon-grid"></div>
+        <!-- Alerta de Dia Bloqueado -->
+        <div id="day-blocked-alert" style="display: none; background: rgba(255, 82, 82, 0.15); border: 1px solid #ff5252; color: #ff8080; padding: 1rem; border-radius: 10px; text-align: center; margin-bottom: 1rem;">
+          <i class="fa-solid fa-ban" style="font-size: 1.5rem; margin-bottom: 0.4rem;"></i>
+          <p style="font-weight: 700; font-size: 0.9rem;" id="blocked-reason-text">Arena Fechada nesta data (Chuva / Manutenção / Evento)</p>
         </div>
 
-        <div class="period-section" style="margin-top: 1rem;">
-          <h3 class="period-title">NOITE</h3>
-          <div class="time-grid" id="night-grid"></div>
+        <div id="times-selection-wrapper">
+          <div class="period-section">
+            <h3 class="period-title">TARDE</h3>
+            <div class="time-grid" id="afternoon-grid"></div>
+          </div>
+
+          <div class="period-section" style="margin-top: 1rem;">
+            <h3 class="period-title">NOITE (Horário Nobre)</h3>
+            <div class="time-grid" id="night-grid"></div>
+          </div>
         </div>
 
         <div class="summary-selection-bar" id="summary-selection-bar" style="display: none;">
@@ -140,7 +148,7 @@
 
         <div class="btn-group" style="margin-top: 1.2rem;">
           <button class="btn-secondary" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
-          <button class="btn-primary" onclick="validateStep2AndProceed()">Continuar <i class="fa-solid fa-arrow-right"></i></button>
+          <button class="btn-primary" id="btn-proceed-step2" onclick="validateStep2AndProceed()">Continuar <i class="fa-solid fa-arrow-right"></i></button>
         </div>
       </div>
 
@@ -246,7 +254,7 @@
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-regular fa-calendar-days icon-lime"></i>
-            <h3>Consultar Agenda</h3>
+            <h3>Consultar & Gerenciar Agenda</h3>
           </div>
 
           <div class="calendar-nav-container">
@@ -256,6 +264,14 @@
           </div>
 
           <div class="days-carousel-scroll" id="admin-days-carousel"></div>
+
+          <!-- BOTÃO DE BLOQUEIO DO DIA COMPLETO -->
+          <div id="admin-day-control-box" style="margin-bottom: 0.8rem; background: rgba(0, 0, 0, 0.2); padding: 0.6rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span id="admin-block-status-text" style="font-size: 0.75rem; color: var(--texto-suave);">Dia aberto para agendamentos</span>
+            <button id="btn-toggle-block-day" class="btn-reject" style="font-size: 0.7rem; padding: 0.4rem 0.6rem;" onclick="toggleBlockSelectedDate()">
+              <i class="fa-solid fa-ban"></i> Fechar Dia
+            </button>
+          </div>
 
           <div class="time-grid-admin" id="admin-calendar-grid"></div>
         </div>
@@ -290,7 +306,12 @@
     let selectedSport = 'Vôlei de Praia';
     let selectedTimes = [];
     let bookedSlots = {};
-    const SLOT_PRICE = 60.00;
+    let blockedDates = {}; // Dias bloqueados por chuva/evento
+
+    // REGRAS DE PREÇOS FLEXÍVEIS
+    const PRICE_DAY = 50.00;      // Tarde (16h - 18h)
+    const PRICE_NIGHT = 60.00;    // Noite / Horário Nobre (18h - 22h)
+    const PRICE_WEEKEND = 70.00;  // Finais de Semana (Sáb/Dom)
     
     let todayObj = new Date();
     let selectedDateStr = formatDateKey(todayObj);
@@ -314,7 +335,13 @@
       renderPendingRequests();
     });
 
-    // Função de máscara automática para o WhatsApp
+    db.ref('outplay_blocked_dates').on('value', (snapshot) => {
+      blockedDates = snapshot.val() || {};
+      renderTimes();
+      renderAdminCalendar();
+    });
+
+    // Máscara de WhatsApp
     function applyPhoneMask(input) {
       let value = input.value.replace(/\D/g, '');
       if (value.length > 11) value = value.slice(0, 11);
@@ -336,6 +363,23 @@
       return `${year}-${month}-${day}`;
     }
 
+    // Calcula o preço dinâmico com base no dia da semana e horário
+    function getSlotPrice(dateStr, timeStr) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const dateObj = new Date(year, month - 1, day);
+      const dayOfWeek = dateObj.getDay(); // 0 = Dom, 6 = Sáb
+
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return PRICE_WEEKEND; // Final de semana
+      }
+
+      if (timeStr.startsWith('16:') || timeStr.startsWith('17:')) {
+        return PRICE_DAY; // Tarde
+      }
+
+      return PRICE_NIGHT; // Noite / Nobre
+    }
+
     function render15DaysCarousel() {
       const carousel = document.getElementById('days-carousel');
       carousel.innerHTML = '';
@@ -353,11 +397,14 @@
         const dayName = weekdaysNames[d.getDay()];
         const dayNum = String(d.getDate()).padStart(2, '0');
 
+        const isBlocked = !!blockedDates[dateKey];
+
         const card = document.createElement('div');
-        card.className = 'day-card' + (dateKey === selectedDateStr ? ' selected' : '');
+        card.className = 'day-card' + (dateKey === selectedDateStr ? ' selected' : '') + (isBlocked ? ' disabled' : '');
         card.innerHTML = `
           <span class="day-name">${dayName}</span>
           <span class="day-number">${dayNum}</span>
+          ${isBlocked ? '<span style="font-size: 0.5rem; color: #ff8080;">Fechado</span>' : ''}
         `;
 
         card.onclick = () => {
@@ -392,12 +439,14 @@
         const d = new Date(year, month, day);
         const dateKey = formatDateKey(d);
         const dayName = weekdaysNames[d.getDay()];
+        const isBlocked = !!blockedDates[dateKey];
 
         const card = document.createElement('div');
         card.className = 'day-card' + (dateKey === adminSelectedDateStr ? ' selected' : '');
         card.innerHTML = `
           <span class="day-name">${dayName}</span>
           <span class="day-number">${String(day).padStart(2, '0')}</span>
+          ${isBlocked ? '<span style="font-size: 0.5rem; color: #ff8080;">Fechado</span>' : ''}
         `;
 
         card.onclick = () => {
@@ -454,10 +503,27 @@
     function renderTimes() {
       const afternoonGrid = document.getElementById('afternoon-grid');
       const nightGrid = document.getElementById('night-grid');
+      const blockedAlert = document.getElementById('day-blocked-alert');
+      const timesWrapper = document.getElementById('times-selection-wrapper');
+      const btnProceed = document.getElementById('btn-proceed-step2');
+
       if (!afternoonGrid || !nightGrid) return;
 
       afternoonGrid.innerHTML = '';
       nightGrid.innerHTML = '';
+
+      // Verifica se o dia está totalmente bloqueado
+      if (blockedDates[selectedDateStr]) {
+        blockedAlert.style.display = 'block';
+        timesWrapper.style.display = 'none';
+        btnProceed.style.display = 'none';
+        updateSummaryBar();
+        return;
+      } else {
+        blockedAlert.style.display = 'none';
+        timesWrapper.style.display = 'block';
+        btnProceed.style.display = 'flex';
+      }
 
       const afternoonTimes = [
         { time: '16:00 - 17:00' },
@@ -477,6 +543,7 @@
         const bookingData = currentBookings.find(b => b && b.time === item.time);
         const isBooked = !!bookingData;
         const isSelected = selectedTimes.includes(item.time);
+        const slotPrice = getSlotPrice(selectedDateStr, item.time);
 
         const div = document.createElement('div');
         div.className = 'time-slot' + (isBooked ? ' disabled' : '') + (isSelected ? ' selected' : '');
@@ -490,7 +557,7 @@
         } else {
           div.innerHTML = `
             <div class="time-text">${item.time}</div>
-            <div class="time-price">${isSelected ? 'selecionado' : 'disponível'}</div>
+            <div class="time-price">${isSelected ? 'Selecionado' : `R$ ${slotPrice.toFixed(2).replace('.', ',')}`}</div>
           `;
 
           div.onclick = () => {
@@ -517,6 +584,14 @@
       renderTimes();
     }
 
+    function calculateTotalPrice() {
+      let total = 0;
+      selectedTimes.forEach(t => {
+        total += getSlotPrice(selectedDateStr, t);
+      });
+      return total;
+    }
+
     function updateSummaryBar() {
       const summaryBar = document.getElementById('summary-selection-bar');
       const countLabel = document.getElementById('selected-count-label');
@@ -524,17 +599,13 @@
       if (!summaryBar || !countLabel || !totalPriceLabel) return;
 
       const totalSlots = selectedTimes.length;
-      const totalAmount = totalSlots * SLOT_PRICE;
+      const totalAmount = calculateTotalPrice();
 
       if (totalSlots === 0) {
         summaryBar.style.display = 'none';
       } else {
         summaryBar.style.display = 'flex';
-        if (totalSlots === 1) {
-          countLabel.innerText = '1 horário selecionado';
-        } else {
-          countLabel.innerText = `${totalSlots} horários selecionados`;
-        }
+        countLabel.innerText = totalSlots === 1 ? '1 horário selecionado' : `${totalSlots} horários selecionados`;
         totalPriceLabel.innerText = `R$ ${totalAmount.toFixed(2).replace('.', ',')}`;
       }
     }
@@ -564,7 +635,7 @@
       const priceVal = document.getElementById('summary-price-val');
 
       const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
-      const totalAmount = selectedTimes.length * SLOT_PRICE;
+      const totalAmount = calculateTotalPrice();
 
       dateVal.innerText = dateFormatted;
       timesVal.innerText = selectedTimes.join(' | ');
@@ -599,7 +670,7 @@
         bookedSlots[selectedDateStr] = [];
       }
       
-      const totalPriceFormatted = `R$ ${(selectedTimes.length * SLOT_PRICE).toFixed(2).replace('.', ',')}`;
+      const totalPriceFormatted = `R$ ${calculateTotalPrice().toFixed(2).replace('.', ',')}`;
 
       selectedTimes.forEach(time => {
         const existing = bookedSlots[selectedDateStr].find(b => b && b.time === time);
@@ -629,7 +700,7 @@
       const name = document.getElementById('user-name').value;
       const phone = document.getElementById('user-phone').value;
       const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
-      const totalPriceFormatted = `R$ ${(selectedTimes.length * SLOT_PRICE).toFixed(2).replace('.', ',')}`;
+      const totalPriceFormatted = `R$ ${calculateTotalPrice().toFixed(2).replace('.', ',')}`;
       const timesFormatted = selectedTimes.join(', ');
 
       const message = `🎾 *NOVO AGENDAMENTO - OUTPLAY ARENA*\n\n` +
@@ -670,6 +741,23 @@
       renderPendingRequests();
       renderAdminMonthCarousel();
       renderAdminCalendar();
+    }
+
+    function toggleBlockSelectedDate() {
+      const isBlocked = !!blockedDates[adminSelectedDateStr];
+      const dateFormatted = adminSelectedDateStr.split('-').reverse().join('/');
+
+      if (isBlocked) {
+        if (confirm(`Deseja REABRIR a agenda para o dia ${dateFormatted}?`)) {
+          delete blockedDates[adminSelectedDateStr];
+          db.ref('outplay_blocked_dates').set(blockedDates);
+        }
+      } else {
+        if (confirm(`Deseja FECHAR COMPLETAMENTE a agenda para o dia ${dateFormatted} (Chuva/Evento)?`)) {
+          blockedDates[adminSelectedDateStr] = true;
+          db.ref('outplay_blocked_dates').set(blockedDates);
+        }
+      }
     }
 
     function renderPendingRequests() {
@@ -734,12 +822,29 @@
 
     function renderAdminCalendar() {
       const grid = document.getElementById('admin-calendar-grid');
+      const statusText = document.getElementById('admin-block-status-text');
+      const btnToggleBlock = document.getElementById('btn-toggle-block-day');
+
       if (!grid) return;
       grid.innerHTML = '';
 
+      const isBlocked = !!blockedDates[adminSelectedDateStr];
+      const dateFormatted = adminSelectedDateStr ? adminSelectedDateStr.split('-').reverse().join('/') : '';
+
+      if (statusText && btnToggleBlock) {
+        if (isBlocked) {
+          statusText.innerHTML = `<strong style="color: #ff5252;"><i class="fa-solid fa-ban"></i> Dia Fechado no Sistema</strong>`;
+          btnToggleBlock.innerHTML = `<i class="fa-solid fa-lock-open"></i> Reabrir Dia`;
+          btnToggleBlock.style.backgroundColor = '#25D366';
+        } else {
+          statusText.innerHTML = `Dia aberto para agendamentos`;
+          btnToggleBlock.innerHTML = `<i class="fa-solid fa-ban"></i> Fechar Dia Completo`;
+          btnToggleBlock.style.backgroundColor = '#ff5252';
+        }
+      }
+
       const times = ['16:00 - 17:00', '17:00 - 18:00', '18:00 - 19:00', '19:00 - 20:00', '20:00 - 21:00', '21:00 - 22:00'];
       const currentBookings = bookedSlots[adminSelectedDateStr] || [];
-      const dateFormatted = adminSelectedDateStr ? adminSelectedDateStr.split('-').reverse().join('/') : '';
 
       times.forEach(time => {
         const bookingIndex = currentBookings.findIndex(b => b && b.time === time);
@@ -749,14 +854,14 @@
         card.className = 'admin-time-card ' + (booking ? (booking.status === 'confirmed' ? 'confirmed' : 'pending') : 'available');
 
         if (booking) {
-          const statusText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
+          const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = booking.phone.replace(/\D/g, '');
           const msgContato = encodeURIComponent(`Olá ${booking.name}, sobre sua reserva na Outplay Arena (${dateFormatted} às ${time}):`);
 
           card.innerHTML = `
             <div class="time-header">
               <strong>⏰ ${time}</strong>
-              <span class="status-tag ${booking.status}">${statusText}</span>
+              <span class="status-tag ${booking.status}">${statusTagText}</span>
             </div>
             <div class="client-detail">
               <div class="detail-line"><i class="fa-solid fa-volleyball icon-lime"></i> <strong>Esporte:</strong> ${booking.sport}</div>
@@ -791,12 +896,13 @@
 
     function blockSlotManually(date, time) {
       if (!bookedSlots[date]) bookedSlots[date] = [];
+      const price = getSlotPrice(date, time);
       bookedSlots[date].push({
         time: time,
         sport: 'Bloqueio Presencial',
         name: 'Dono / Presencial',
         phone: '(42) 99910-9395',
-        price: 'R$ 60,00',
+        price: `R$ ${price.toFixed(2).replace('.', ',')}`,
         status: 'confirmed'
       });
       db.ref('outplay_booked_slots').set(bookedSlots);
