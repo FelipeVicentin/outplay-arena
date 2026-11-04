@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v36.0 -->
-  <link rel="stylesheet" href="./style.css?v=36.0">
+  <!-- Estilos CSS com Forçador de Cache v37.0 -->
+  <link rel="stylesheet" href="./style.css?v=37.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -252,44 +252,37 @@
     </div>
   </main>
 
-  <!-- MODAL DOS TERMOS DE USO (ATUALIZADO COM SINAL DE R$ 20) -->
+  <!-- MODAL DOS TERMOS DE USO (VERSÃO SIMPLIFICADA E DIRETA) -->
   <div id="terms-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
       <div class="modal-header">
-        <h2><i class="fa-solid fa-file-contract"></i> Termos de Uso e Condicoes Gerais - Outplay Arena</h2>
+        <h2><i class="fa-solid fa-file-contract"></i> Regras e Termos da Outplay Arena</h2>
         <span class="close-btn" onclick="closeTermsModal()">&times;</span>
       </div>
-      <div style="font-size: 0.8rem; color: #d0d0d0; line-height: 1.6; margin-top: 1rem; text-align: left;">
+      <div style="font-size: 0.85rem; color: #d0d0d0; line-height: 1.6; margin-top: 1rem; text-align: left;">
         
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">1. Da Reserva e Modalidades de Pagamento</h4>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">1. Pagamento e Garantia da Reserva</h4>
         <p style="margin-bottom: 0.8rem;">
-          <b>1.1. Pre-Reserva:</b> O preenchimento dos dados no sistema gera uma retencao temporaria da quadra por ate 10 (dez) minutos. A efetivacao e garantia da vaga condicionam-se obrigatoriamente a confirmacao do pagamento via PIX dentro deste periodo.<br>
-          <b>1.2. Opcao Quitacao Integral:</b> O usuario podera optar pela quitacao do valor total da locacao via PIX no ato do agendamento online.<br>
-          <b>1.3. Opcao Pagamento via Sinal:</b> Caso optado pelo pagamento parcial, o usuario devera efetuar o pagamento do sinal de garantia padronizado em <b>R$ 20,00 por horario</b> via PIX. O saldo remanescente devera ser quitado integralmente na recepcao da arena antes da adentracao em quadra.
+          O seu horário fica pré-reservado por 10 minutos. Para confirmar, escolha uma das opções: pagar o <b>valor total via PIX</b> ou pagar apenas o <b>sinal de R$ 20,00 por horário via PIX</b> (o restante você paga em dinheiro ou PIX na recepção da arena antes de jogar).
         </p>
 
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">2. Da Politica de Chuva e Condicoes Climaticas (Quadra Descoberta)</h4>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">2. Política de Chuva (Quadra Descoberta)</h4>
         <p style="margin-bottom: 0.8rem;">
-          <b>2.1. Quadra Descoberta:</b> O contratante declara ciencia previa de que a Outplay Arena conta com estrutura de quadra a ceu aberto.<br>
-          <b>2.2. Interrupcao por Intemperies:</b> Em casos de chuvas fortes, tempestades ou descargas eletricas no horario exato da locacao que inviabilizem a pratica esportiva com seguranca, a administracao declarara a quadra impraticavel.<br>
-          <b>2.3. Conversao em Credito:</b> O montante pago (seja o sinal de garantia ou o valor total) sera convertido integralmente em credito de locacao para utilizacao no prazo de ate 30 (trinta) dias corridos. <b>Em nenhuma hipotese havera devolucao ou reembolso de valores em especie/PIX decorrentes de imprevistos climaticos.</b>
+          Nossa quadra é descoberta. Se chover forte ou houver tempestade na hora do seu jogo a ponto de impedir a partida, o valor pago (sinal ou total) vira <b>crédito para você remarcar em até 30 dias</b>. Não realizamos reembolso em dinheiro por motivos de clima.
         </p>
 
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">3. Das Regras de Cancelamento, Reagendamento e Nao Comparecimento</h4>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">3. Cancelamento e Reagendamento</h4>
         <p style="margin-bottom: 0.8rem;">
-          <b>3.1. Reagendamento por Solicitacao do Cliente:</b> Solicitacoes de alteracao de data ou horario devem ser comunicadas a administracao com antecedencia minima de 2 (duas) horas do horario agendado, sujeitas a disponibilidade de agenda.<br>
-          <b>3.2. Cancelamento Fora do Prazo e "No-Show":</b> O cancelamento solicitado com menos de 2 (duas) horas de antecedencia ou o nao comparecimento no horario reservado (no-show) acarretara a perda automatica e retencao integral do valor pago a titulo de sinal ou quitacao, sem direito a ressarcimento ou geracao de creditos futuros.
+          Precisa mudar o horário? Avise-nos com no mínimo <b>2 horas de antecedência</b>. Cancelamentos em cima da hora ou faltas sem aviso (no-show) resultam na perda do valor pago ou do sinal.
         </p>
 
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">4. Normas de Utilizacao, Seguranca e Conservacao</h4>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">4. Regras da Quadra</h4>
         <p style="margin-bottom: 0.8rem;">
-          <b>4.1. Pontualidade:</b> O horario de inicio e termino da locacao deve ser rigorosamente respeitado, incluindo o tempo de aquecimento e desocupacao da quadra.<br>
-          <b>4.2. Proibicao Rigorosa de Vidros:</b> E terminantemente proibida a circulacao, transporte ou consumo de bebidas em recipientes ou copos de vidro na quadra e areas perimetrais de areia, sob pena de interrupcao imediata da partida para prevencao de acidentes.<br>
-          <b>4.3. Danos ao Patrimonio:</b> Danos provocados a estrutura da arena, redes, postes ou equipamentos por mau uso ou conduta inadequada serao de inteira responsabilidade financeira do titular da reserva.
+          Respeite os horários de início e término. <b>É proibida a entrada de copos ou garrafas de vidro</b> na área de areia para evitar acidentes.
         </p>
 
       </div>
-      <button class="btn-primary" style="margin-top: 1rem; width: 100%;" onclick="closeTermsModal()">Declaro que Li, Entendi e Concordo</button>
+      <button class="btn-primary" style="margin-top: 1rem; width: 100%;" onclick="closeTermsModal()">Li e Concordo</button>
     </div>
   </div>
 
@@ -430,8 +423,6 @@
     }
 
     // TABELA DE PREÇOS E SINAL PADRONIZADO EM R$ 20,00 POR HORÁRIO:
-    // 18h as 21h -> R$ 60 (Sinal R$ 20)
-    // 16h as 18h e 21h as 22h -> R$ 40 (Sinal R$ 20)
     function getSlotPricing(timeStr) {
       let fullPrice = (timeStr.startsWith('18:') || timeStr.startsWith('19:') || timeStr.startsWith('20:')) ? 60.00 : 40.00;
       let deposit = 20.00; // Sinal fixo padronizado
