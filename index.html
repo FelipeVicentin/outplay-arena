@@ -26,8 +26,8 @@
   <!-- FontAwesome Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Estilos CSS com Forçador de Cache v33.0 -->
-  <link rel="stylesheet" href="./style.css?v=33.0">
+  <!-- Estilos CSS com Forçador de Cache v34.0 -->
+  <link rel="stylesheet" href="./style.css?v=34.0">
 
   <!-- SDKs do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -69,7 +69,7 @@
         </div>
         <div class="step-item" id="step3-indicator">
           <div class="step-number">3</div>
-          <div class="step-label">Sinal PIX</div>
+          <div class="step-label">Pagamento</div>
         </div>
         <div class="step-item" id="step4-indicator">
           <div class="step-number">4</div>
@@ -131,24 +131,24 @@
 
         <div id="times-selection-wrapper">
           <div class="period-section">
-            <h3 class="period-title">TARDE (R$ 40 - Sinal R$ 10)</h3>
+            <h3 class="period-title">TARDE (R$ 40,00)</h3>
             <div class="time-grid" id="afternoon-grid"></div>
           </div>
 
           <div class="period-section" style="margin-top: 1rem;">
-            <h3 class="period-title">NOITE PRIME (R$ 60 - Sinal R$ 20)</h3>
+            <h3 class="period-title">NOITE PRIME (R$ 60,00)</h3>
             <div class="time-grid" id="night-prime-grid"></div>
           </div>
 
           <div class="period-section" style="margin-top: 1rem;">
-            <h3 class="period-title">NOITE LATE (R$ 40 - Sinal R$ 10)</h3>
+            <h3 class="period-title">NOITE LATE (R$ 40,00)</h3>
             <div class="time-grid" id="night-late-grid"></div>
           </div>
         </div>
 
         <div class="summary-selection-bar" id="summary-selection-bar" style="display: none;">
           <span id="selected-count-label"></span>
-          <span id="selected-total-price" class="summary-total-price">Sinal: R$ 0,00</span>
+          <span id="selected-total-price" class="summary-total-price">Total: R$ 0,00</span>
         </div>
 
         <div class="btn-group" style="margin-top: 1.2rem;">
@@ -157,9 +157,9 @@
         </div>
       </div>
 
-      <!-- ETAPA 3: DADOS DO CLIENTE, RESUMO DO SINAL & PAGAMENTO PIX -->
+      <!-- ETAPA 3: DADOS, OPCAO DE PAGAMENTO E PIX -->
       <div id="step3" class="step-content" style="display: none;">
-        <h2 class="step-title">Dados e Pagamento do Sinal</h2>
+        <h2 class="step-title">Dados e Pagamento</h2>
 
         <div class="booking-summary-card">
           <div class="summary-row">
@@ -170,17 +170,9 @@
             <span><i class="fa-regular fa-clock icon-lime"></i> Horarios:</span>
             <strong id="summary-times-val">Nenhum</strong>
           </div>
-          <div class="summary-row">
-            <span>Valor Total do Horario:</span>
+          <div class="summary-row summary-total-row">
+            <span>Valor Total:</span>
             <strong id="summary-total-full-price">R$ 0,00</strong>
-          </div>
-          <div class="summary-row" style="color: #25D366; font-size: 1.05rem;">
-            <span><strong>Sinal a pagar agora (PIX):</strong></span>
-            <strong id="summary-deposit-val">R$ 0,00</strong>
-          </div>
-          <div class="summary-row" style="color: #ffca28; font-size: 0.85rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 4px;">
-            <span>Restante a pagar na Arena:</span>
-            <strong id="summary-remaining-val">R$ 0,00</strong>
           </div>
         </div>
 
@@ -197,23 +189,41 @@
           <input type="tel" id="user-phone" class="form-input" placeholder="(42) 99999-9999" maxlength="15" oninput="applyPhoneMask(this)">
         </div>
 
-        <div class="pix-box">
+        <!-- ESCOLHA DA FORMA DE PAGAMENTO -->
+        <div class="form-group" style="margin-top: 1rem;">
+          <label><i class="fa-solid fa-wallet"></i> Escolha a forma de pagamento:</label>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+            <label style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.85rem;">
+              <input type="radio" name="payment-option" value="full" checked onchange="updatePaymentDisplay()" style="accent-color: var(--verde-limao);">
+              <span><strong>Pagar Valor Total via PIX</strong> (Quita tudo agora)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.85rem;">
+              <input type="radio" name="payment-option" value="deposit" onchange="updatePaymentDisplay()" style="accent-color: var(--verde-limao);">
+              <span><strong>Pagar apenas o Sinal via PIX</strong> (O restante paga no balcão)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- CAIXA DINÂMICA DE VALORES A PAGAR AGORA -->
+        <div class="pix-box" style="margin-top: 1rem;">
           <div class="pix-header">
             <i class="fa-solid fa-qrcode pix-icon"></i>
-            <span>Pagamento do Sinal via PIX</span>
+            <span id="pix-box-title">Pagamento via PIX: Valor Total</span>
+          </div>
+          <div style="text-align: center; margin: 8px 0; font-size: 1.2rem; font-weight: 800; color: var(--verde-limao);" id="pix-amount-display">
+            R$ 0,00
           </div>
           <p class="pix-desc">Chave PIX da Outplay Arena:</p>
           <div class="pix-key-container">
             <span id="pix-key">42999109395</span>
             <button class="btn-copy" onclick="copyPixKey()"><i class="fa-regular fa-copy"></i> Copiar</button>
           </div>
-          <!-- AVISO DE TEMPO LIMITE PIX -->
-          <small class="pix-info" style="color: #ffca28; margin-top: 6px; font-weight: 600;">
-            <i class="fa-solid fa-triangle-exclamation"></i> Atencao: Envie o comprovante do sinal no WhatsApp em ate 10 minutos para garantir sua reserva.
+          <small class="pix-info" style="color: #ffca28; margin-top: 6px; font-weight: 600; display: block;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Atencao: Envie o comprovante no WhatsApp em ate 10 minutos para garantir sua reserva.
           </small>
         </div>
 
-        <!-- ACEITE DOS TERMOS DE USO E REGRAS DA ARENA -->
+        <!-- ACEITE DOS TERMOS -->
         <div style="margin-top: 1rem; background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
           <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.8rem; color: var(--texto-suave);">
             <input type="checkbox" id="terms-checkbox" style="margin-top: 3px; accent-color: var(--verde-limao); cursor: pointer;">
@@ -231,18 +241,18 @@
       <div id="step4" class="step-content" style="display: none; text-align: center;">
         <i class="fa-solid fa-circle-check success-icon"></i>
         <h2 class="step-title" style="margin-bottom: 0.4rem;">Quase la!</h2>
-        <p class="success-desc">Seus horarios ja foram pre-reservados no sistema! Clique no botao abaixo para enviar os dados e o comprovante do sinal no WhatsApp oficial da Outplay Arena para confirmar.</p>
+        <p class="success-desc">Seus horarios ja foram pre-reservados no sistema! Clique no botao abaixo para enviar os dados e o comprovante no WhatsApp oficial da Outplay Arena para confirmar.</p>
 
         <button class="btn-whatsapp" onclick="sendToWhatsApp()">
           <svg class="whatsapp-btn-svg" viewBox="0 0 448 512" width="20" height="20" fill="#FFFFFF"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-          Enviar Comprovante do Sinal no WhatsApp
+          Enviar Comprovante no WhatsApp
         </button>
       </div>
 
     </div>
   </main>
 
-  <!-- MODAL DOS TERMOS DE USO (QUADRA DESCOBERTA E SINAL) -->
+  <!-- MODAL DOS TERMOS DE USO -->
   <div id="terms-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
       <div class="modal-header">
@@ -251,20 +261,19 @@
       </div>
       <div style="font-size: 0.8rem; color: #d0d0d0; line-height: 1.6; margin-top: 1rem; text-align: left;">
         
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">1. Do Sinal de Reserva e Pagamento</h4>
-        <p style="margin-bottom: 0.8rem;">Para garantir a reserva do horario, e obrigatorio o pagamento do sinal via PIX no ato do agendamento (R$ 20,00 para horarios prime de R$ 60,00 / R$ 10,00 para horarios de R$ 40,00). O valor restante da locacao devera ser quitado na arena antes do inicio da partida.</p>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">1. Das Formas de Pagamento e Sinal</h4>
+        <p style="margin-bottom: 0.8rem;">O cliente pode optar por quitar o valor total via PIX ou pagar apenas o sinal de reserva (R$ 20,00 para horarios de R$ 60,00 / R$ 10,00 para horarios de R$ 40,00), quitando o restante presencialmente na arena antes de iniciar a partida.</p>
 
         <h4 style="color: #ffca28; margin-bottom: 0.3rem;">2. Da Politica de Chuva (Quadra Descoberta)</h4>
-        <p style="margin-bottom: 0.8rem;">A Outplay Arena possui quadra descoberta. Em caso de chuvas fortes ou tempestades no momento do horario agendado que inviabilizem a partida, o valor do sinal pago sera convertido integralmente em credito para remarcacao dentro do prazo de 30 dias. Nao havera devolucao do sinal em dinheiro.</p>
+        <p style="margin-bottom: 0.8rem;">A Outplay Arena possui quadra descoberta. Em caso de chuvas fortes ou tempestades no momento do horario que inviabilizem o jogo, o valor pago (seja sinal ou total) sera convertido integralmente em credito para remarcacao em ate 30 dias. Nao havera restituicao em dinheiro.</p>
 
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">3. Do Reagendamento Pessoal e Cancelamento</h4>
-        <p style="margin-bottom: 0.8rem;">Reagendamentos por iniciativa do cliente devem ser solicitados com no minimo 2 horas de antecedencia do horario agendado para manter o credito do sinal. Cancelamentos com menos de 2 horas ou nao comparecimento (no-show) acarretarao a perda automatica do valor do sinal pago.</p>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">3. Do Cancelamento e Reagendamento Pessoal</h4>
+        <p style="margin-bottom: 0.8rem;">Reagendamentos devem ser solicitados com no minimo 2 horas de antecedencia. Cancelamentos com menos de 2 horas ou ausencia (no-show) implicam na perda do valor pago como sinal ou creditos.</p>
 
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">4. Das Regras de Conduta e Uso da Quadra</h4>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">4. Das Regras de Conduta</h4>
         <ul style="margin-left: 1.2rem; margin-bottom: 0.8rem;">
-          <li><b>Horarios:</b> Respeite rigorosamente o inicio e termino da sua locacao.</li>
-          <li><b>Proibicao de Vidros:</b> E estritamente proibida a entrada de garrafas ou copos de vidro nas proximidades da quadra para evitar acidentes.</li>
-          <li><b>Conservacao:</b> Danos aos equipamentos da arena serao de responsabilidade do locatario.</li>
+          <li><b>Horarios:</b> Respeite rigorosamente o inicio e termino da locacao.</li>
+          <li><b>Vidros:</b> Proibido o uso de garrafas ou copos de vidro nas proximidades da quadra.</li>
         </ul>
 
       </div>
@@ -296,7 +305,7 @@
         <div class="admin-section">
           <div class="section-title-box">
             <i class="fa-solid fa-bell icon-warning"></i>
-            <h3>Aprovacoes Pendentes (Sinais PIX)</h3>
+            <h3>Aprovacoes Pendentes (PIX)</h3>
           </div>
           <div id="pending-requests-container" class="pending-list"></div>
         </div>
@@ -408,9 +417,9 @@
       return `${year}-${month}-${day}`;
     }
 
-    // REGRA DE VALORES E SINAIS DAS QUADRAS
-    // Das 18 as 21: R$ 60 (Sinal: R$ 20)
-    // Das 16 as 18 e das 21 as 22: R$ 40 (Sinal: R$ 10)
+    // TABELA DE PREÇOS: 
+    // 18h as 21h -> R$ 60 (Sinal R$ 20)
+    // 16h as 18h e 21h as 22h -> R$ 40 (Sinal R$ 10)
     function getSlotPricing(timeStr) {
       if (timeStr.startsWith('18:') || timeStr.startsWith('19:') || timeStr.startsWith('20:')) {
         return { fullPrice: 60.00, deposit: 20.00, remaining: 40.00 };
@@ -588,7 +597,7 @@
         } else {
           div.innerHTML = `
             <div class="time-text">${item.time}</div>
-            <div class="time-price">${isSelected ? 'Selecionado' : `Sinal: R$ ${pricing.deposit.toFixed(2).replace('.', ',')}`}</div>
+            <div class="time-price">${isSelected ? 'Selecionado' : `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}`}</div>
           `;
 
           div.onclick = () => {
@@ -645,7 +654,7 @@
       } else {
         summaryBar.style.display = 'flex';
         countLabel.innerText = totalSlots === 1 ? '1 horario selecionado' : `${totalSlots} horarios selecionados`;
-        totalPriceLabel.innerText = `Sinal PIX: R$ ${totals.totalDeposit.toFixed(2).replace('.', ',')}`;
+        totalPriceLabel.innerText = `Total: R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`;
       }
     }
 
@@ -672,8 +681,6 @@
       const dateVal = document.getElementById('summary-date-val');
       const timesVal = document.getElementById('summary-times-val');
       const totalFullVal = document.getElementById('summary-total-full-price');
-      const depositVal = document.getElementById('summary-deposit-val');
-      const remainingVal = document.getElementById('summary-remaining-val');
 
       const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data nao informada';
       const totals = calculateTotals();
@@ -681,8 +688,25 @@
       dateVal.innerText = dateFormatted;
       timesVal.innerText = selectedTimes.join(' | ');
       totalFullVal.innerText = `R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`;
-      depositVal.innerText = `R$ ${totals.totalDeposit.toFixed(2).replace('.', ',')}`;
-      remainingVal.innerText = `R$ ${totals.totalRemaining.toFixed(2).replace('.', ',')}`;
+
+      // Resetar para a primeira opção por padrão (Pagar Total)
+      document.querySelector('input[name="payment-option"][value="full"]').checked = true;
+      updatePaymentDisplay();
+    }
+
+    function updatePaymentDisplay() {
+      const option = document.querySelector('input[name="payment-option"]:checked').value;
+      const totals = calculateTotals();
+      const titleEl = document.getElementById('pix-box-title');
+      const amountEl = document.getElementById('pix-amount-display');
+
+      if (option === 'full') {
+        titleEl.innerText = 'Pagamento via PIX: Valor Total';
+        amountEl.innerText = `R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`;
+      } else {
+        titleEl.innerText = 'Pagamento via PIX: Valor do Sinal';
+        amountEl.innerText = `R$ ${totals.totalDeposit.toFixed(2).replace('.', ',')} (Restam R$ ${totals.totalRemaining.toFixed(2).replace('.', ',')} na Arena)`;
+      }
     }
 
     function resetToHome() {
@@ -712,6 +736,7 @@
       const name = document.getElementById('user-name').value.trim();
       const phone = document.getElementById('user-phone').value.trim();
       const termsAccepted = document.getElementById('terms-checkbox').checked;
+      const paymentOption = document.querySelector('input[name="payment-option"]:checked').value;
 
       if (!name || !phone) {
         alert('Por favor, preencha o seu Nome Completo e o WhatsApp.');
@@ -719,7 +744,7 @@
       }
 
       if (!termsAccepted) {
-        alert('Por favor, leia e aceite os Termos de Uso e Politica de Chuva da Outplay Arena para continuar.');
+        alert('Por favor, leia e aceite os Termos de Uso e Regras da Outplay Arena para continuar.');
         return;
       }
 
@@ -733,14 +758,18 @@
         const existing = bookedSlots[selectedDateStr].find(b => b && b.time === time);
         if (!existing) {
           const pricing = getSlotPricing(time);
+          const payTypeDesc = paymentOption === 'full' ? 'Quitado via PIX' : 'Sinal via PIX';
+          const remainingDesc = paymentOption === 'full' ? 'R$ 0,00' : `R$ ${pricing.remaining.toFixed(2).replace('.', ',')}`;
+
           bookedSlots[selectedDateStr].push({
             time: time,
             sport: selectedSport,
             name: name,
             phone: phone,
             fullPrice: `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}`,
-            deposit: `R$ ${pricing.deposit.toFixed(2).replace('.', ',')}`,
-            remaining: `R$ ${pricing.remaining.toFixed(2).replace('.', ',')}`,
+            paymentType: payTypeDesc,
+            amountPaidNow: paymentOption === 'full' ? `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}` : `R$ ${pricing.deposit.toFixed(2).replace('.', ',')}`,
+            remaining: remainingDesc,
             status: 'pending'
           });
         }
@@ -756,13 +785,18 @@
       alert('Chave PIX copiada para a area de transferencia!');
     }
 
-    // ENVIAR WHATSAPP DO CLIENTE COM DETALHES DO SINAL
+    // ENVIAR WHATSAPP DO CLIENTE COM A OPÇÃO ESCOLHIDA
     function sendToWhatsApp() {
       const name = document.getElementById('user-name').value;
       const phone = document.getElementById('user-phone').value;
       const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data nao informada';
       const totals = calculateTotals();
       const timesFormatted = selectedTimes.join(', ');
+      const paymentOption = document.querySelector('input[name="payment-option"]:checked').value;
+
+      let paymentDesc = paymentOption === 'full' 
+        ? `Valor Total Quitado via PIX: R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`
+        : `Sinal Pago via PIX: R$ ${totals.totalDeposit.toFixed(2).replace('.', ',')} | Restante a Pagar na Arena: R$ ${totals.totalRemaining.toFixed(2).replace('.', ',')}`;
 
       const message = "OUTPLAY ARENA - NOVO AGENDAMENTO\n\n" +
                       "Nome: " + name + "\n" +
@@ -770,10 +804,8 @@
                       "Esporte: " + selectedSport + "\n" +
                       "Data: " + dateFormatted + "\n" +
                       "Horarios (" + selectedTimes.length + "): " + timesFormatted + "\n\n" +
-                      "Valor Total Horario: R$ " + totals.totalFull.toFixed(2).replace('.', ',') + "\n" +
-                      "Sinal Pago via PIX: R$ " + totals.totalDeposit.toFixed(2).replace('.', ',') + "\n" +
-                      "Restante a Pagar na Arena: R$ " + totals.totalRemaining.toFixed(2).replace('.', ',') + "\n\n" +
-                      "Segue em anexo o comprovante do PIX do sinal:";
+                      paymentDesc + "\n\n" +
+                      "Segue em anexo o comprovante do PIX:";
 
       window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
     }
@@ -841,18 +873,18 @@
               
               const textAprovado = "OUTPLAY ARENA - RESERVA APROVADA\n\n" +
                                    "Ola " + booking.name + "!\n" +
-                                   "O sinal de " + (booking.deposit || "reserva") + " para " + booking.sport + " em " + dateFormatted + " as " + booking.time + " foi confirmado!\n\n" +
-                                   "Restante a pagar no balcao: " + (booking.remaining || "no local") + ".\n" +
+                                   "Sua reserva de " + booking.sport + " em " + dateFormatted + " as " + booking.time + " foi aprovada (" + (booking.paymentType || 'Confirmado') + ").\n\n" +
+                                   "Restante a pagar no balcao: " + (booking.remaining || "R$ 0,00") + ".\n" +
                                    "Nos vemos em quadra!";
               
-              const textPagamento = "OUTPLAY ARENA - COMPROVANTE SINAL PIX\n\n" +
+              const textPagamento = "OUTPLAY ARENA - COMPROVANTE PIX\n\n" +
                                     "Ola " + booking.name + ",\n" +
-                                    "Passando para lembrar sobre o envio do comprovante do PIX no valor de " + (booking.deposit || "sinal") + " para garantir sua pre-reserva de " + booking.sport + " em " + dateFormatted + " as " + booking.time + ".\n\n" +
+                                    "Passando para lembrar sobre o envio do comprovante PIX (" + (booking.paymentType || 'Pagamento') + ") para garantir sua pre-reserva de " + booking.sport + " em " + dateFormatted + " as " + booking.time + ".\n\n" +
                                     "Qualquer duvida estamos a disposicao!";
               
               const textRecusado = "OUTPLAY ARENA - RESERVA CANCELADA\n\n" +
                                    "Ola " + booking.name + ".\n" +
-                                   "Infelizmente nao recebemos o comprovante do sinal a tempo e sua pre-reserva de " + booking.sport + " para " + dateFormatted + " as " + booking.time + " foi cancelada, liberando o horario na agenda.\n\n" +
+                                   "Infelizmente nao recebemos o comprovante a tempo e sua pre-reserva de " + booking.sport + " para " + dateFormatted + " as " + booking.time + " foi cancelada, liberando o horario na agenda.\n\n" +
                                    "Agradecemos o contato!";
 
               const msgAprovadoEncoded = encodeURIComponent(textAprovado);
@@ -865,7 +897,7 @@
                 <div class="pending-info">
                   <strong>👤 ${booking.name}</strong> (${booking.phone})<br>
                   <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${booking.sport}</span><br>
-                  <span style="color:#ffca28; font-size:0.75rem;">Sinal: ${booking.deposit || 'Sim'} | Resta: ${booking.remaining || 'No local'}</span>
+                  <span style="color:#ffca28; font-size:0.75rem;">Modalidade: ${booking.paymentType || 'PIX'} | Resta: ${booking.remaining || 'R$ 0,00'}</span>
                 </div>
                 <div class="pending-actions" style="display: flex; gap: 4px; flex-wrap: wrap; margin-top:4px;">
                   <!-- BOTAO APROVAR -->
@@ -891,7 +923,7 @@
       }
 
       if (count === 0) {
-        container.innerHTML = `<p class="no-pending-msg"><i class="fa-solid fa-circle-check"></i> Nenhuma confirmacao de sinal PIX pendente no momento.</p>`;
+        container.innerHTML = `<p class="no-pending-msg"><i class="fa-solid fa-circle-check"></i> Nenhuma confirmacao de PIX pendente no momento.</p>`;
       }
     }
 
@@ -952,7 +984,7 @@
         card.className = 'admin-time-card ' + (booking ? (booking.status === 'confirmed' ? 'confirmed' : 'pending') : 'available');
 
         if (booking) {
-          const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando Sinal';
+          const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = booking.phone.replace(/\D/g, '');
           
           const textContato = "OUTPLAY ARENA - CONTATO\n\n" +
@@ -969,7 +1001,8 @@
             <div class="client-detail">
               <div class="detail-line"><i class="fa-solid fa-volleyball icon-lime"></i> <strong>Esporte:</strong> ${booking.sport}</div>
               <div class="detail-line"><i class="fa-regular fa-user icon-lime"></i> <strong>Nome:</strong> ${booking.name}</div>
-              <div class="detail-line"><i class="fa-solid fa-money-bill-wave icon-lime"></i> <strong>Resta Pagar:</strong> ${booking.remaining || 'Verificar'}</div>
+              <div class="detail-line"><i class="fa-solid fa-wallet icon-lime"></i> <strong>Forma:</strong> ${booking.paymentType || 'PIX'}</div>
+              <div class="detail-line"><i class="fa-solid fa-money-bill-wave icon-lime"></i> <strong>Resta Pagar:</strong> ${booking.remaining || 'R$ 0,00'}</div>
               <div class="detail-line" style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
                 <span><i class="fa-brands fa-whatsapp icon-lime"></i> <strong>Tel:</strong> ${booking.phone}</span>
                 <a href="https://wa.me/55${whatsappClean}?text=${msgContatoEncoded}" target="_blank" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
@@ -1007,7 +1040,8 @@
         name: 'Dono / Presencial',
         phone: '(42) 99910-9395',
         fullPrice: `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}`,
-        deposit: `R$ ${pricing.deposit.toFixed(2).replace('.', ',')}`,
+        paymentType: 'Bloqueio Direto',
+        amountPaidNow: 'R$ 0,00',
         remaining: 'R$ 0,00',
         status: 'confirmed'
       });
