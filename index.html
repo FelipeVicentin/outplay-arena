@@ -1253,6 +1253,26 @@
       }
     }
 
+    function buildBookingMessages(booking, dateFormatted) {
+      const textAprovado = "OUTPLAY ARENA - RESERVA APROVADA\n\n" +
+                           "Olá " + booking.name + "!\n" +
+                           "Sua reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + " foi aprovada (" + (booking.paymentType || 'Confirmado') + ").\n\n" +
+                           "Restante a pagar no balcão: " + (booking.remaining || "R$ 0,00") + ".\n" +
+                           "Nos vemos em quadra!";
+
+      const textPagamento = "OUTPLAY ARENA - COMPROVANTE PIX\n\n" +
+                            "Olá " + booking.name + ",\n" +
+                            "Passando para lembrar sobre o envio do comprovante PIX (" + (booking.paymentType || 'Pagamento') + ") para garantir sua pré-reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + ".\n\n" +
+                            "Qualquer dúvida estamos à disposição!";
+
+      const textRecusado = "OUTPLAY ARENA - RESERVA CANCELADA\n\n" +
+                           "Olá " + booking.name + ".\n" +
+                           "Infelizmente não recebemos o comprovante a tempo e sua pré-reserva de " + booking.sport + " para " + dateFormatted + " às " + booking.time + " foi cancelada, liberando o horário na agenda.\n\n" +
+                           "Agradecemos o contato!";
+
+      return { textAprovado, textPagamento, textRecusado };
+    }
+
     function renderPendingRequests() {
       const container = document.getElementById('pending-requests-container');
       if (!container) return;
@@ -1267,25 +1287,9 @@
           bookedSlots[date].forEach((booking, index) => {
             if (booking && booking.status === 'pending') {
               count++;
-              const whatsappClean = booking.phone.replace(/\D/g, '');
-              
-              const textAprovado = "OUTPLAY ARENA - RESERVA APROVADA\n\n" +
-                                   "Olá " + booking.name + "!\n" +
-                                   "Sua reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + " foi aprovada (" + (booking.paymentType || 'Confirmado') + ").\n\n" +
-                                   "Restante a pagar no balcão: " + (booking.remaining || "R$ 0,00") + ".\n" +
-                                   "Nos vemos em quadra!";
-              
-              const textPagamento = "OUTPLAY ARENA - COMPROVANTE PIX\n\n" +
-                                    "Olá " + booking.name + ",\n" +
-                                    "Passando para lembrar sobre o envio do comprovante PIX (" + (booking.paymentType || 'Pagamento') + ") para garantir sua pré-reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + ".\n\n" +
-                                    "Qualquer dúvida estamos à disposição!";
-              
-              const textRecusado = "OUTPLAY ARENA - RESERVA CANCELADA\n\n" +
-                                   "Olá " + booking.name + ".\n" +
-                                   "Infelizmente não recebemos o comprovante a tempo e sua pré-reserva de " + booking.sport + " para " + dateFormatted + " às " + booking.time + " foi cancelada, liberando o horário na agenda.\n\n" +
-                                   "Agradecemos o contato!";
-
-              const msgPagamentoEncoded = encodeURIComponent(textPagamento);
+              const whatsappClean = (booking.phone || '').replace(/\D/g, '');
+              const msgs = buildBookingMessages(booking, dateFormatted);
+              const paymentHref = `https://wa.me/55${whatsappClean}?text=${encodeURIComponent(msgs.textPagamento)}`;
 
               const item = document.createElement('div');
               item.className = 'pending-card';
@@ -1296,19 +1300,35 @@
                   <span style="color:#ffca28; font-size:0.75rem;">Modalidade: ${booking.paymentType || 'PIX'} | Resta: ${booking.remaining || 'R$ 0,00'}</span>
                 </div>
                 <div class="pending-actions" style="display: flex; gap: 4px; flex-wrap: wrap; margin-top:4px;">
-                  <button class="btn-approve" onclick="approveAndNotify('${date}', ${index}, '${whatsappClean}', encodeURIComponent(${JSON.stringify(textAprovado)}))">
+                  <button type="button" class="btn-approve" data-action="approve">
                     <i class="fa-solid fa-check"></i> Aprovar
                   </button>
                   
-                  <a href="https://wa.me/55${whatsappClean}?text=${msgPagamentoEncoded}" target="_blank" style="background:#ffca28; color:#000; padding: 0.3rem 0.5rem; border-radius: 5px; font-weight: 700; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Lembrar Comprovante">
+                  <a href="${paymentHref}" target="_blank" rel="noopener noreferrer" style="background:#ffca28; color:#000; padding: 0.3rem 0.5rem; border-radius: 5px; font-weight: 700; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Lembrar Comprovante">
                     <i class="fa-regular fa-clock"></i> Pagamento
                   </a>
 
-                  <button class="btn-reject" onclick="rejectAndNotify('${date}', ${index}, '${whatsappClean}', encodeURIComponent(${JSON.stringify(textRecusado)}))">
+                  <button type="button" class="btn-reject" data-action="reject">
                     <i class="fa-solid fa-xmark"></i> Recusar
                   </button>
                 </div>
               `;
+
+              const btnApprove = item.querySelector('[data-action="approve"]');
+              const btnReject = item.querySelector('[data-action="reject"]');
+
+              if (btnApprove) {
+                btnApprove.addEventListener('click', () => {
+                  approveBookingItem(date, index, whatsappClean, msgs.textAprovado);
+                });
+              }
+
+              if (btnReject) {
+                btnReject.addEventListener('click', () => {
+                  rejectBookingItem(date, index, whatsappClean, msgs.textRecusado);
+                });
+              }
+
               container.appendChild(item);
             }
           });
@@ -1320,22 +1340,40 @@
       }
     }
 
-    function approveAndNotify(date, index, phoneClean, encodedMessage) {
+    function approveBookingItem(date, index, phoneClean, messageText) {
+      if (!Array.isArray(bookedSlots[date]) || !bookedSlots[date][index]) return;
       bookedSlots[date][index].status = 'confirmed';
-      db.ref('outplay_booked_slots').set(bookedSlots);
-      window.open(`https://wa.me/55${phoneClean}?text=${encodedMessage}`, '_blank');
+      db.ref('outplay_booked_slots').set(bookedSlots)
+        .then(() => {
+          if (phoneClean) {
+            window.open(`https://wa.me/55${phoneClean}?text=${encodeURIComponent(messageText)}`, '_blank');
+          }
+        })
+        .catch((err) => {
+          alert('Erro ao aprovar reserva: ' + (err && err.message ? err.message : 'Verifique suas permissões no Firebase.'));
+        });
     }
 
-    function rejectAndNotify(date, index, phoneClean, encodedMessage) {
-      if (confirm('Deseja recusar e liberar este horário da agenda?')) {
-        bookedSlots[date].splice(index, 1);
-        if (bookedSlots[date].length === 0) delete bookedSlots[date];
-        db.ref('outplay_booked_slots').set(bookedSlots);
-        window.open(`https://wa.me/55${phoneClean}?text=${encodedMessage}`, '_blank');
-      }
+    function rejectBookingItem(date, index, phoneClean, messageText) {
+      if (!Array.isArray(bookedSlots[date]) || !bookedSlots[date][index]) return;
+      if (!confirm('Deseja recusar e liberar este horário da agenda?')) return;
+
+      bookedSlots[date].splice(index, 1);
+      if (bookedSlots[date].length === 0) delete bookedSlots[date];
+
+      db.ref('outplay_booked_slots').set(bookedSlots)
+        .then(() => {
+          if (phoneClean) {
+            window.open(`https://wa.me/55${phoneClean}?text=${encodeURIComponent(messageText)}`, '_blank');
+          }
+        })
+        .catch((err) => {
+          alert('Erro ao recusar reserva: ' + (err && err.message ? err.message : 'Verifique suas permissões no Firebase.'));
+        });
     }
 
     function rejectBooking(date, index) {
+      if (!Array.isArray(bookedSlots[date]) || !bookedSlots[date][index]) return;
       if (confirm('Deseja liberar este horário da agenda?')) {
         bookedSlots[date].splice(index, 1);
         if (bookedSlots[date].length === 0) delete bookedSlots[date];
@@ -1379,7 +1417,7 @@
 
         if (booking) {
           const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
-          const whatsappClean = booking.phone.replace(/\D/g, '');
+          const whatsappClean = (booking.phone || '').replace(/\D/g, '');
           
           const textContato = "OUTPLAY ARENA - CONTATO\n\n" +
                               "Olá " + booking.name + "!\n" +
@@ -1399,12 +1437,12 @@
               <div class="detail-line"><i class="fa-solid fa-money-bill-wave icon-lime"></i> <strong>Resta Pagar:</strong> ${booking.remaining || 'R$ 0,00'}</div>
               <div class="detail-line" style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
                 <span><i class="fa-brands fa-whatsapp icon-lime"></i> <strong>Tel:</strong> ${booking.phone}</span>
-                <a href="https://wa.me/55${whatsappClean}?text=${msgContatoEncoded}" target="_blank" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                <a href="https://wa.me/55${whatsappClean}?text=${msgContatoEncoded}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
                   <i class="fa-brands fa-whatsapp"></i> Chamar
                 </a>
               </div>
             </div>
-            <button class="btn-cancel-sm" onclick="rejectBooking('${adminSelectedDateStr}', ${bookingIndex})">
+            <button type="button" class="btn-cancel-sm" onclick="rejectBooking('${adminSelectedDateStr}', ${bookingIndex})">
               <i class="fa-solid fa-trash-can"></i> Liberar Horário
             </button>
           `;
@@ -1415,7 +1453,7 @@
               <span class="status-tag available">Livre</span>
             </div>
             <p class="free-slot-msg"><i class="fa-regular fa-circle-check"></i> Horário disponível</p>
-            <button class="btn-block-sm" onclick="blockSlotManually('${adminSelectedDateStr}', '${time}')">
+            <button type="button" class="btn-block-sm" onclick="blockSlotManually('${adminSelectedDateStr}', '${time}')">
               <i class="fa-solid fa-ban"></i> Bloquear Presencial
             </button>
           `;
