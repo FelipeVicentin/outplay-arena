@@ -1,4 +1,298 @@
-<!-- MODAL DOS TERMOS DE USO (VERSÃO SIMPLIFICADA E DIRETA) -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Outplay Arena - Esportes de Areia</title>
+  
+  <!-- META TAGS OPEN GRAPH (WhatsApp e Redes Sociais) -->
+  <meta property="meta-title" content="Outplay Arena - Esportes de Areia">
+  <meta property="og:title" content="Outplay Arena - Agendamento Online">
+  <meta property="og:description" content="Reserve sua quadra de Vôlei de Praia, Beach Tennis ou Futevôlei de forma rápida e prática!">
+  <meta property="og:image" content="https://felipevicentin.github.io/outplay-arena/img/logo.png">
+  <meta property="og:url" content="https://felipevicentin.github.io/outplay-arena/">
+  <meta property="og:type" content="website">
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="./img/logo-aba.png">
+  <link rel="shortcut icon" type="image/png" href="./img/logo-aba.png">
+  <link rel="apple-touch-icon" href="./img/logo-aba.png">
+
+  <!-- Fonte Oficial Sora -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Estilos CSS com Forçador de Cache v42.0 -->
+  <link rel="stylesheet" href="./style.css?v=42.0">
+
+  <!-- SDKs do Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header class="header">
+    <div class="logo-container" onclick="resetToHome()" style="cursor: pointer;" title="Voltar para a página inicial">
+      <img src="./img/logo.png" alt="Outplay Arena - Esportes de Areia" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
+      <div id="fallback-logo" class="logo-fallback">OUTPLAY ARENA</div>
+    </div>
+    <!-- Botão de Acesso à Área Restrita -->
+    <button class="btn-admin-access" onclick="openAdminModal()" title="Acesso Restrito ao Dono">
+      <i class="fa-solid fa-lock"></i>
+      <span id="badge-pending-count" class="badge-count" style="display: none;">0</span>
+    </button>
+  </header>
+
+  <!-- SUBTÍTULO -->
+  <div class="hero" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+    <button type="button" onclick="openGuideModal()" title="Abrir tutorial de uso" aria-label="Abrir tutorial de uso" style="background: transparent; border: none; padding: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1;">
+      <i class="fa-solid fa-circle-info" style="color: var(--verde-limao, #aeea00); font-size: 0.95rem;"></i>
+    </button>
+    <p class="subtitle">Agendamento Online</p>
+  </div>
+
+  <!-- CONTAINER PRINCIPAL -->
+  <main class="main-container">
+    <div class="card">
+      
+      <!-- INDICADOR DE PASSO A PASSO -->
+      <div class="steps">
+        <div class="step-item active" id="step1-indicator">
+          <div class="step-number">1</div>
+          <div class="step-label">Modalidade</div>
+        </div>
+        <div class="step-item" id="step2-indicator">
+          <div class="step-number">2</div>
+          <div class="step-label">Data/Hora</div>
+        </div>
+        <div class="step-item" id="step3-indicator">
+          <div class="step-number">3</div>
+          <div class="step-label">Pagamento</div>
+        </div>
+        <div class="step-item" id="step4-indicator">
+          <div class="step-number">4</div>
+          <div class="step-label">Confirmação</div>
+        </div>
+      </div>
+
+      <!-- ETAPA 1: SELEÇÃO DA MODALIDADE -->
+      <div id="step1" class="step-content">
+        <h2 class="step-title">Selecione o Esporte</h2>
+        
+        <div class="sports-grid">
+          <!-- 1º Vôlei de Praia -->
+          <div class="sport-card selected" onclick="selectSport('Vôlei de Praia', this)">
+            <div class="sport-img-wrapper">
+              <img src="./img/vp.png" alt="Vôlei de Praia" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
+            </div>
+            <h3>Vôlei de Praia</h3>
+          </div>
+
+          <!-- 2º Beach Tennis -->
+          <div class="sport-card" onclick="selectSport('Beach Tennis', this)">
+            <div class="sport-img-wrapper">
+              <img src="./img/BT.png" alt="Beach Tennis" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <i class="fa-solid fa-table-tennis-paddle-ball sport-icon-fallback" style="display:none;"></i>
+            </div>
+            <h3>Beach Tennis</h3>
+          </div>
+
+          <!-- 3º Futevôlei -->
+          <div class="sport-card" onclick="selectSport('Futevôlei', this)">
+            <div class="sport-img-wrapper">
+              <img src="./img/FV.png" alt="Futevôlei" class="sport-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <i class="fa-solid fa-volleyball sport-icon-fallback" style="display:none;"></i>
+            </div>
+            <h3>Futevôlei</h3>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="goToStep(2)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <!-- ETAPA 2: DATA E HORÁRIOS -->
+      <div id="step2" class="step-content" style="display: none;">
+        <h2 class="step-title">Escolher Horários</h2>
+
+        <div class="calendar-nav-container">
+          <span id="month-name-label" class="date-range-label">Novembro</span>
+        </div>
+
+        <div class="days-carousel-scroll" id="days-carousel"></div>
+
+        <!-- Alerta de Dia Bloqueado -->
+        <div id="day-blocked-alert" style="display: none; background: rgba(255, 82, 82, 0.15); border: 1px solid #ff5252; color: #ff8080; padding: 1rem; border-radius: 10px; text-align: center; margin-bottom: 1rem;">
+          <i class="fa-solid fa-ban" style="font-size: 1.5rem; margin-bottom: 0.4rem;"></i>
+          <p style="font-weight: 700; font-size: 0.9rem;" id="blocked-reason-text">Arena Fechada nesta data (Chuva / Manutenção / Evento)</p>
+        </div>
+
+        <div id="times-selection-wrapper">
+          <div class="period-section">
+            <h3 class="period-title" id="afternoon-period-title">TARDE (R$ 40,00)</h3>
+            <div class="time-grid" id="afternoon-grid"></div>
+          </div>
+
+          <div class="period-section" style="margin-top: 1rem;">
+            <h3 class="period-title" id="night-period-title">NOITE (R$ 60,00)</h3>
+            <div class="time-grid" id="night-prime-grid"></div>
+          </div>
+        </div>
+
+        <div class="summary-selection-bar" id="summary-selection-bar" style="display: none;">
+          <span id="selected-count-label"></span>
+          <span id="selected-total-price" class="summary-total-price">Total: R$ 0,00</span>
+        </div>
+
+        <div class="btn-group" style="margin-top: 1.2rem;">
+          <button class="btn-secondary" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+          <button class="btn-primary" id="btn-proceed-step2" onclick="validateStep2AndProceed()">Continuar <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- ETAPA 3: DADOS, OPÇÃO DE PAGAMENTO E PIX -->
+      <div id="step3" class="step-content" style="display: none;">
+        <h2 class="step-title">Dados e Pagamento</h2>
+
+        <div class="booking-summary-card">
+          <div class="summary-row">
+            <span><i class="fa-regular fa-calendar-check icon-lime"></i> Data:</span>
+            <strong id="summary-date-val">--/--/----</strong>
+          </div>
+          <div class="summary-row">
+            <span><i class="fa-regular fa-clock icon-lime"></i> Horários:</span>
+            <strong id="summary-times-val">Nenhum</strong>
+          </div>
+          <div class="summary-row summary-total-row">
+            <span>Valor Total:</span>
+            <strong id="summary-total-full-price">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="user-name"><i class="fa-regular fa-user"></i> Seu Nome Completo:</label>
+          <input type="text" id="user-name" class="form-input" placeholder="Ex: João Silva">
+        </div>
+
+        <div class="form-group">
+          <label for="user-phone">
+            <svg class="whatsapp-svg-icon" viewBox="0 0 448 512" width="16" height="16" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+            WhatsApp para Contato:
+          </label>
+          <input type="tel" id="user-phone" class="form-input" placeholder="(42) 99999-9999" maxlength="15" oninput="applyPhoneMask(this)">
+        </div>
+
+        <!-- ESCOLHA DA FORMA DE PAGAMENTO -->
+        <div class="form-group" style="margin-top: 1rem;">
+          <label><i class="fa-solid fa-wallet"></i> Escolha a forma de pagamento:</label>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+            <label style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.85rem;">
+              <input type="radio" name="payment-option" value="full" checked onchange="updatePaymentDisplay()" style="accent-color: var(--verde-limao);">
+              <span><strong>Pagar Valor Total via PIX</strong> (Quita tudo agora)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.85rem;">
+              <input type="radio" name="payment-option" value="deposit" onchange="updatePaymentDisplay()" style="accent-color: var(--verde-limao);">
+              <span><strong>Pagar apenas o Sinal via PIX (R$ 20,00 por horário)</strong> (O restante paga no balcão)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- CAIXA DINÂMICA DE VALORES A PAGAR AGORA -->
+        <div class="pix-box" style="margin-top: 1rem;">
+          <div class="pix-header">
+            <i class="fa-solid fa-qrcode pix-icon"></i>
+            <span id="pix-box-title">Pagamento via PIX: Valor Total</span>
+          </div>
+          <div style="text-align: center; margin: 8px 0; font-size: 1.2rem; font-weight: 800; color: var(--verde-limao);" id="pix-amount-display">
+            R$ 0,00
+          </div>
+          <p class="pix-desc">Chave PIX da Outplay Arena:</p>
+          <div class="pix-key-container">
+            <span id="pix-key">42999109395</span>
+            <button class="btn-copy" onclick="copyPixKey()"><i class="fa-regular fa-copy"></i> Copiar</button>
+          </div>
+          <small class="pix-info" style="color: #ffca28; margin-top: 6px; font-weight: 600; display: block;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Atenção: Envie o comprovante no WhatsApp em até 10 minutos para garantir sua reserva.
+          </small>
+        </div>
+
+        <!-- ACEITE DOS TERMOS -->
+        <div style="margin-top: 1rem; background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+          <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.8rem; color: var(--texto-suave);">
+            <input type="checkbox" id="terms-checkbox" style="margin-top: 3px; accent-color: var(--verde-limao); cursor: pointer;">
+            <span>Li e concordo com os <a href="javascript:void(0)" onclick="openTermsModal()" style="color: #ffca28; text-decoration: underline;">Termos de Uso, Política de Chuva e Regras da Outplay Arena</a>.</span>
+          </label>
+        </div>
+
+        <div class="btn-group" style="margin-top: 1.2rem;">
+          <button class="btn-secondary" onclick="goToStep(2)"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+          <button class="btn-primary" onclick="validateAndGoToStep4()">Confirmar Agendamento <i class="fa-solid fa-check"></i></button>
+        </div>
+      </div>
+
+      <!-- ETAPA 4: CONFIRMAÇÃO E WHATSAPP -->
+      <div id="step4" class="step-content" style="display: none; text-align: center;">
+        <i class="fa-solid fa-circle-check success-icon"></i>
+        <h2 class="step-title" style="margin-bottom: 0.4rem;">Quase lá!</h2>
+        <p class="success-desc">Seus horários já foram pré-reservados no sistema! Clique no botão abaixo para enviar os dados e o comprovante no WhatsApp oficial da Outplay Arena para confirmar.</p>
+
+        <button class="btn-whatsapp" onclick="sendToWhatsApp()">
+          <svg class="whatsapp-btn-svg" viewBox="0 0 448 512" width="20" height="20" fill="#FFFFFF"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+          Enviar Comprovante no WhatsApp
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- JANELA INTERATIVA DE TUTORIAL PASSO A PASSO -->
+  <div id="guide-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 450px;">
+      <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <h2><i class="fa-solid fa-graduation-cap"></i> Tutorial de Uso</h2>
+        <button type="button" onclick="closeGuideModal()" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #d0d0d0; border-radius: 6px; padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
+          Pular
+        </button>
+      </div>
+
+      <div style="margin-top: 1rem; text-align: left;">
+        <div id="guide-step-badge" style="font-size: 0.74rem; font-weight: 800; color: var(--verde-limao, #aeea00); text-transform: uppercase; margin-bottom: 0.35rem;">
+          1º Passo — Modalidade
+        </div>
+        <h3 id="guide-step-title" style="font-size: 1.05rem; color: #ffffff; margin-bottom: 0.45rem;">
+          Selecione o esporte desejado
+        </h3>
+        <p id="guide-step-desc" style="font-size: 0.85rem; color: #d0d0d0; line-height: 1.55; margin-bottom: 1rem;">
+          Na primeira tela, toque no cartão do esporte que você vai jogar (Vôlei de Praia, Beach Tennis ou Futevôlei) e depois clique em <b>Continuar</b>.
+        </p>
+
+        <!-- Indicador de bolinhas -->
+        <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 1.1rem;">
+          <span class="guide-dot" id="guide-dot-0" style="width: 8px; height: 8px; border-radius: 50%; background: var(--verde-limao, #aeea00);"></span>
+          <span class="guide-dot" id="guide-dot-1" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);"></span>
+          <span class="guide-dot" id="guide-dot-2" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);"></span>
+          <span class="guide-dot" id="guide-dot-3" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);"></span>
+        </div>
+
+        <div class="btn-group" style="gap: 8px;">
+          <button type="button" id="guide-prev-btn" class="btn-secondary" onclick="prevGuideStep()" style="display: none;">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+          </button>
+          <button type="button" id="guide-next-btn" class="btn-primary" onclick="nextGuideStep()">
+            Próximo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DOS TERMOS DE USO (VERSÃO SIMPLIFICADA E DIRETA) -->
   <div id="terms-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
       <div class="modal-header">
@@ -12,7 +306,7 @@
           O seu horário fica pré-reservado por 10 minutos. Para confirmar, escolha uma das opções: pagar o <b>valor total via PIX</b> ou pagar apenas o <b>sinal de R$ 20,00 por horário via PIX</b> (o restante você paga em dinheiro ou PIX na recepção da arena antes de jogar).
         </p>
 
-        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">2. Política de Chuva (Quadra Descoberta)</h4>
+        <h4 style="color: #ffca28; margin-bottom: 0.3rem;">2. Política de Chuva</h4>
         <p style="margin-bottom: 0.8rem;">
           Nossa quadra é descoberta. Se chover forte ou houver tempestade na hora do seu jogo a ponto de impedir a partida, o valor pago (sinal ou total) vira <b>crédito para você remarcar em até 30 dias</b>. Não realizamos reembolso em dinheiro por motivos de clima.
         </p>
@@ -31,3 +325,1123 @@
       <button class="btn-primary" style="margin-top: 1rem; width: 100%;" onclick="closeTermsModal()">Li e Concordo</button>
     </div>
   </div>
+
+  <!-- MODAL DA ÁREA RESTRITA -->
+  <div id="admin-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-user-shield"></i> Agenda de Locações - Outplay</h2>
+        <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="admin-login-view">
+        <p style="color: var(--texto-suave); margin-bottom: 0.8rem; font-size: 0.85rem;">Entre com seu e-mail e senha de administrador:</p>
+        <div class="form-group">
+          <label for="admin-email-input"><i class="fa-regular fa-envelope"></i> E-mail:</label>
+          <input type="email" id="admin-email-input" class="form-input" placeholder="admin@outplayarena.com.br" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="admin-pass-input"><i class="fa-solid fa-key"></i> Senha:</label>
+          <input type="password" id="admin-pass-input" class="form-input" placeholder="Digite sua senha" autocomplete="current-password">
+        </div>
+        <button class="btn-primary" id="btn-admin-login" onclick="checkAdminPassword()">Acessar Agenda</button>
+      </div>
+
+      <!-- PAINEL DA AGENDA -->
+      <div id="admin-dashboard-view" style="display: none;">
+        
+        <!-- PENDENTES PIX -->
+        <div class="admin-section">
+          <div class="section-title-box">
+            <i class="fa-solid fa-bell icon-warning"></i>
+            <h3>Aprovações Pendentes (PIX)</h3>
+          </div>
+          <div id="pending-requests-container" class="pending-list"></div>
+        </div>
+
+        <!-- AGENDA DO DIA COM NAVEGADOR LIMPO DE MÊS -->
+        <div class="admin-section">
+          <div class="section-title-box">
+            <i class="fa-regular fa-calendar-days icon-lime"></i>
+            <h3>Consultar &amp; Gerenciar Agenda</h3>
+          </div>
+
+          <div class="calendar-nav-container">
+            <button class="cal-nav-btn" onclick="changeAdminMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="admin-month-name-label" class="date-range-label">Novembro de 2026</span>
+            <button class="cal-nav-btn" onclick="changeAdminMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+
+          <div class="days-carousel-scroll" id="admin-days-carousel"></div>
+
+          <!-- BOTÃO DE BLOQUEIO DO DIA COMPLETO -->
+          <div id="admin-day-control-box" style="margin-bottom: 0.8rem; background: rgba(0, 0, 0, 0.2); padding: 0.6rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span id="admin-block-status-text" style="font-size: 0.75rem; color: var(--texto-suave);">Dia aberto para agendamentos</span>
+            <button id="btn-toggle-block-day" class="btn-reject" style="font-size: 0.7rem; padding: 0.4rem 0.6rem;" onclick="toggleBlockSelectedDate()">
+              <i class="fa-solid fa-ban"></i> Fechar Dia
+            </button>
+          </div>
+
+          <div class="time-grid-admin" id="admin-calendar-grid"></div>
+        </div>
+
+        <!-- ALTERAR SENHA DO ADMINISTRADOR -->
+        <div class="admin-section">
+          <div class="section-title-box">
+            <i class="fa-solid fa-key icon-lime"></i>
+            <h3>Alterar Senha de Acesso</h3>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--texto-suave); margin-bottom: 0.6rem;">
+            Conta logada: <strong id="admin-logged-email" style="color: var(--branco);">--</strong>
+          </p>
+          <div class="form-group" style="margin-bottom: 0.6rem;">
+            <input type="password" id="current-admin-pass-input" class="form-input" placeholder="Senha atual" autocomplete="current-password">
+          </div>
+          <div class="form-group" style="margin-bottom: 0.6rem;">
+            <input type="password" id="new-admin-pass-input" class="form-input" placeholder="Nova senha (mínimo 6 caracteres)" autocomplete="new-password">
+          </div>
+          <div class="form-group" style="margin-bottom: 0.7rem;">
+            <input type="password" id="confirm-admin-pass-input" class="form-input" placeholder="Confirmar nova senha" autocomplete="new-password">
+          </div>
+          <button class="btn-primary" style="width: 100%;" onclick="changeAdminPassword()">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Nova Senha
+          </button>
+        </div>
+
+        <button class="btn-secondary" style="margin-top: 1rem; width: 100%;" onclick="logoutAdmin()">Sair da Área Restrita</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer class="footer">
+    <p>© Outplay Arena - Esportes de Areia</p>
+    <p>WhatsApp: (42) 99910-9395</p>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAZn0OrfAmdJWvRf6EK2CbkFLehDkS7S9A",
+      authDomain: "outplay-arena.firebaseapp.com",
+      databaseURL: "https://outplay-arena-default-rtdb.firebaseio.com",
+      projectId: "outplay-arena",
+      storageBucket: "outplay-arena.firebasestorage.app",
+      messagingSenderId: "643232920665",
+      appId: "1:643232920665:web:7d9bec459ddcda0c1aad48",
+      measurementId: "G-MTWDLZM52H"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    let selectedSport = 'Vôlei de Praia';
+    let selectedTimes = [];
+    let bookedSlots = {};
+    let blockedDates = {};
+    let isAdminAuthenticated = false;
+
+    let todayObj = new Date();
+    let selectedDateStr = formatDateKey(todayObj);
+
+    let adminCurrentDateObj = new Date();
+    let adminSelectedDateStr = formatDateKey(new Date());
+
+    // TUTORIAL DETALHADO POR ETAPA DA PÁGINA
+    const guideSteps = [
+      {
+        badge: "1º Passo — Modalidade",
+        title: "Selecione o esporte desejado",
+        desc: "Na primeira etapa, toque no cartão do esporte que você vai jogar (Vôlei de Praia, Beach Tennis ou Futevôlei). Ele ficará destacado e, em seguida, basta tocar em <b>Continuar</b>."
+      },
+      {
+        badge: "2º Passo — Data e Hora",
+        title: "Selecione o dia e os horários livres",
+        desc: "Arraste ou toque na faixa de dias para escolher a data e clique nos horários disponíveis (16h às 22h nos dias úteis; 14h às 22h aos sábados, domingos e feriados). Você pode selecionar mais de um horário e conferir o total na barra inferior antes de clicar em <b>Continuar</b>."
+      },
+      {
+        badge: "3º Passo — Dados e Pagamento",
+        title: "Preencha seus dados, escolha PIX e aceite os termos",
+        desc: "Digite seu Nome Completo e WhatsApp, escolha entre pagar o Valor Total ou apenas o Sinal de R$ 20,00 por horário via PIX (o restante você paga na arena), copie a chave PIX, marque o aceite dos Termos e clique em <b>Confirmar Agendamento</b>."
+      },
+      {
+        badge: "4º Passo — Confirmação no WhatsApp",
+        title: "Envie o comprovante em até 10 minutos",
+        desc: "Seu horário entra em pré-reserva por 10 minutos. Clique em <b>Enviar Comprovante no WhatsApp</b> para abrir a conversa já com os dados do seu agendamento e anexe o comprovante do PIX para garantir a quadra."
+      }
+    ];
+    let currentGuideStep = 0;
+
+    function openGuideModal() {
+      currentGuideStep = 0;
+      renderGuideStep();
+      const modal = document.getElementById('guide-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeGuideModal() {
+      const modal = document.getElementById('guide-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function renderGuideStep() {
+      const step = guideSteps[currentGuideStep];
+      const badge = document.getElementById('guide-step-badge');
+      const title = document.getElementById('guide-step-title');
+      const desc = document.getElementById('guide-step-desc');
+      const prevBtn = document.getElementById('guide-prev-btn');
+      const nextBtn = document.getElementById('guide-next-btn');
+
+      if (badge) badge.innerText = step.badge;
+      if (title) title.innerText = step.title;
+      if (desc) desc.innerHTML = step.desc;
+
+      if (prevBtn) {
+        prevBtn.style.display = currentGuideStep === 0 ? 'none' : 'inline-flex';
+      }
+
+      if (nextBtn) {
+        if (currentGuideStep === guideSteps.length - 1) {
+          nextBtn.innerHTML = `<i class="fa-solid fa-check"></i> Concluir e Navegar`;
+        } else {
+          nextBtn.innerHTML = `Próximo <i class="fa-solid fa-arrow-right"></i>`;
+        }
+      }
+
+      for (let i = 0; i < guideSteps.length; i++) {
+        const dot = document.getElementById(`guide-dot-${i}`);
+        if (dot) {
+          dot.style.background = i === currentGuideStep ? 'var(--verde-limao, #aeea00)' : 'rgba(255,255,255,0.2)';
+        }
+      }
+    }
+
+    function nextGuideStep() {
+      if (currentGuideStep < guideSteps.length - 1) {
+        currentGuideStep++;
+        renderGuideStep();
+      } else {
+        closeGuideModal();
+      }
+    }
+
+    function prevGuideStep() {
+      if (currentGuideStep > 0) {
+        currentGuideStep--;
+        renderGuideStep();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedStep = sessionStorage.getItem('outplay_current_step');
+      if (savedStep) {
+        goToStep(parseInt(savedStep, 10), false);
+      }
+      render15DaysCarousel();
+      openGuideModal();
+    });
+
+    auth.onAuthStateChanged((user) => {
+      isAdminAuthenticated = !!user;
+      const loggedEmailEl = document.getElementById('admin-logged-email');
+      if (loggedEmailEl) {
+        loggedEmailEl.innerText = user && user.email ? user.email : '--';
+      }
+
+      const modal = document.getElementById('admin-modal');
+      if (modal && modal.style.display === 'flex') {
+        syncAdminModalView();
+      }
+    });
+
+    db.ref('outplay_booked_slots').on('value', (snapshot) => {
+      bookedSlots = snapshot.val() || {};
+      renderTimes();
+      updatePendingBadge();
+      if (isAdminAuthenticated) {
+        renderAdminCalendar();
+        renderPendingRequests();
+      }
+    });
+
+    db.ref('outplay_blocked_dates').on('value', (snapshot) => {
+      blockedDates = snapshot.val() || {};
+      renderTimes();
+      if (isAdminAuthenticated) {
+        renderAdminCalendar();
+      }
+    });
+
+    function applyPhoneMask(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      
+      if (value.length > 6) {
+        value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+      } else if (value.length > 2) {
+        value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+      } else if (value.length > 0) {
+        value = `(${value}`;
+      }
+      input.value = value;
+    }
+
+    function formatDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function parseDateKey(dateStr) {
+      const parts = dateStr.split('-');
+      return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    }
+
+    function getEasterSunday(year) {
+      const a = year % 19;
+      const b = Math.floor(year / 100);
+      const c = year % 100;
+      const d = Math.floor(b / 4);
+      const e = b % 4;
+      const f = Math.floor((b + 8) / 25);
+      const g = Math.floor((b - f + 1) / 3);
+      const h = (19 * a + b - d - g + 15) % 30;
+      const i = Math.floor(c / 4);
+      const k = c % 4;
+      const l = (32 + 2 * e + 2 * i - h - k) % 7;
+      const m = Math.floor((a + 11 * h + 22 * l) / 451);
+      const month = Math.floor((h + l - 7 * m + 114) / 31);
+      const day = ((h + l - 7 * m + 114) % 31) + 1;
+      return new Date(year, month - 1, day);
+    }
+
+    function isHolidayDateStr(dateStr) {
+      if (!dateStr) return false;
+      const parts = dateStr.split('-').map(n => parseInt(n, 10));
+      if (parts.length !== 3) return false;
+      const [year, month, day] = parts;
+      const mmdd = `${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+      const fixedHolidays = [
+        '01-01', // Confraternização Universal
+        '04-21', // Tiradentes
+        '05-01', // Dia do Trabalho
+        '09-07', // Independência do Brasil
+        '10-12', // Nossa Senhora Aparecida
+        '11-02', // Finados
+        '11-15', // Proclamação da República
+        '11-20', // Dia Nacional de Zumbi e da Consciência Negra
+        '12-25'  // Natal
+      ];
+      if (fixedHolidays.includes(mmdd)) return true;
+
+      const easter = getEasterSunday(year);
+      const goodFriday = new Date(easter);
+      goodFriday.setDate(easter.getDate() - 2);
+      const corpusChristi = new Date(easter);
+      corpusChristi.setDate(easter.getDate() + 60);
+
+      const movableKeys = [formatDateKey(goodFriday), formatDateKey(corpusChristi)];
+      return movableKeys.includes(dateStr);
+    }
+
+    function isWeekendOrHoliday(dateStr) {
+      if (!dateStr) return false;
+      const d = parseDateKey(dateStr);
+      const dayOfWeek = d.getDay();
+      return dayOfWeek === 0 || dayOfWeek === 6 || isHolidayDateStr(dateStr);
+    }
+
+    function getScheduleForDate(dateStr) {
+      if (isWeekendOrHoliday(dateStr)) {
+        return {
+          afternoonTitle: 'TARDE (R$ 60,00)',
+          nightTitle: 'NOITE (R$ 60,00)',
+          afternoonTimes: [
+            { time: '14:00 - 15:00' },
+            { time: '15:00 - 16:00' },
+            { time: '16:00 - 17:00' },
+            { time: '17:00 - 18:00' }
+          ],
+          nightTimes: [
+            { time: '18:00 - 19:00' },
+            { time: '19:00 - 20:00' },
+            { time: '20:00 - 21:00' },
+            { time: '21:00 - 22:00' }
+          ]
+        };
+      }
+
+      return {
+        afternoonTitle: 'TARDE (R$ 40,00)',
+        nightTitle: 'NOITE (R$ 60,00)',
+        afternoonTimes: [
+          { time: '16:00 - 17:00' },
+          { time: '17:00 - 18:00' }
+        ],
+        nightTimes: [
+          { time: '18:00 - 19:00' },
+          { time: '19:00 - 20:00' },
+          { time: '20:00 - 21:00' },
+          { time: '21:00 - 22:00' }
+        ]
+      };
+    }
+
+    function getSlotPricing(timeStr, dateStr = selectedDateStr) {
+      const startHour = parseInt(timeStr.split(':')[0], 10);
+      const specialDay = isWeekendOrHoliday(dateStr);
+      const fullPrice = (specialDay || startHour >= 18) ? 60.00 : 40.00;
+      const deposit = 20.00;
+      const remaining = fullPrice - deposit;
+      return { fullPrice, deposit, remaining };
+    }
+
+    function render15DaysCarousel() {
+      const carousel = document.getElementById('days-carousel');
+      if (!carousel) return;
+      carousel.innerHTML = '';
+
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      const monthShortNames = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+      const selectedDateObj = parseDateKey(selectedDateStr);
+      const selectedMonthIdx = selectedDateObj.getMonth();
+
+      const monthLabel = document.getElementById('month-name-label');
+      if (monthLabel) monthLabel.innerText = monthNames[selectedMonthIdx];
+
+      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+
+      for (let i = 0; i < 15; i++) {
+        const d = new Date();
+        d.setDate(todayObj.getDate() + i);
+
+        const dateKey = formatDateKey(d);
+        const dayName = weekdaysNames[d.getDay()];
+        const dayNum = String(d.getDate()).padStart(2, '0');
+        const isBlocked = !!blockedDates[dateKey];
+        const isDifferentMonth = d.getMonth() !== selectedMonthIdx;
+        const isHoliday = isHolidayDateStr(dateKey);
+
+        let subTag = '';
+        if (isBlocked) {
+          subTag = '<span style="font-size: 0.5rem; color: #ff8080;">Fechado</span>';
+        } else if (isHoliday) {
+          subTag = '<span style="font-size: 0.5rem; color: var(--verde-limao, #aeea00); font-weight: 700;">FER</span>';
+        } else if (isDifferentMonth) {
+          subTag = `<span style="font-size: 0.5rem; color: var(--verde-limao, #aeea00); font-weight: 700;">${monthShortNames[d.getMonth()]}</span>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'day-card' + (dateKey === selectedDateStr ? ' selected' : '') + (isBlocked ? ' disabled' : '');
+        card.innerHTML = `
+          <span class="day-name">${dayName}</span>
+          <span class="day-number">${dayNum}</span>
+          ${subTag}
+        `;
+
+        card.onclick = () => {
+          selectedDateStr = dateKey;
+          selectedTimes = [];
+          render15DaysCarousel();
+          renderTimes();
+          updateSummaryBar();
+        };
+
+        carousel.appendChild(card);
+      }
+    }
+
+    function renderAdminMonthCarousel() {
+      const carousel = document.getElementById('admin-days-carousel');
+      if (!carousel) return;
+      carousel.innerHTML = '';
+
+      const year = adminCurrentDateObj.getFullYear();
+      const month = adminCurrentDateObj.getMonth();
+
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      const adminMonthLabel = document.getElementById('admin-month-name-label');
+      if (adminMonthLabel) adminMonthLabel.innerText = `${monthNames[month]} de ${year}`;
+
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const weekdaysNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+
+      let selectedCardElement = null;
+
+      for (let day = 1; day <= totalDays; day++) {
+        const d = new Date(year, month, day);
+        const dateKey = formatDateKey(d);
+        const dayName = weekdaysNames[d.getDay()];
+        const isBlocked = !!blockedDates[dateKey];
+
+        const card = document.createElement('div');
+        card.className = 'day-card' + (dateKey === adminSelectedDateStr ? ' selected' : '');
+        card.innerHTML = `
+          <span class="day-name">${dayName}</span>
+          <span class="day-number">${String(day).padStart(2, '0')}</span>
+          ${isBlocked ? '<span style="font-size: 0.5rem; color: #ff8080;">Fechado</span>' : ''}
+        `;
+
+        card.onclick = () => {
+          adminSelectedDateStr = dateKey;
+          renderAdminMonthCarousel();
+          renderAdminCalendar();
+        };
+
+        carousel.appendChild(card);
+
+        if (dateKey === adminSelectedDateStr) {
+          selectedCardElement = card;
+        }
+      }
+
+      if (selectedCardElement) {
+        setTimeout(() => {
+          selectedCardElement.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 50);
+      }
+    }
+
+    function changeAdminMonth(direction) {
+      adminCurrentDateObj.setMonth(adminCurrentDateObj.getMonth() + direction);
+      renderAdminMonthCarousel();
+    }
+
+    function updatePendingBadge() {
+      let pendingCount = 0;
+      for (const date in bookedSlots) {
+        if (Array.isArray(bookedSlots[date])) {
+          bookedSlots[date].forEach(booking => {
+            if (booking && booking.status === 'pending') pendingCount++;
+          });
+        }
+      }
+
+      const badge = document.getElementById('badge-pending-count');
+      if (!badge) return;
+      if (pendingCount > 0) {
+        badge.innerText = pendingCount;
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function selectSport(sport, element) {
+      selectedSport = sport;
+      document.querySelectorAll('.sport-card').forEach(card => card.classList.remove('selected'));
+      if (element) element.classList.add('selected');
+      renderTimes();
+    }
+
+    function renderTimes() {
+      const afternoonGrid = document.getElementById('afternoon-grid');
+      const nightGrid = document.getElementById('night-prime-grid');
+      const afternoonTitle = document.getElementById('afternoon-period-title');
+      const nightTitle = document.getElementById('night-period-title');
+      const blockedAlert = document.getElementById('day-blocked-alert');
+      const timesWrapper = document.getElementById('times-selection-wrapper');
+      const btnProceed = document.getElementById('btn-proceed-step2');
+
+      if (!afternoonGrid || !nightGrid) return;
+
+      afternoonGrid.innerHTML = '';
+      nightGrid.innerHTML = '';
+
+      if (blockedDates[selectedDateStr]) {
+        if (blockedAlert) blockedAlert.style.display = 'block';
+        if (timesWrapper) timesWrapper.style.display = 'none';
+        if (btnProceed) btnProceed.style.display = 'none';
+        updateSummaryBar();
+        return;
+      } else {
+        if (blockedAlert) blockedAlert.style.display = 'none';
+        if (timesWrapper) timesWrapper.style.display = 'block';
+        if (btnProceed) btnProceed.style.display = 'flex';
+      }
+
+      const schedule = getScheduleForDate(selectedDateStr);
+      if (afternoonTitle) afternoonTitle.innerText = schedule.afternoonTitle;
+      if (nightTitle) nightTitle.innerText = schedule.nightTitle;
+
+      const validTimes = new Set([...schedule.afternoonTimes, ...schedule.nightTimes].map(s => s.time));
+      selectedTimes = selectedTimes.filter(t => validTimes.has(t));
+
+      const currentBookings = bookedSlots[selectedDateStr] || [];
+
+      function buildSlotElement(item) {
+        const bookingData = currentBookings.find(b => b && b.time === item.time);
+        const isBooked = !!bookingData;
+        const isSelected = selectedTimes.includes(item.time);
+        const pricing = getSlotPricing(item.time, selectedDateStr);
+
+        const div = document.createElement('div');
+        div.className = 'time-slot' + (isBooked ? ' disabled' : '') + (isSelected ? ' selected' : '');
+        
+        if (isBooked) {
+          const statusText = bookingData.status === 'confirmed' ? 'Ocupado' : 'Aguardando PIX';
+          div.innerHTML = `
+            <div class="time-text">${item.time}</div>
+            <div class="time-price status-booked">${statusText}</div>
+          `;
+        } else {
+          div.innerHTML = `
+            <div class="time-text">${item.time}</div>
+            <div class="time-price">${isSelected ? 'Selecionado' : `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}`}</div>
+          `;
+
+          div.onclick = () => {
+            toggleTimeSelection(item.time);
+          };
+        }
+        return div;
+      }
+
+      schedule.afternoonTimes.forEach(item => afternoonGrid.appendChild(buildSlotElement(item)));
+      schedule.nightTimes.forEach(item => nightGrid.appendChild(buildSlotElement(item)));
+
+      updateSummaryBar();
+    }
+
+    function toggleTimeSelection(timeStr) {
+      const idx = selectedTimes.indexOf(timeStr);
+      if (idx > -1) {
+        selectedTimes.splice(idx, 1);
+      } else {
+        selectedTimes.push(timeStr);
+        selectedTimes.sort();
+      }
+      renderTimes();
+    }
+
+    function calculateTotals() {
+      let totalFull = 0;
+      let totalDeposit = 0;
+      let totalRemaining = 0;
+
+      selectedTimes.forEach(t => {
+        const p = getSlotPricing(t, selectedDateStr);
+        totalFull += p.fullPrice;
+        totalDeposit += p.deposit;
+        totalRemaining += p.remaining;
+      });
+
+      return { totalFull, totalDeposit, totalRemaining };
+    }
+
+    function updateSummaryBar() {
+      const summaryBar = document.getElementById('summary-selection-bar');
+      const countLabel = document.getElementById('selected-count-label');
+      const totalPriceLabel = document.getElementById('selected-total-price');
+      if (!summaryBar || !countLabel || !totalPriceLabel) return;
+
+      const totalSlots = selectedTimes.length;
+      const totals = calculateTotals();
+
+      if (totalSlots === 0) {
+        summaryBar.style.display = 'none';
+      } else {
+        summaryBar.style.display = 'flex';
+        countLabel.innerText = totalSlots === 1 ? '1 horário selecionado' : `${totalSlots} horários selecionados`;
+        totalPriceLabel.innerText = `Total: R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`;
+      }
+    }
+
+    function goToStep(step, saveSession = true) {
+      document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
+      const targetStep = document.getElementById(`step${step}`);
+      if (targetStep) targetStep.style.display = 'block';
+
+      for (let i = 1; i <= 4; i++) {
+        const indicator = document.getElementById(`step${i}-indicator`);
+        if (indicator) indicator.classList.toggle('active', i <= step);
+      }
+
+      if (saveSession) {
+        sessionStorage.setItem('outplay_current_step', step);
+      }
+
+      if (step === 3) {
+        populateSummaryStep3();
+      }
+    }
+
+    function populateSummaryStep3() {
+      const dateVal = document.getElementById('summary-date-val');
+      const timesVal = document.getElementById('summary-times-val');
+      const totalFullVal = document.getElementById('summary-total-full-price');
+
+      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
+      const totals = calculateTotals();
+
+      if (dateVal) dateVal.innerText = dateFormatted;
+      if (timesVal) timesVal.innerText = selectedTimes.join(' | ');
+      if (totalFullVal) totalFullVal.innerText = `R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`;
+
+      const fullRadio = document.querySelector('input[name="payment-option"][value="full"]');
+      if (fullRadio) fullRadio.checked = true;
+      updatePaymentDisplay();
+    }
+
+    function updatePaymentDisplay() {
+      const checkedRadio = document.querySelector('input[name="payment-option"]:checked');
+      if (!checkedRadio) return;
+      const option = checkedRadio.value;
+      const totals = calculateTotals();
+      const titleEl = document.getElementById('pix-box-title');
+      const amountEl = document.getElementById('pix-amount-display');
+
+      if (option === 'full') {
+        if (titleEl) titleEl.innerText = 'Pagamento via PIX: Valor Total';
+        if (amountEl) amountEl.innerText = `R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`;
+      } else {
+        if (titleEl) titleEl.innerText = 'Pagamento via PIX: Valor do Sinal (R$ 20,00 por horário)';
+        if (amountEl) amountEl.innerText = `R$ ${totals.totalDeposit.toFixed(2).replace('.', ',')} (Restam R$ ${totals.totalRemaining.toFixed(2).replace('.', ',')} na Arena)`;
+      }
+    }
+
+    function resetToHome() {
+      sessionStorage.removeItem('outplay_current_step');
+      selectedTimes = [];
+      goToStep(1, false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function validateStep2AndProceed() {
+      if (selectedTimes.length === 0) {
+        alert('Por favor, selecione pelo menos um horário disponível para continuar.');
+        return;
+      }
+      goToStep(3);
+    }
+
+    function openTermsModal() {
+      const modal = document.getElementById('terms-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeTermsModal() {
+      const modal = document.getElementById('terms-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function validateAndGoToStep4() {
+      const name = document.getElementById('user-name').value.trim();
+      const phone = document.getElementById('user-phone').value.trim();
+      const termsAccepted = document.getElementById('terms-checkbox').checked;
+      const paymentOption = document.querySelector('input[name="payment-option"]:checked').value;
+
+      if (!name || !phone) {
+        alert('Por favor, preencha o seu Nome Completo e o WhatsApp.');
+        return;
+      }
+
+      if (!termsAccepted) {
+        alert('Por favor, leia e aceite os Termos de Uso e Regras da Outplay Arena para continuar.');
+        return;
+      }
+
+      if (!bookedSlots[selectedDateStr]) {
+        bookedSlots[selectedDateStr] = [];
+      }
+
+      selectedTimes.forEach(time => {
+        const existing = bookedSlots[selectedDateStr].find(b => b && b.time === time);
+        if (!existing) {
+          const pricing = getSlotPricing(time, selectedDateStr);
+          const payTypeDesc = paymentOption === 'full' ? 'Quitado via PIX' : 'Sinal via PIX';
+          const remainingDesc = paymentOption === 'full' ? 'R$ 0,00' : `R$ ${pricing.remaining.toFixed(2).replace('.', ',')}`;
+
+          bookedSlots[selectedDateStr].push({
+            time: time,
+            sport: selectedSport,
+            name: name,
+            phone: phone,
+            fullPrice: `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}`,
+            paymentType: payTypeDesc,
+            amountPaidNow: paymentOption === 'full' ? `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}` : `R$ ${pricing.deposit.toFixed(2).replace('.', ',')}`,
+            remaining: remainingDesc,
+            status: 'pending'
+          });
+        }
+      });
+
+      db.ref('outplay_booked_slots').set(bookedSlots);
+      goToStep(4);
+    }
+
+    function copyPixKey() {
+      const pixKeyEl = document.getElementById('pix-key');
+      if (!pixKeyEl) return;
+      navigator.clipboard.writeText(pixKeyEl.innerText);
+      alert('Chave PIX copiada para a área de transferência!');
+    }
+
+    function sendToWhatsApp() {
+      const name = document.getElementById('user-name').value;
+      const phone = document.getElementById('user-phone').value;
+      const dateFormatted = selectedDateStr ? selectedDateStr.split('-').reverse().join('/') : 'Data não informada';
+      const totals = calculateTotals();
+      const timesFormatted = selectedTimes.join(', ');
+      const paymentOption = document.querySelector('input[name="payment-option"]:checked').value;
+
+      const paymentDesc = paymentOption === 'full' 
+        ? `Valor Total Quitado via PIX: R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`
+        : `Sinal Pago via PIX: R$ ${totals.totalDeposit.toFixed(2).replace('.', ',')} | Restante a Pagar na Arena: R$ ${totals.totalRemaining.toFixed(2).replace('.', ',')}`;
+
+      const message = "OUTPLAY ARENA - NOVO AGENDAMENTO\n\n" +
+                      "Nome: " + name + "\n" +
+                      "WhatsApp: " + phone + "\n" +
+                      "Esporte: " + selectedSport + "\n" +
+                      "Data: " + dateFormatted + "\n" +
+                      "Horários (" + selectedTimes.length + "): " + timesFormatted + "\n\n" +
+                      paymentDesc + "\n\n" +
+                      "Segue em anexo o comprovante do PIX:";
+
+      window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function syncAdminModalView() {
+      const loginView = document.getElementById('admin-login-view');
+      const dashView = document.getElementById('admin-dashboard-view');
+
+      if (isAdminAuthenticated && auth.currentUser) {
+        if (loginView) loginView.style.display = 'none';
+        if (dashView) dashView.style.display = 'block';
+        const loggedEmailEl = document.getElementById('admin-logged-email');
+        if (loggedEmailEl) loggedEmailEl.innerText = auth.currentUser.email || '--';
+        loadAdminDashboard();
+      } else {
+        if (loginView) loginView.style.display = 'block';
+        if (dashView) dashView.style.display = 'none';
+      }
+    }
+
+    function openAdminModal() {
+      const modal = document.getElementById('admin-modal');
+      if (modal) modal.style.display = 'flex';
+      document.getElementById('admin-pass-input').value = '';
+      syncAdminModalView();
+    }
+
+    function closeAdminModal() {
+      const modal = document.getElementById('admin-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function logoutAdmin() {
+      auth.signOut().finally(() => {
+        document.getElementById('admin-pass-input').value = '';
+        closeAdminModal();
+      });
+    }
+
+    function getAuthErrorMessage(err) {
+      if (!err || !err.code) return 'Não foi possível autenticar. Tente novamente.';
+      switch (err.code) {
+        case 'auth/invalid-email':
+          return 'E-mail inválido.';
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+          return 'E-mail ou senha incorretos.';
+        case 'auth/too-many-requests':
+          return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
+        default:
+          return err.message || 'Erro ao autenticar.';
+      }
+    }
+
+    function checkAdminPassword() {
+      const emailInput = document.getElementById('admin-email-input');
+      const passInput = document.getElementById('admin-pass-input');
+      const btnLogin = document.getElementById('btn-admin-login');
+
+      const email = emailInput ? emailInput.value.trim() : '';
+      const pass = passInput ? passInput.value : '';
+
+      if (!email || !pass) {
+        alert('Preencha o e-mail e a senha de administrador.');
+        return;
+      }
+
+      if (btnLogin) btnLogin.disabled = true;
+
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          passInput.value = '';
+          syncAdminModalView();
+        })
+        .catch((err) => {
+          alert(getAuthErrorMessage(err));
+        })
+        .finally(() => {
+          if (btnLogin) btnLogin.disabled = false;
+        });
+    }
+
+    function changeAdminPassword() {
+      const user = auth.currentUser;
+      if (!user || !user.email) {
+        alert('Sessão expirada. Faça login novamente.');
+        syncAdminModalView();
+        return;
+      }
+
+      const currentPass = document.getElementById('current-admin-pass-input').value;
+      const newPass = document.getElementById('new-admin-pass-input').value;
+      const confirmPass = document.getElementById('confirm-admin-pass-input').value;
+
+      if (!currentPass || !newPass || !confirmPass) {
+        alert('Preencha a senha atual, a nova senha e a confirmação.');
+        return;
+      }
+
+      if (newPass.length < 6) {
+        alert('A nova senha deve ter pelo menos 6 caracteres.');
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        alert('A nova senha e a confirmação não coincidem.');
+        return;
+      }
+
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPass);
+
+      user.reauthenticateWithCredential(credential)
+        .then(() => user.updatePassword(newPass))
+        .then(() => {
+          document.getElementById('current-admin-pass-input').value = '';
+          document.getElementById('new-admin-pass-input').value = '';
+          document.getElementById('confirm-admin-pass-input').value = '';
+          alert('Senha atualizada com sucesso!');
+        })
+        .catch((err) => {
+          if (err && err.code === 'auth/wrong-password') {
+            alert('A senha atual está incorreta.');
+          } else {
+            alert(getAuthErrorMessage(err));
+          }
+        });
+    }
+
+    function loadAdminDashboard() {
+      renderPendingRequests();
+      renderAdminMonthCarousel();
+      renderAdminCalendar();
+    }
+
+    function toggleBlockSelectedDate() {
+      const isBlocked = !!blockedDates[adminSelectedDateStr];
+      const dateFormatted = adminSelectedDateStr.split('-').reverse().join('/');
+
+      if (isBlocked) {
+        if (confirm(`Deseja REABRIR a agenda para o dia ${dateFormatted}?`)) {
+          delete blockedDates[adminSelectedDateStr];
+          db.ref('outplay_blocked_dates').set(blockedDates);
+        }
+      } else {
+        if (confirm(`Deseja FECHAR COMPLETAMENTE a agenda para o dia ${dateFormatted} (Chuva/Evento)?`)) {
+          blockedDates[adminSelectedDateStr] = true;
+          db.ref('outplay_blocked_dates').set(blockedDates);
+        }
+      }
+    }
+
+    function renderPendingRequests() {
+      const container = document.getElementById('pending-requests-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let count = 0;
+
+      for (const date in bookedSlots) {
+        const dateFormatted = date ? date.split('-').reverse().join('/') : date;
+
+        if (Array.isArray(bookedSlots[date])) {
+          bookedSlots[date].forEach((booking, index) => {
+            if (booking && booking.status === 'pending') {
+              count++;
+              const whatsappClean = booking.phone.replace(/\D/g, '');
+              
+              const textAprovado = "OUTPLAY ARENA - RESERVA APROVADA\n\n" +
+                                   "Olá " + booking.name + "!\n" +
+                                   "Sua reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + " foi aprovada (" + (booking.paymentType || 'Confirmado') + ").\n\n" +
+                                   "Restante a pagar no balcão: " + (booking.remaining || "R$ 0,00") + ".\n" +
+                                   "Nos vemos em quadra!";
+              
+              const textPagamento = "OUTPLAY ARENA - COMPROVANTE PIX\n\n" +
+                                    "Olá " + booking.name + ",\n" +
+                                    "Passando para lembrar sobre o envio do comprovante PIX (" + (booking.paymentType || 'Pagamento') + ") para garantir sua pré-reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + ".\n\n" +
+                                    "Qualquer dúvida estamos à disposição!";
+              
+              const textRecusado = "OUTPLAY ARENA - RESERVA CANCELADA\n\n" +
+                                   "Olá " + booking.name + ".\n" +
+                                   "Infelizmente não recebemos o comprovante a tempo e sua pré-reserva de " + booking.sport + " para " + dateFormatted + " às " + booking.time + " foi cancelada, liberando o horário na agenda.\n\n" +
+                                   "Agradecemos o contato!";
+
+              const msgPagamentoEncoded = encodeURIComponent(textPagamento);
+
+              const item = document.createElement('div');
+              item.className = 'pending-card';
+              item.innerHTML = `
+                <div class="pending-info">
+                  <strong>👤 ${booking.name}</strong> (${booking.phone})<br>
+                  <span>📅 ${dateFormatted} • ⏰ ${booking.time} • ⚽ ${booking.sport}</span><br>
+                  <span style="color:#ffca28; font-size:0.75rem;">Modalidade: ${booking.paymentType || 'PIX'} | Resta: ${booking.remaining || 'R$ 0,00'}</span>
+                </div>
+                <div class="pending-actions" style="display: flex; gap: 4px; flex-wrap: wrap; margin-top:4px;">
+                  <button class="btn-approve" onclick="approveAndNotify('${date}', ${index}, '${whatsappClean}', encodeURIComponent(${JSON.stringify(textAprovado)}))">
+                    <i class="fa-solid fa-check"></i> Aprovar
+                  </button>
+                  
+                  <a href="https://wa.me/55${whatsappClean}?text=${msgPagamentoEncoded}" target="_blank" style="background:#ffca28; color:#000; padding: 0.3rem 0.5rem; border-radius: 5px; font-weight: 700; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Lembrar Comprovante">
+                    <i class="fa-regular fa-clock"></i> Pagamento
+                  </a>
+
+                  <button class="btn-reject" onclick="rejectAndNotify('${date}', ${index}, '${whatsappClean}', encodeURIComponent(${JSON.stringify(textRecusado)}))">
+                    <i class="fa-solid fa-xmark"></i> Recusar
+                  </button>
+                </div>
+              `;
+              container.appendChild(item);
+            }
+          });
+        }
+      }
+
+      if (count === 0) {
+        container.innerHTML = `<p class="no-pending-msg"><i class="fa-solid fa-circle-check"></i> Nenhuma confirmação de PIX pendente no momento.</p>`;
+      }
+    }
+
+    function approveAndNotify(date, index, phoneClean, encodedMessage) {
+      bookedSlots[date][index].status = 'confirmed';
+      db.ref('outplay_booked_slots').set(bookedSlots);
+      window.open(`https://wa.me/55${phoneClean}?text=${encodedMessage}`, '_blank');
+    }
+
+    function rejectAndNotify(date, index, phoneClean, encodedMessage) {
+      if (confirm('Deseja recusar e liberar este horário da agenda?')) {
+        bookedSlots[date].splice(index, 1);
+        if (bookedSlots[date].length === 0) delete bookedSlots[date];
+        db.ref('outplay_booked_slots').set(bookedSlots);
+        window.open(`https://wa.me/55${phoneClean}?text=${encodedMessage}`, '_blank');
+      }
+    }
+
+    function rejectBooking(date, index) {
+      if (confirm('Deseja liberar este horário da agenda?')) {
+        bookedSlots[date].splice(index, 1);
+        if (bookedSlots[date].length === 0) delete bookedSlots[date];
+        db.ref('outplay_booked_slots').set(bookedSlots);
+      }
+    }
+
+    function renderAdminCalendar() {
+      const grid = document.getElementById('admin-calendar-grid');
+      const statusText = document.getElementById('admin-block-status-text');
+      const btnToggleBlock = document.getElementById('btn-toggle-block-day');
+
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const isBlocked = !!blockedDates[adminSelectedDateStr];
+      const dateFormatted = adminSelectedDateStr ? adminSelectedDateStr.split('-').reverse().join('/') : '';
+
+      if (statusText && btnToggleBlock) {
+        if (isBlocked) {
+          statusText.innerHTML = `<strong style="color: #ff5252;"><i class="fa-solid fa-ban"></i> Dia Fechado no Sistema</strong>`;
+          btnToggleBlock.innerHTML = `<i class="fa-solid fa-lock-open"></i> Reabrir Dia`;
+          btnToggleBlock.style.backgroundColor = '#25D366';
+        } else {
+          statusText.innerHTML = `Dia aberto para agendamentos`;
+          btnToggleBlock.innerHTML = `<i class="fa-solid fa-ban"></i> Fechar Dia Completo`;
+          btnToggleBlock.style.backgroundColor = '#ff5252';
+        }
+      }
+
+      const schedule = getScheduleForDate(adminSelectedDateStr);
+      const times = [...schedule.afternoonTimes, ...schedule.nightTimes].map(s => s.time);
+      const currentBookings = bookedSlots[adminSelectedDateStr] || [];
+
+      times.forEach(time => {
+        const bookingIndex = currentBookings.findIndex(b => b && b.time === time);
+        const booking = bookingIndex !== -1 ? currentBookings[bookingIndex] : null;
+
+        const card = document.createElement('div');
+        card.className = 'admin-time-card ' + (booking ? (booking.status === 'confirmed' ? 'confirmed' : 'pending') : 'available');
+
+        if (booking) {
+          const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
+          const whatsappClean = booking.phone.replace(/\D/g, '');
+          
+          const textContato = "OUTPLAY ARENA - CONTATO\n\n" +
+                              "Olá " + booking.name + "!\n" +
+                              "Sobre sua reserva na Outplay Arena para o dia " + dateFormatted + " às " + time + ":";
+          
+          const msgContatoEncoded = encodeURIComponent(textContato);
+
+          card.innerHTML = `
+            <div class="time-header">
+              <strong>⏰ ${time}</strong>
+              <span class="status-tag ${booking.status}">${statusTagText}</span>
+            </div>
+            <div class="client-detail">
+              <div class="detail-line"><i class="fa-solid fa-volleyball icon-lime"></i> <strong>Esporte:</strong> ${booking.sport}</div>
+              <div class="detail-line"><i class="fa-regular fa-user icon-lime"></i> <strong>Nome:</strong> ${booking.name}</div>
+              <div class="detail-line"><i class="fa-solid fa-wallet icon-lime"></i> <strong>Forma:</strong> ${booking.paymentType || 'PIX'}</div>
+              <div class="detail-line"><i class="fa-solid fa-money-bill-wave icon-lime"></i> <strong>Resta Pagar:</strong> ${booking.remaining || 'R$ 0,00'}</div>
+              <div class="detail-line" style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
+                <span><i class="fa-brands fa-whatsapp icon-lime"></i> <strong>Tel:</strong> ${booking.phone}</span>
+                <a href="https://wa.me/55${whatsappClean}?text=${msgContatoEncoded}" target="_blank" class="btn-whatsapp-sm" style="background:#25D366; color:white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                  <i class="fa-brands fa-whatsapp"></i> Chamar
+                </a>
+              </div>
+            </div>
+            <button class="btn-cancel-sm" onclick="rejectBooking('${adminSelectedDateStr}', ${bookingIndex})">
+              <i class="fa-solid fa-trash-can"></i> Liberar Horário
+            </button>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="time-header">
+              <strong>⏰ ${time}</strong>
+              <span class="status-tag available">Livre</span>
+            </div>
+            <p class="free-slot-msg"><i class="fa-regular fa-circle-check"></i> Horário disponível</p>
+            <button class="btn-block-sm" onclick="blockSlotManually('${adminSelectedDateStr}', '${time}')">
+              <i class="fa-solid fa-ban"></i> Bloquear Presencial
+            </button>
+          `;
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    function blockSlotManually(date, time) {
+      if (!bookedSlots[date]) bookedSlots[date] = [];
+      const pricing = getSlotPricing(time, date);
+      bookedSlots[date].push({
+        time: time,
+        sport: 'Bloqueio Presencial',
+        name: 'Dono / Presencial',
+        phone: '(42) 99910-9395',
+        fullPrice: `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}`,
+        paymentType: 'Bloqueio Direto',
+        amountPaidNow: 'R$ 0,00',
+        remaining: 'R$ 0,00',
+        status: 'confirmed'
+      });
+      db.ref('outplay_booked_slots').set(bookedSlots);
+    }
+  </script>
+
+</body>
+</html>
