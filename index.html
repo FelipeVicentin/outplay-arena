@@ -1169,23 +1169,13 @@
         ? `Valor Total Quitado via PIX: R$ ${totals.totalFull.toFixed(2).replace('.', ',')}`
         : `Sinal Pago via PIX: R$ ${totals.totalDeposit.toFixed(2).replace('.', ',')} | Restante a Pagar na Arena: R$ ${totals.totalRemaining.toFixed(2).replace('.', ',')}`;
 
-      const message = "OUTPLAY ARENA - NOVO AGENDAMENTO
-
-" +
-                      "Nome: " + name + "
-" +
-                      "WhatsApp: " + phone + "
-" +
-                      "Esporte: " + selectedSport + "
-" +
-                      "Data: " + dateFormatted + "
-" +
-                      "Horários (" + selectedTimes.length + "): " + timesFormatted + "
-
-" +
-                      paymentDesc + "
-
-" +
+      const message = "OUTPLAY ARENA - NOVO AGENDAMENTO\n\n" +
+                      "Nome: " + name + "\n" +
+                      "WhatsApp: " + phone + "\n" +
+                      "Esporte: " + selectedSport + "\n" +
+                      "Data: " + dateFormatted + "\n" +
+                      "Horários (" + selectedTimes.length + "): " + timesFormatted + "\n\n" +
+                      paymentDesc + "\n\n" +
                       "Segue em anexo o comprovante do PIX:";
 
       window.open(`https://wa.me/5542999109395?text=${encodeURIComponent(message)}`, '_blank');
@@ -1340,36 +1330,20 @@
     }
 
     function buildBookingMessages(booking, dateFormatted) {
-      const textAprovado = "OUTPLAY ARENA - RESERVA APROVADA
-
-" +
-                           "Olá " + booking.name + "!
-" +
-                           "Sua reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + " foi aprovada (" + (booking.paymentType || 'Confirmado') + ").
-
-" +
-                           "Restante a pagar no balcão: " + (booking.remaining || "R$ 0,00") + ".
-" +
+      const textAprovado = "OUTPLAY ARENA - RESERVA APROVADA\n\n" +
+                           "Olá " + booking.name + "!\n" +
+                           "Sua reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + " foi aprovada (" + (booking.paymentType || 'Confirmado') + ").\n\n" +
+                           "Restante a pagar no balcão: " + (booking.remaining || "R$ 0,00") + ".\n" +
                            "Nos vemos em quadra!";
 
-      const textPagamento = "OUTPLAY ARENA - COMPROVANTE PIX
-
-" +
-                            "Olá " + booking.name + ",
-" +
-                            "Passando para lembrar sobre o envio do comprovante PIX (" + (booking.paymentType || 'Pagamento') + ") para garantir sua pré-reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + ".
-
-" +
+      const textPagamento = "OUTPLAY ARENA - COMPROVANTE PIX\n\n" +
+                            "Olá " + booking.name + ",\n" +
+                            "Passando para lembrar sobre o envio do comprovante PIX (" + (booking.paymentType || 'Pagamento') + ") para garantir sua pré-reserva de " + booking.sport + " em " + dateFormatted + " às " + booking.time + ".\n\n" +
                             "Qualquer dúvida estamos à disposição!";
 
-      const textRecusado = "OUTPLAY ARENA - RESERVA CANCELADA
-
-" +
-                           "Olá " + booking.name + ".
-" +
-                           "Infelizmente não recebemos o comprovante a tempo e sua pré-reserva de " + booking.sport + " para " + dateFormatted + " às " + booking.time + " foi cancelada, liberando o horário na agenda.
-
-" +
+      const textRecusado = "OUTPLAY ARENA - RESERVA CANCELADA\n\n" +
+                           "Olá " + booking.name + ".\n" +
+                           "Infelizmente não recebemos o comprovante a tempo e sua pré-reserva de " + booking.sport + " para " + dateFormatted + " às " + booking.time + " foi cancelada, liberando o horário na agenda.\n\n" +
                            "Agradecemos o contato!";
 
       return { textAprovado, textPagamento, textRecusado };
@@ -1514,11 +1488,8 @@
           const statusTagText = booking.status === 'confirmed' ? 'Confirmado' : 'Aguardando PIX';
           const whatsappClean = (booking.phone || '').replace(/\D/g, '');
           
-          const textContato = "OUTPLAY ARENA - CONTATO
-
-" +
-                              "Olá " + booking.name + "!
-" +
+          const textContato = "OUTPLAY ARENA - CONTATO\n\n" +
+                              "Olá " + booking.name + "!\n" +
                               "Sobre sua reserva na Outplay Arena para o dia " + dateFormatted + " às " + time + ":";
           
           const msgContatoEncoded = encodeURIComponent(textContato);
