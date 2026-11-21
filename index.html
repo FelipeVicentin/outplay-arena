@@ -545,6 +545,7 @@
 
     auth.onAuthStateChanged((user) => {
       isAdminAuthenticated = !!user;
+      updatePendingBadge();
       const loggedEmailEl = document.getElementById('admin-logged-email');
       if (loggedEmailEl) {
         loggedEmailEl.innerText = user && user.email ? user.email : '--';
@@ -812,6 +813,14 @@
     }
 
     function updatePendingBadge() {
+      const badge = document.getElementById('badge-pending-count');
+      if (!badge) return;
+
+      if (!isAdminAuthenticated) {
+        badge.style.display = 'none';
+        return;
+      }
+
       let pendingCount = 0;
       for (const date in bookedSlots) {
         if (Array.isArray(bookedSlots[date])) {
@@ -821,8 +830,6 @@
         }
       }
 
-      const badge = document.getElementById('badge-pending-count');
-      if (!badge) return;
       if (pendingCount > 0) {
         badge.innerText = pendingCount;
         badge.style.display = 'inline-flex';
