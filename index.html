@@ -922,15 +922,16 @@
         div.className = 'time-slot' + (isBooked ? ' disabled' : '') + (isSelected ? ' selected' : '');
         
         if (isBooked) {
-          const statusText = bookingData.status === 'confirmed' ? 'Ocupado' : 'Aguardando PIX';
+          const statusText = bookingData.status === 'confirmed' ? 'Reservado' : 'Em pré-reserva';
           div.innerHTML = `
             <div class="time-text">${item.time}</div>
             <div class="time-price status-booked">${statusText}</div>
           `;
         } else {
+          const priceShort = `R$ ${pricing.fullPrice.toFixed(0)}`;
           div.innerHTML = `
             <div class="time-text">${item.time}</div>
-            <div class="time-price">${isSelected ? 'Selecionado' : `R$ ${pricing.fullPrice.toFixed(2).replace('.', ',')}`}</div>
+            <div class="time-price">${isSelected ? 'Selecionado' : `Livre • ${priceShort}`}</div>
           `;
 
           div.onclick = () => {
